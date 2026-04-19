@@ -15,7 +15,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-6 left-1/2 transform -translate-x-1/2 z-50">
-      <div className="bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-slate-100 px-1 py-3 flex items-center gap-1">
+      <div className="bg-white/80 backdrop-blur-md rounded-full shadow-lg border border-slate-100 px-4 py-3 flex items-center gap-1">
         {navItems.map((item) => (
           <Link
             key={item.id}
