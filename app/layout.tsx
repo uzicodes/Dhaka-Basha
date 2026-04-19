@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri, Geist_Mono } from "next/font/google"; // Added Hind Siliguri for Bangla
 import "./globals.css";
+import Navbar from "./components/Navbar";
 
 // Modern Bangla font
 const hindSiliguri = Hind_Siliguri({
@@ -52,6 +53,7 @@ export default function RootLayout({
       suppressHydrationWarning
     >
       <body className={`min-h-full flex flex-col font-sans`}>
+        <Navbar />
         {children}
       </body>
     </html>

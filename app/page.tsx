@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export default function Home() {
   return (
-    <main className="flex-grow flex flex-col items-center justify-center px-4 bg-white">
+    <main className="flex-grow flex flex-col items-center justify-center px-4 bg-white pt-20">
       {/* Hero Section */}
       <div className="max-w-3xl w-full text-center space-y-8">
         <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight">
