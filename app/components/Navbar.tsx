@@ -10,7 +10,6 @@ export default function Navbar() {
     { id: "home", label: "হোম", href: "/" },
     { id: "properties", label: "খুজন", href: "/listings" },
     { id: "post", label: "বিজ্ঞাপন দিন", href: "/post" },
-    { id: "about", label: "সম্পর্কে", href: "/about" },
     { id: "contact", label: "যোগাযোগ", href: "/contact" },
   ];
 
