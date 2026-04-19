@@ -1,6 +1,6 @@
 export default function PostToLet() {
   return (
-    <main className="flex-grow flex flex-col items-center px-4 bg-white pt-20 pb-12">
+    <main className="flex-grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
       <div className="max-w-2xl w-full space-y-8">
         <h1 className="text-4xl md:text-5xl font-bold text-slate-900">
           আপনার সম্পত্তি বিজ্ঞাপন দিন

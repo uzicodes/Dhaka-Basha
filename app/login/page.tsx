@@ -1,6 +1,6 @@
 export default function Login() {
   return (
-    <main className="flex-grow flex flex-col items-center justify-center px-4 bg-white pt-20 pb-12">
+    <main className="flex-grow flex flex-col items-center justify-center px-4 bg-white pt-32 pb-12">
       <div className="max-w-md w-full space-y-6">
         <div className="text-center space-y-2">
           <h1 className="text-4xl font-bold text-slate-900">লগইন করুন</h1>

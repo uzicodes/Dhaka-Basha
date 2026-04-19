@@ -1,6 +1,6 @@
 export default function Profile() {
   return (
-    <main className="flex-grow flex flex-col items-center px-4 bg-white pt-20 pb-12">
+    <main className="flex-grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
       <div className="max-w-3xl w-full space-y-8">
         {/* Profile Header */}
         <div className="space-y-6">
