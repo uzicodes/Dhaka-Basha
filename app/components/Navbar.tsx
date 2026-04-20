@@ -1,13 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function Navbar() {
   const [active, setActive] = useState("home");
 
   const navItems = [
-    { id: "home", label: "হোম", href: "/" },
+    { id: "home", label: "হোম", href: "/", icon: true },
     { id: "properties", label: "খুজন", href: "/listings" },
     { id: "post", label: "বিজ্ঞাপন দিন", href: "/post" },
     { id: "contact", label: "যোগাযোগ", href: "/contact" },
@@ -21,13 +22,22 @@ export default function Navbar() {
             key={item.id}
             href={item.href}
             onClick={() => setActive(item.id)}
-            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 ${
+            className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center ${
               active === item.id
-                ? "bg-blue-600 text-white shadow-md"
+                ? "border-2 border-blue-600 text-blue-600"
                 : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
             }`}
           >
-            {item.label}
+            {item.icon ? (
+              <Image
+                src="/logo.png"
+                alt="Home"
+                width={24}
+                height={24}
+              />
+            ) : (
+              item.label
+            )}
           </Link>
         ))}
 
