@@ -36,14 +36,13 @@ export default function Home() {
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/listings"
-            className="text-slate-500 hover:text-blue-600 transition-colors font-medium border-b border-transparent hover:border-blue-600"
+            className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-none hover:bg-green-200 transition-colors font-semibold shadow-sm"
           >
-            সব টু-লেট দেখুন
+            টু-লেট দেখুন
           </Link>
-          <span className="text-slate-300">|</span>
           <Link
             href="/post-to-let"
-            className="text-slate-500 hover:text-blue-600 transition-colors font-medium border-b border-transparent hover:border-blue-600"
+            className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-none hover:bg-green-200 transition-colors font-semibold shadow-sm"
           >
             বিজ্ঞাপন দিন
           </Link>
