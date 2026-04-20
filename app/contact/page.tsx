@@ -1,6 +1,6 @@
 export default function Contact() {
   return (
-    <main className="flex-grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
+    <main className="grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
       <div className="max-w-3xl w-full space-y-12">
         {/* About Section */}
         <section className="space-y-6">

@@ -10,7 +10,7 @@ export default function Navbar() {
   const navItems = [
     { id: "home", label: "হোম", href: "/", icon: true },
     { id: "properties", label: "খুজন", href: "/listings" },
-    { id: "post", label: "বিজ্ঞাপন দিন", href: "/post" },
+    { id: "post", label: "বিজ্ঞাপন", href: "/post" },
     { id: "contact", label: "যোগাযোগ", href: "/contact" },
   ];
 
@@ -24,7 +24,7 @@ export default function Navbar() {
             onClick={() => setActive(item.id)}
             className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center ${
               active === item.id
-                ? "border-2 border-blue-600 text-blue-600"
+                ? "ring-2 ring-blue-600 text-blue-600"
                 : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
             }`}
           >
