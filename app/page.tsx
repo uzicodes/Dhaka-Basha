@@ -3,9 +3,12 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-white pt-2">
+    <main className="relative grow flex flex-col items-center px-4 pt-34 bg-[url('/hero_bg.jpg')] bg-cover bg-center bg-no-repeat">
+      {/* Overlay for better text readability */}
+      <div className="absolute inset-0 bg-white/50"></div>
+
       {/* Hero Section */}
-      <div className="max-w-3xl w-full text-center space-y-8">
+      <div className="relative z-10 max-w-3xl w-full text-center space-y-8">
         <Image
           src="/logo.png"
           alt="ঢাকা-বাসা"
@@ -17,23 +20,12 @@ export default function Home() {
           ঢাকা-<span className="text-blue-600">বাসা</span>
         </h1>
 
-        <p className="text-lg md:text-xl text-slate-600 font-medium">
+        <p className="text-lg md:text-lg text-slate-600 font-medium">
           আপনার পরবর্তী গন্তব্য খুঁজে নিন সহজেই।
         </p>
 
-        {/* Minimal Search Bar */}
-        <div className="relative max-w-xl mx-auto">
-          <input
-            type="text"
-            className="w-full px-6 py-4 text-lg border-2 border-slate-100 rounded-full bg-slate-50 focus:bg-white focus:border-blue-500 outline-none transition-all shadow-sm"
-          />
-          <button className="absolute right-2 top-2 bottom-2 bg-blue-600 text-white px-6 rounded-full hover:bg-blue-700 transition-colors font-semibold">
-            খুঁজুন
-          </button>
-        </div>
-
         {/* CTA buttons */}
-        <div className="flex flex-wrap justify-center gap-4 pt-4">
+        <div className="flex flex-wrap justify-center gap-5 pt-4">
           <Link
             href="/listings"
             className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-none hover:bg-green-200 transition-colors font-semibold shadow-sm"
@@ -50,8 +42,8 @@ export default function Home() {
       </div>
 
       {/* Footer */}
-      <footer className="fixed bottom-8 text-slate-400 text-sm">
-        © ২০২৬ ঢাকা-বাসা প্ল্যাটফর্ম
+      <footer className="fixed bottom-2 text-slate-500 font-medium text-sm z-10">
+        © ২০२६ ঢাকা-বাসা প্ল্যাটফর্ম
       </footer>
     </main>
   );
