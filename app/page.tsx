@@ -32,7 +32,7 @@ export default function Home() {
           </button>
         </div>
 
-        {/* Quick Actions */}
+        {/* CTA buttons */}
         <div className="flex flex-wrap justify-center gap-4 pt-4">
           <Link
             href="/listings"
@@ -41,7 +41,7 @@ export default function Home() {
             টু-লেট দেখুন
           </Link>
           <Link
-            href="/post-to-let"
+            href="/post"
             className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-none hover:bg-green-200 transition-colors font-semibold shadow-sm"
           >
             বিজ্ঞাপন দিন
@@ -49,7 +49,7 @@ export default function Home() {
         </div>
       </div>
 
-      {/* Trust Footer */}
+      {/* Footer */}
       <footer className="fixed bottom-8 text-slate-400 text-sm">
         © ২০২৬ ঢাকা-বাসা প্ল্যাটফর্ম
       </footer>

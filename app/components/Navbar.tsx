@@ -3,10 +3,23 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const [active, setActive] = useState("home");
+  const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Map pathname to active nav item
+  const getActiveId = () => {
+    if (pathname === "/") return "home";
+    if (pathname === "/listings") return "properties";
+    if (pathname === "/post") return "post";
+    if (pathname === "/contact") return "contact";
+    if (pathname === "/login") return "login";
+    return "home";
+  };
+  
+  const active = getActiveId();
 
   const navItems = [
     { id: "home", label: "হোম", href: "/", icon: true },
@@ -21,7 +34,7 @@ export default function Navbar() {
         
         {/* Mobile Header (Logo & Hamburger) */}
         <div className={`relative flex items-center justify-between md:hidden w-full ${isMenuOpen ? "mb-4" : ""}`}>
-          <Link href="/" onClick={() => { setActive("home"); setIsMenuOpen(false); }} className="flex items-center z-10">
+          <Link href="/" onClick={() => { setIsMenuOpen(false); }} className="flex items-center z-10">
             <div className="scale-150 origin-left ml-2">
               <Image src="/logo.png" alt="Home" width={24} height={24} />
             </div>
@@ -51,7 +64,6 @@ export default function Navbar() {
               key={item.id}
               href={item.href}
               onClick={() => {
-                setActive(item.id);
                 setIsMenuOpen(false);
               }}
               className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center w-full md:w-auto ${
@@ -85,7 +97,6 @@ export default function Navbar() {
           <Link
             href="/login"
             onClick={() => {
-              setActive("login");
               setIsMenuOpen(false);
             }}
             className="px-6 py-2 rounded-md text-sm font-semibold text-red-600 hover:bg-green-50 transition-colors relative w-full md:w-auto text-center"
