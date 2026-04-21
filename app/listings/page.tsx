@@ -40,14 +40,37 @@ export default function Listings() {
                 <option value="" disabled>এলাকা নির্বাচন করুন</option>
                 <option value="gulshan">গুলশান (Gulshan)</option>
                 <option value="banani">বনানী (Banani)</option>
+                <option value="baridhara">বারিধারা (Baridhara)</option>
                 <option value="dhanmondi">ধানমন্ডি (Dhanmondi)</option>
                 <option value="mirpur">মিরপুর (Mirpur)</option>
                 <option value="uttara">উত্তরা (Uttara)</option>
                 <option value="mohammadpur">মোহাম্মদপুর (Mohammadpur)</option>
+                <option value="mohakhali">মহাখালী (Mohakhali)</option>
                 <option value="bashundhara">বসুন্ধরা (Bashundhara)</option>
                 <option value="badda">বাড্ডা (Badda)</option>
                 <option value="motijheel">মতিঝিল (Motijheel)</option>
                 <option value="khilgaon">খিলগাঁও (Khilgaon)</option>
+                <option value="tejgaon">তেজগাঁও (Tejgaon)</option>
+                <option value="malibagh">মালিবাগ (Malibagh)</option>
+                <option value="rampura">রামপুরা (Rampura)</option>
+                <option value="shantinagar">শান্তিনগর (Shantinagar)</option>
+                <option value="demra">ডেমরা (Demra)</option>
+                <option value="shyamoli">শ্যামলী (Shyamoli)</option>
+                <option value="kallyanpur">কল্যাণপুর (Kallyanpur)</option>
+                <option value="agargaon">আগারগাঁও (Agargaon)</option>
+                <option value="kuril">কুড়িল (Kuril)</option>
+                <option value="azimpur">আজিমপুর (Azimpur)</option>
+                <option value="gulistan">গুলিস্তান (Gulistan)</option>
+                <option value="farmgate">ফার্মগেট (Farmgate)</option>
+                <option value="karwan bazar">কারওয়ান বাজার (Karwan Bazar)</option>
+                <option value="shiddheswari">সিদ্ধেশ্বরী (Shiddheswari)</option>
+                <option value="new eskaton">নিউ ইস্কাটন (New Eskaton)</option>
+                <option value="old dhaka">পুরান ঢাকা (Old Dhaka)</option>
+                <option value="rajarbagh">রাজারবাগ (Rajarbagh)</option>
+                <option value="jatrabari">যাত্রাবাড়ী (Jatrabari)</option>
+                <option value="sadarghat">সদরঘাট (Sadarghat)</option>
+
+
               </select>
               
               {/* Dropdown Icon */}
@@ -76,13 +99,13 @@ export default function Listings() {
                 onChange={() => setIsTypeSelectOpen(false)}
               >
                 <option value="" disabled>কি খুঁজছেন?</option>
-                <option value="single-room">Single room</option>
-                <option value="single-room-attached">Single room (washroom attached)</option>
-                <option value="flat">Flat</option>
-                <option value="master-bedroom">Master Bedroom</option>
-                <option value="office">Office / Corporate</option>
-                <option value="bachelors-male">Bachelors (male)</option>
-                <option value="bachelors-female">Bachelors (Female)</option>
+                <option value="single-room">সিঙ্গেল রুম (Single room)</option>
+                <option value="single-room-attached">সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)</option>
+                <option value="flat">ফ্ল্যাট (Flat)</option>
+                <option value="master-bedroom">মাস্টার বেডরুম (Master Bedroom)</option>
+                <option value="office">অফিস / করপোরেট (Office / Corporate)</option>
+                <option value="bachelors-male">ব্যাচেলর - পুরুষ (Bachelors - Male)</option>
+                <option value="bachelors-female">ব্যাচেলর - মহিলা (Bachelors - Female)</option>
               </select>
 
               {/* Dropdown Icon */}
