@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 
 export default function Login() {
   const [showPassword, setShowPassword] = useState(false);
@@ -66,9 +67,9 @@ export default function Login() {
 
         <p className="text-center text-black text-[14px] my-2">
           অ্যাকাউন্ট নেই? 
-          <span className="text-[14px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href="/sign-up" className="text-[14px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
             সাইন আপ
-          </span>
+          </Link>
         </p>
 
         <button type="button" className="mt-2 w-30 h-12.5 mx-auto rounded-[10px] flex justify-center items-center font-medium text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
