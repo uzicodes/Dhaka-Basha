@@ -5,68 +5,189 @@ import Link from "next/link";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
+  const [errors, setErrors] = useState({
+    name: "",
+    email: "",
+    phone: "",
+    password: "",
+  });
+
+  const [submitted, setSubmitted] = useState(false);
+
+  // Validation functions
+  const validateName = (value: string) => {
+    if (!value) return "নাম প্রয়োজন";
+    const words = value.trim().split(/\s+/).length;
+    if (words > 30) return "নাম ৩০ শব্দের বেশি হতে পারে না";
+    if (!/^[a-zA-Z\s]+$/.test(value)) return "নাম শুধুমাত্র অক্ষর এবং স্পেস থাকতে পারে";
+    return "";
+  };
+
+  const validateEmail = (value: string) => {
+    if (!value) return "ইমেইল প্রয়োজন";
+    const atCount = (value.match(/@/g) || []).length;
+    if (atCount !== 1) return "সঠিক ইমেইল দিন";
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "সঠিক ইমেইল ফরম্যাট দিন";
+    return "";
+  };
+
+  const validatePhone = (value: string) => {
+    if (!value) return "ফোন নম্বর প্রয়োজন";
+    if (!/^\d+$/.test(value)) return "সঠিক ফোন নম্বর দিন";
+    if (value.length !== 11) return "সঠিক ফোন নম্বর দিন";
+    return "";
+  };
+
+  const validatePassword = (value: string) => {
+    if (!value) return "পাসওয়ার্ড প্রয়োজন";
+    if (value.length < 6) return "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে";
+    if (value.length > 50) return "পাসওয়ার্ড ৫০ অক্ষরের বেশি হতে পারে না";
+    return "";
+  };
+
+  const handleChange = (field: string, value: string) => {
+    let filteredValue = value;
+
+    // Filter based on field type
+    if (field === "name") {
+      // Only letters and spaces allowed
+      filteredValue = value.replace(/[^a-zA-Z\s]/g, "");
+      // Limit to 30 words
+      const words = filteredValue.trim().split(/\s+/).filter(word => word.length > 0);
+      if (words.length > 30) {
+        // Keep only first 30 words
+        filteredValue = words.slice(0, 30).join(" ");
+      }
+    } else if (field === "email") {
+      // Prevent multiple @ symbols
+      const atCount = (filteredValue.match(/@/g) || []).length;
+      if (atCount > 1) {
+        // Keep only the first @
+        const parts = value.split("@");
+        filteredValue = parts[0] + "@" + parts.slice(1).join("");
+      }
+    } else if (field === "phone") {
+      // Only digits allowed, max 11 digits
+      filteredValue = value.replace(/\D/g, "").slice(0, 11);
+    }
+
+    setFormData({ ...formData, [field]: filteredValue });
+
+    // Only validate if form has been submitted
+    if (submitted) {
+      let error = "";
+      if (field === "name") error = validateName(filteredValue);
+      else if (field === "email") error = validateEmail(filteredValue);
+      else if (field === "phone") error = validatePhone(filteredValue);
+      else if (field === "password") error = validatePassword(filteredValue);
+
+      setErrors({ ...errors, [field]: error });
+    }
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+
+    // Validate all fields
+    const nameError = validateName(formData.name);
+    const emailError = validateEmail(formData.email);
+    const phoneError = validatePhone(formData.phone);
+    const passwordError = validatePassword(formData.password);
+
+    setErrors({
+      name: nameError,
+      email: emailError,
+      phone: phoneError,
+      password: passwordError,
+    });
+
+    // Only submit if all validations pass
+    if (!nameError && !emailError && !phoneError && !passwordError) {
+      console.log("Form submitted:", formData);
+      // Add your submission logic here
+    }
+  };
 
   return (
     <main className="grow flex flex-col items-center justify-center px-4 bg-slate-50 pt-32 pb-12">
       <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">সাইন আপ</h1>
-      <form className="flex flex-col gap-1 bg-white p-4 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
+      <form onSubmit={handleSubmit} className="flex flex-col gap-1 bg-white p-4 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         
         {/* Name Input */}
         <div className="flex flex-col">
           <label className="text-[#151717] text-sm font-semibold mb-1">আপনার নাম</label>
         </div>
-        <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.name ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <input
             type="text"
             placeholder="আপনার পুরো নাম দিন"
+            value={formData.name}
+            onChange={(e) => handleChange("name", e.target.value)}
             className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
+        {submitted && errors.name && <p className="text-red-500 text-xs mt-1 mb-2">{errors.name}</p>}
 
         {/* Email Input */}
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
-        <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
           <input
             type="email"
             placeholder="আপনার ইমেইল দিন"
+            value={formData.email}
+            onChange={(e) => handleChange("email", e.target.value)}
             className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
+        {submitted && errors.email && <p className="text-red-500 text-xs mt-1 mb-2">{errors.email}</p>}
 
-        {/* Phone Input (New) */}
+        {/* Phone Input */}
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">ফোন নম্বর</label>
         </div>
-        <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.phone ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
           <input
-            type="tel"
+            type="text"
             placeholder="আপনার ফোন নম্বর দিন"
+            value={formData.phone}
+            onChange={(e) => handleChange("phone", e.target.value)}
             className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
+        {submitted && errors.phone && <p className="text-red-500 text-xs mt-1 mb-2">{errors.phone}</p>}
 
         {/* Password Input */}
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
-        <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 focus-within:border-[#2d79f3]">
+        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && errors.password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           <input
             type={showPassword ? "text" : "password"}
             placeholder="নতুন পাসওয়ার্ড দিন"
+            value={formData.password}
+            onChange={(e) => handleChange("password", e.target.value)}
             className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
           <button
@@ -87,8 +208,12 @@ export default function SignUp() {
             )}
           </button>
         </div>
+        {submitted && errors.password && <p className="text-red-500 text-xs mt-1 mb-2">{errors.password}</p>}
 
-        <button className="mt-3 mb-2 bg-[#151717] text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200">
+        <button 
+          type="submit"
+          className="mt-3 mb-2 bg-[#151717] text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200"
+        >
           সাইন আপ 
         </button>
 
