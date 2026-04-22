@@ -14,7 +14,7 @@ export default function Home() {
           alt="ঢাকা-বাসা"
           width={120}
           height={120}
-          className="mx-auto mb-4"
+          className="mx-auto mb-4 w-auto h-auto"
         />
         <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight">
           ঢাকা-<span className="text-blue-600">বাসা</span>

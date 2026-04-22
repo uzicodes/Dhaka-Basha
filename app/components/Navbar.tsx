@@ -36,7 +36,7 @@ export default function Navbar() {
         <div className={`relative flex items-center justify-between md:hidden w-full ${isMenuOpen ? "mb-4" : ""}`}>
           <Link href="/" onClick={() => { setIsMenuOpen(false); }} className="flex items-center z-10">
             <div className="scale-150 origin-left ml-2">
-              <Image src="/logo.png" alt="Home" width={24} height={24} />
+              <Image src="/logo.png" alt="Home" width={24} height={24} className="w-auto h-auto" />
             </div>
           </Link>
           
@@ -81,6 +81,7 @@ export default function Navbar() {
                     alt="Home"
                     width={24}
                     height={24}
+                    className="w-auto h-auto"
                   />
                 </div>
               ) : (
