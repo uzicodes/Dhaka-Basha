@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hind_Siliguri, Geist_Mono } from "next/font/google"; // Added Hind Siliguri for Bangla
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import { ClerkProvider } from "@clerk/nextjs"; // <-- 1. Imported ClerkProvider
 
 // Modern Bangla font
 const hindSiliguri = Hind_Siliguri({
@@ -47,15 +48,18 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="bn"
-      className={`${hindSiliguri.variable} ${geistMono.variable} h-full antialiased`}
-      suppressHydrationWarning
-    >
-      <body className={`min-h-full flex flex-col font-sans`}>
-        <Navbar />
-        {children}
-      </body>
-    </html>
+    // 2. Wrapped the entire application in ClerkProvider
+    <ClerkProvider>
+      <html
+        lang="bn"
+        className={`${hindSiliguri.variable} ${geistMono.variable} h-full antialiased`}
+        suppressHydrationWarning
+      >
+        <body className={`min-h-full flex flex-col font-sans`}>
+          <Navbar />
+          {children}
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
