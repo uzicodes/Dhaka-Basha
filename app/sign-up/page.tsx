@@ -2,6 +2,8 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSignUp } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
@@ -20,6 +22,12 @@ export default function SignUp() {
   });
 
   const [submitted, setSubmitted] = useState(false);
+  const [pendingVerification, setPendingVerification] = useState(false);
+  const [code, setCode] = useState("");
+  const [clerkError, setClerkError] = useState("");
+
+  const { isLoaded, signUp, setActive } = useSignUp();
+  const router = useRouter();
 
   // Validation functions
   const validateName = (value: string) => {
@@ -92,9 +100,10 @@ export default function SignUp() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
+    setClerkError("");
 
     // Validate all fields
     const nameError = validateName(formData.name);
@@ -111,15 +120,76 @@ export default function SignUp() {
 
     // Only submit if all validations pass
     if (!nameError && !emailError && !phoneError && !passwordError) {
-      console.log("Form submitted:", formData);
-      // Add your submission logic here
+      if (!isLoaded) return;
+      try {
+        await signUp.create({
+          firstName: formData.name, // name is passed via firstName or ignored
+          emailAddress: formData.email,
+          password: formData.password,
+        });
+
+        await signUp.prepareEmailAddressVerification({ strategy: "email_code" });
+        setPendingVerification(true);
+      } catch (err: any) {
+        setClerkError(err.errors?.[0]?.longMessage || "সাইন আপ ব্যর্থ হয়েছে।");
+      }
     }
   };
+
+  const onPressVerify = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!isLoaded) return;
+    setClerkError("");
+
+    try {
+      const completeSignUp = await signUp.attemptEmailAddressVerification({
+        code,
+      });
+      if (completeSignUp.status === "complete") {
+        await setActive({ session: completeSignUp.createdSessionId });
+        router.push("/");
+      } else {
+        setClerkError("যাচাইকরণ ব্যর্থ হয়েছে।");
+      }
+    } catch (err: any) {
+      setClerkError(err.errors?.[0]?.longMessage || "ভুল কোড দেওয়া হয়েছে।");
+    }
+  };
+
+  if (pendingVerification) {
+    return (
+      <main className="grow flex flex-col items-center justify-center px-4 bg-slate-50 pt-32 pb-12">
+        <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">ইমেইল যাচাই করুন</h1>
+        <form onSubmit={onPressVerify} className="flex flex-col gap-1.5 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
+          <p className="text-center text-sm mb-4">আপনার ইমেইলে একটি কোড পাঠানো হয়েছে।</p>
+          {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
+          
+          <div className="flex flex-col">
+            <label className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
+          </div>
+          <div className={`border-[1.5px] border-[#ecedec] rounded-[10px] h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]`}>
+            <input
+              type="text"
+              value={code}
+              onChange={(e) => setCode(e.target.value)}
+              placeholder="কোড দিন"
+              className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
+            />
+          </div>
+          
+          <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-[10px] h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
+            যাচাই করুন
+          </button>
+        </form>
+      </main>
+    );
+  }
 
   return (
     <main className="grow flex flex-col items-center justify-center px-4 bg-slate-50 pt-32 pb-12">
       <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">সাইন আপ</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-1 bg-white p-4 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
+        {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
         
         {/* Name Input */}
         <div className="flex flex-col">
@@ -149,8 +219,9 @@ export default function SignUp() {
           </svg>
           <input
             type="email"
-            placeholder="আপনার ইমেইল দিন"
-            value={formData.email}
+          disabled={!isLoaded}
+          type="submit"
+          className="mt-3 mb-2 bg-[#151717] text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-5
             onChange={(e) => handleChange("email", e.target.value)}
             className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
