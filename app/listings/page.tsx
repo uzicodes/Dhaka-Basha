@@ -3,15 +3,13 @@
 import { useState } from 'react';
 
 export default function Listings() {
-  // State to track if the dropdown menus are open
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState<boolean>(false);
 
-  // New state to hold the selected values
   const [selectedLocation, setSelectedLocation] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
 
-  // Extracted options for cleaner rendering
+
   const locations = [
     { value: "gulshan", label: "গুলশান (Gulshan)" },
     { value: "banani", label: "বনানী (Banani)" },
@@ -81,19 +79,19 @@ export default function Listings() {
               {/* Custom Select Button */}
               <button
                 type="button"
-                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left"
+                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left rounded-t-[10px] md:rounded-none md:rounded-l-[10px]"
                 onClick={() => {
                   setIsSelectOpen(!isSelectOpen);
-                  setIsTypeSelectOpen(false); // Close the other dropdown
+                  setIsTypeSelectOpen(false);
                 }}
-                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)} // Delay so click registers
+                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)} 
               >
                 {selectedLocation 
                   ? locations.find(l => l.value === selectedLocation)?.label 
                   : <span className="text-gray-500">এলাকা নির্বাচন করুন</span>}
               </button>
 
-              {/* Custom Dropdown Menu Forced Below (top-full) */}
+              {/* Custom Dropdown Menu */}
               {isSelectOpen && (
                 <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
                   {locations.map((loc) => (
@@ -134,7 +132,7 @@ export default function Listings() {
                 className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left"
                 onClick={() => {
                   setIsTypeSelectOpen(!isTypeSelectOpen);
-                  setIsSelectOpen(false); // Close the other dropdown
+                  setIsSelectOpen(false); 
                 }}
                 onBlur={() => setTimeout(() => setIsTypeSelectOpen(false), 200)}
               >
@@ -143,7 +141,7 @@ export default function Listings() {
                   : <span className="text-gray-500">কি খুঁজছেন?</span>}
               </button>
 
-              {/* Custom Dropdown Menu Forced Below (top-full) */}
+              {/* Custom Dropdown Menu */}
               {isTypeSelectOpen && (
                 <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
                   {propertyTypes.map((type) => (
@@ -170,7 +168,7 @@ export default function Listings() {
             </div>
             
             {/* Search Button */}
-            <button className="w-full md:w-auto px-8 py-3.5 bg-[#2d79f3] text-white font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shrink-0 z-20">
+            <button className="w-full md:w-auto px-8 py-3.5 bg-[#2d79f3] text-white font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shrink-0 z-20 rounded-b-[10px] md:rounded-none md:rounded-r-[10px]">
               খুঁজুন
             </button>
             
