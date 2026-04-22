@@ -3,9 +3,58 @@
 import { useState } from 'react';
 
 export default function Listings() {
-  // State to track if the dropdown menus are open, explicitly typed as booleans
+  // State to track if the dropdown menus are open
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState<boolean>(false);
+
+  // New state to hold the selected values
+  const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedType, setSelectedType] = useState<string>("");
+
+  // Extracted options for cleaner rendering
+  const locations = [
+    { value: "gulshan", label: "গুলশান (Gulshan)" },
+    { value: "banani", label: "বনানী (Banani)" },
+    { value: "baridhara", label: "বারিধারা (Baridhara)" },
+    { value: "dhanmondi", label: "ধানমন্ডি (Dhanmondi)" },
+    { value: "mirpur", label: "মিরপুর (Mirpur)" },
+    { value: "uttara", label: "উত্তরা (Uttara)" },
+    { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
+    { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
+    { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)" },
+    { value: "badda", label: "বাড্ডা (Badda)" },
+    { value: "motijheel", label: "মতিঝিল (Motijheel)" },
+    { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
+    { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
+    { value: "malibagh", label: "মালিবাগ (Malibagh)" },
+    { value: "rampura", label: "রামপুরা (Rampura)" },
+    { value: "shantinagar", label: "শান্তিনগর (Shantinagar)" },
+    { value: "demra", label: "ডেমরা (Demra)" },
+    { value: "shyamoli", label: "শ্যামলী (Shyamoli)" },
+    { value: "kallyanpur", label: "কল্যাণপুর (Kallyanpur)" },
+    { value: "agargaon", label: "আগারগাঁও (Agargaon)" },
+    { value: "kuril", label: "কুড়িল (Kuril)" },
+    { value: "azimpur", label: "আজিমপুর (Azimpur)" },
+    { value: "gulistan", label: "গুলিস্তান (Gulistan)" },
+    { value: "farmgate", label: "ফার্মগেট (Farmgate)" },
+    { value: "karwan bazar", label: "কারওয়ান বাজার (Karwan Bazar)" },
+    { value: "shiddheswari", label: "সিদ্ধেশ্বরী (Shiddheswari)" },
+    { value: "new eskaton", label: "নিউ ইস্কাটন (New Eskaton)" },
+    { value: "old dhaka", label: "পুরান ঢাকা (Old Dhaka)" },
+    { value: "rajarbagh", label: "রাজারবাগ (Rajarbagh)" },
+    { value: "jatrabari", label: "যাত্রাবাড়ী (Jatrabari)" },
+    { value: "sadarghat", label: "সদরঘাট (Sadarghat)" }
+  ];
+
+  const propertyTypes = [
+    { value: "single-room", label: "সিঙ্গেল রুম (Single room)" },
+    { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)" },
+    { value: "flat", label: "ফ্ল্যাট (Flat)" },
+    { value: "master-bedroom", label: "মাস্টার বেডরুম (Master Bedroom)" },
+    { value: "office", label: "অফিস / করপোরেট (Office / Corporate)" },
+    { value: "bachelors-male", label: "ব্যাচেলর - পুরুষ (Bachelors - Male)" },
+    { value: "bachelors-female", label: "ব্যাচেলর - মহিলা (Bachelors - Female)" }
+  ];
 
   return (
     <main className="grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
@@ -17,7 +66,7 @@ export default function Listings() {
             আপনার পছন্দের বাসা খুঁজুন
           </h1>
           
-          <div className="w-full max-w-3xl flex flex-col md:flex-row shadow-sm rounded-xl overflow-hidden border-2 border-[#2d79f3] bg-white transition-all hover:shadow-md">
+          <div className="w-full max-w-3xl flex flex-col md:flex-row shadow-sm rounded-xl overflow-visible border-2 border-[#2d79f3] bg-white transition-all hover:shadow-md">
             
             {/* Dropdown Dhaka places */}
             <div className="relative w-full md:w-[43%] border-b md:border-b-0 md:border-r border-slate-500 group">
@@ -29,49 +78,38 @@ export default function Listings() {
                 </svg>
               </div>
               
-              {/* Select Input with State Handlers */}
-              <select 
-                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium appearance-none z-10 relative focus:bg-slate-50" 
-                defaultValue=""
-                onClick={() => setIsSelectOpen(!isSelectOpen)}
-                onBlur={() => setIsSelectOpen(false)}
-                onChange={() => setIsSelectOpen(false)}
+              {/* Custom Select Button */}
+              <button
+                type="button"
+                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left"
+                onClick={() => {
+                  setIsSelectOpen(!isSelectOpen);
+                  setIsTypeSelectOpen(false); // Close the other dropdown
+                }}
+                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)} // Delay so click registers
               >
-                <option value="" disabled>এলাকা নির্বাচন করুন</option>
-                <option value="gulshan">গুলশান (Gulshan)</option>
-                <option value="banani">বনানী (Banani)</option>
-                <option value="baridhara">বারিধারা (Baridhara)</option>
-                <option value="dhanmondi">ধানমন্ডি (Dhanmondi)</option>
-                <option value="mirpur">মিরপুর (Mirpur)</option>
-                <option value="uttara">উত্তরা (Uttara)</option>
-                <option value="mohammadpur">মোহাম্মদপুর (Mohammadpur)</option>
-                <option value="mohakhali">মহাখালী (Mohakhali)</option>
-                <option value="bashundhara">বসুন্ধরা (Bashundhara)</option>
-                <option value="badda">বাড্ডা (Badda)</option>
-                <option value="motijheel">মতিঝিল (Motijheel)</option>
-                <option value="khilgaon">খিলগাঁও (Khilgaon)</option>
-                <option value="tejgaon">তেজগাঁও (Tejgaon)</option>
-                <option value="malibagh">মালিবাগ (Malibagh)</option>
-                <option value="rampura">রামপুরা (Rampura)</option>
-                <option value="shantinagar">শান্তিনগর (Shantinagar)</option>
-                <option value="demra">ডেমরা (Demra)</option>
-                <option value="shyamoli">শ্যামলী (Shyamoli)</option>
-                <option value="kallyanpur">কল্যাণপুর (Kallyanpur)</option>
-                <option value="agargaon">আগারগাঁও (Agargaon)</option>
-                <option value="kuril">কুড়িল (Kuril)</option>
-                <option value="azimpur">আজিমপুর (Azimpur)</option>
-                <option value="gulistan">গুলিস্তান (Gulistan)</option>
-                <option value="farmgate">ফার্মগেট (Farmgate)</option>
-                <option value="karwan bazar">কারওয়ান বাজার (Karwan Bazar)</option>
-                <option value="shiddheswari">সিদ্ধেশ্বরী (Shiddheswari)</option>
-                <option value="new eskaton">নিউ ইস্কাটন (New Eskaton)</option>
-                <option value="old dhaka">পুরান ঢাকা (Old Dhaka)</option>
-                <option value="rajarbagh">রাজারবাগ (Rajarbagh)</option>
-                <option value="jatrabari">যাত্রাবাড়ী (Jatrabari)</option>
-                <option value="sadarghat">সদরঘাট (Sadarghat)</option>
+                {selectedLocation 
+                  ? locations.find(l => l.value === selectedLocation)?.label 
+                  : <span className="text-gray-500">এলাকা নির্বাচন করুন</span>}
+              </button>
 
-
-              </select>
+              {/* Custom Dropdown Menu Forced Below (top-full) */}
+              {isSelectOpen && (
+                <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
+                  {locations.map((loc) => (
+                    <li
+                      key={loc.value}
+                      className="px-4 py-2 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors text-left"
+                      onClick={() => {
+                        setSelectedLocation(loc.value);
+                        setIsSelectOpen(false);
+                      }}
+                    >
+                      {loc.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
               
               {/* Dropdown Icon */}
               <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 z-20 transition-transform duration-200 ${isSelectOpen ? 'rotate-180' : ''}`}>
@@ -81,7 +119,7 @@ export default function Listings() {
               </div>
             </div>
             
-            {/* Property Type Dropdown - Stays as 'grow' to take up the remaining space, making it naturally smaller now */}
+            {/* Property Type Dropdown */}
             <div className="relative grow border-b md:border-b-0 group">
               {/* Search Icon */}
               <div className="absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none text-green-600 z-20">
@@ -90,23 +128,38 @@ export default function Listings() {
                 </svg>
               </div>
               
-              {/* Property Type Select */}
-              <select 
-                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium appearance-none z-10 relative focus:bg-slate-50" 
-                defaultValue=""
-                onClick={() => setIsTypeSelectOpen(!isTypeSelectOpen)}
-                onBlur={() => setIsTypeSelectOpen(false)}
-                onChange={() => setIsTypeSelectOpen(false)}
+              {/* Custom Property Type Select */}
+              <button
+                type="button"
+                className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left"
+                onClick={() => {
+                  setIsTypeSelectOpen(!isTypeSelectOpen);
+                  setIsSelectOpen(false); // Close the other dropdown
+                }}
+                onBlur={() => setTimeout(() => setIsTypeSelectOpen(false), 200)}
               >
-                <option value="" disabled>কি খুঁজছেন?</option>
-                <option value="single-room">সিঙ্গেল রুম (Single room)</option>
-                <option value="single-room-attached">সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)</option>
-                <option value="flat">ফ্ল্যাট (Flat)</option>
-                <option value="master-bedroom">মাস্টার বেডরুম (Master Bedroom)</option>
-                <option value="office">অফিস / করপোরেট (Office / Corporate)</option>
-                <option value="bachelors-male">ব্যাচেলর - পুরুষ (Bachelors - Male)</option>
-                <option value="bachelors-female">ব্যাচেলর - মহিলা (Bachelors - Female)</option>
-              </select>
+                {selectedType 
+                  ? propertyTypes.find(t => t.value === selectedType)?.label 
+                  : <span className="text-gray-500">কি খুঁজছেন?</span>}
+              </button>
+
+              {/* Custom Dropdown Menu Forced Below (top-full) */}
+              {isTypeSelectOpen && (
+                <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
+                  {propertyTypes.map((type) => (
+                    <li
+                      key={type.value}
+                      className="px-4 py-2 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors text-left"
+                      onClick={() => {
+                        setSelectedType(type.value);
+                        setIsTypeSelectOpen(false);
+                      }}
+                    >
+                      {type.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
 
               {/* Dropdown Icon */}
               <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 z-20 transition-transform duration-200 ${isTypeSelectOpen ? 'rotate-180' : ''}`}>
