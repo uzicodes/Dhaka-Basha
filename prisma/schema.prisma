@@ -1,0 +1,88 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 1. The Enums based on your arrays
+enum Location {
+  gulshan
+  banani
+  baridhara
+  dhanmondi
+  mirpur
+  uttara
+  mohammadpur
+  mohakhali
+  bashundhara
+  badda
+  motijheel
+  khilgaon
+  tejgaon
+  malibagh
+  rampura
+  shantinagar
+  demra
+  shyamoli
+  kallyanpur
+  agargaon
+  kuril
+  azimpur
+  gulistan
+  farmgate
+  karwan_bazar  // Underscore instead of space for Enums
+  shiddheswari
+  new_eskaton   // Underscore instead of space
+  old_dhaka     // Underscore instead of space
+  rajarbagh
+  jatrabari
+  sadarghat
+}
+
+enum PropertyType {
+  single_room
+  single_room_attached
+  flat
+  master_bedroom
+  office
+  bachelors_male
+  bachelors_female
+}
+
+// 2. The User Model (Synced from Clerk)
+model User {
+  id        String   @id @default(cuid())
+  clerkId   String   @unique
+  email     String   @unique
+  name      String?
+  phone     String?  // Good to have for a To-Let site
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  listings  Listing[] // A user can have many To-Let posts
+}
+
+// 3. The To-Let Listing Model
+model Listing {
+  id           String       @id @default(cuid())
+  title        String
+  description  String
+  rentPrice    Int          // In BDT
+  
+  location     Location     // Uses your strict enum
+  propertyType PropertyType // Uses your strict enum
+  
+  address      String?      // Exact house number/road (optional)
+  images       String[]     // Array of Cloudinary Image URLs
+  
+  isAvailable  Boolean      @default(true)
+  
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  // Relationship to the User who posted it
+  userId       String
+  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
