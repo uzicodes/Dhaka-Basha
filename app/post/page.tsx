@@ -15,7 +15,7 @@ const formSchema = z.object({
   rentFrom: z.string().regex(/^(0[1-9]|1[0-2])\/\d{4}$/, "MM/YYYY ফরম্যাটে দিন (যেমন: 06/2026)"),
   address: z.string().min(5, "সম্পূর্ণ ঠিকানা দিন (বাড়ি, ব্লক, রাস্তা)"),
   contactInfo: z.string().min(11, "সঠিক মোবাইল নম্বর দিন").max(11, "সঠিক মোবাইল নম্বর দিন (১১ ডিজিট)"),
-  mapLink: z.string().optional(), // NEW: Accepts Maps URL or Location Code
+  mapLink: z.string().optional(), 
   images: z.array(z.string()), 
 });
 
@@ -40,7 +40,7 @@ export default function PostToLet() {
       rentFrom: "",
       address: "",
       contactInfo: "",
-      mapLink: "", // NEW: Default state
+      mapLink: "", 
       images: [], 
     },
   });
@@ -65,7 +65,7 @@ export default function PostToLet() {
     }
   };
 
-  // --- ARRAYS FOR DROPDOWNS ---
+// --- ARRAYS FOR DROPDOWNS ---
   const locations = [
     { value: "", label: "-- লোকেশন নির্বাচন করুন --" },
     { value: "gulshan", label: "গুলশান (Gulshan)" },
@@ -92,10 +92,10 @@ export default function PostToLet() {
     { value: "azimpur", label: "আজিমপুর (Azimpur)" },
     { value: "gulistan", label: "গুলিস্তান (Gulistan)" },
     { value: "farmgate", label: "ফার্মগেট (Farmgate)" },
-    { value: "karwan_bazar", label: "কারওয়ান বাজার (Karwan Bazar)" },
+    { value: "karwan bazar", label: "কারওয়ান বাজার (Karwan Bazar)" },
     { value: "shiddheswari", label: "সিদ্ধেশ্বরী (Shiddheswari)" },
-    { value: "new_eskaton", label: "নিউ ইস্কাটন (New Eskaton)" },
-    { value: "old_dhaka", label: "পুরান ঢাকা (Old Dhaka)" },
+    { value: "new eskaton", label: "নিউ ইস্কাটন (New Eskaton)" },
+    { value: "old dhaka", label: "পুরান ঢাকা (Old Dhaka)" },
     { value: "rajarbagh", label: "রাজারবাগ (Rajarbagh)" },
     { value: "jatrabari", label: "যাত্রাবাড়ী (Jatrabari)" },
     { value: "sadarghat", label: "সদরঘাট (Sadarghat)" }
@@ -103,13 +103,13 @@ export default function PostToLet() {
 
   const propertyTypes = [
     { value: "", label: "-- প্রপার্টির ধরন নির্বাচন করুন --" },
-    { value: "single_room", label: "সিঙ্গেল রুম (Single room)" },
-    { value: "single_room_attached", label: "সিঙ্গেল রুম - ওয়াশরুম সহ" },
+    { value: "single-room", label: "সিঙ্গেল রুম (Single room)" },
+    { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)" },
     { value: "flat", label: "ফ্ল্যাট (Flat)" },
-    { value: "master_bedroom", label: "মাস্টার বেডরুম (Master Bedroom)" },
-    { value: "office", label: "অফিস / করপোরেট" },
-    { value: "bachelors_male", label: "ব্যাচেলর - পুরুষ" },
-    { value: "bachelors_female", label: "ব্যাচেলর - মহিলা" },
+    { value: "master-bedroom", label: "মাস্টার বেডরুম (Master Bedroom)" },
+    { value: "office", label: "অফিস / করপোরেট (Office / Corporate)" },
+    { value: "bachelors-male", label: "ব্যাচেলর - পুরুষ (Bachelors - Male)" },
+    { value: "bachelors-female", label: "ব্যাচেলর - মহিলা (Bachelors - Female)" }
   ];
 
   return (
@@ -209,16 +209,16 @@ export default function PostToLet() {
             {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
           </div>
 
-          {/* NEW: Contact Info and Map Link placed side-by-side */}
+          {/* Contact Info & Map Link placed */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             
-            {/* Contact Info (Now smaller and restricted to 11 digits) */}
+            {/* Contact Info */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
               <input
                 {...register("contactInfo")}
                 type="text"
-                maxLength={11} // Physically restricts input to 11 characters
+                maxLength={11} 
                 placeholder="01XXXXXXXXX"
                 className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
                   errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
