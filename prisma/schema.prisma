@@ -51,7 +51,7 @@ enum PropertyType {
   bachelors_female
 }
 
-// 2. The User Model (Synced from Clerk)
+// 2. The User Model 
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -70,6 +70,8 @@ model Listing {
   title        String
   description  String
   rentPrice    Int          // In BDT
+  rentFrom     String       // e.g., "05/2026"
+  contactInfo  String       // e.g., "017XXXXXXXX"
   
   location     Location     // Uses your strict enum
   propertyType PropertyType // Uses your strict enum
