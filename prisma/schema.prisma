@@ -72,6 +72,7 @@ model Listing {
   rentPrice    Int          // In BDT
   rentFrom     String       // e.g., "05/2026"
   contactInfo  String       // e.g., "017XXXXXXXX"
+  mapLink      String?
   
   location     Location     // Uses your strict enum
   propertyType PropertyType // Uses your strict enum

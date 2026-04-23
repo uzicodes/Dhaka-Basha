@@ -9,12 +9,13 @@ import { useRouter } from "next/navigation";
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
   title: z.string().min(5, "টাইটেল কমপক্ষে ৫ অক্ষরের হতে হবে").max(100, "টাইটেল ১০০ অক্ষরের বেশি হতে পারবে না"),
-  rentPrice: z.string().min(3, "ভাড়ার পরিমাণ দিন"), 
+  rentPrice: z.string().min(3, "ভাড়ার পরিমাণ দিন"), 
   propertyType: z.string().min(1, "প্রপার্টির ধরন নির্বাচন করুন"),
   location: z.string().min(1, "লোকেশন নির্বাচন করুন"),
   rentFrom: z.string().regex(/^(0[1-9]|1[0-2])\/\d{4}$/, "MM/YYYY ফরম্যাটে দিন (যেমন: 06/2026)"),
-  address: z.string().min(5, "সম্পূর্ণ ঠিকানা দিন (বাড়ি, ব্লক, রাস্তা)"),
-  contactInfo: z.string().min(11, "সঠিক মোবাইল নম্বর দিন"),
+  address: z.string().min(5, "সম্পূর্ণ ঠিকানা দিন (বাড়ি, ব্লক, রাস্তা)"),
+  contactInfo: z.string().min(11, "সঠিক মোবাইল নম্বর দিন").max(11, "সঠিক মোবাইল নম্বর দিন (১১ ডিজিট)"),
+  mapLink: z.string().optional(), // NEW: Accepts Maps URL or Location Code
   images: z.array(z.string()), 
 });
 
@@ -39,6 +40,7 @@ export default function PostToLet() {
       rentFrom: "",
       address: "",
       contactInfo: "",
+      mapLink: "", // NEW: Default state
       images: [], 
     },
   });
@@ -53,11 +55,11 @@ export default function PostToLet() {
 
       console.log("Data ready for Prisma:", finalDataForDatabase);
       
-      alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
+      alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
       router.push("/");
     } catch (error) {
       console.error(error);
-      alert("পোস্ট করতে সমস্যা হয়েছে।");
+      alert("পোস্ট করতে সমস্যা হয়েছে।");
     } finally {
       setIsSubmitting(false);
     }
@@ -123,7 +125,7 @@ export default function PostToLet() {
             <input
               {...register("title")}
               type="text"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
+              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
                 errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
               }`}
             />
@@ -133,7 +135,7 @@ export default function PostToLet() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Rent Price */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
+              <label className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
               <input
                 {...register("rentPrice")}
                 type="number"
@@ -146,7 +148,7 @@ export default function PostToLet() {
 
             {/* Rent From */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
+              <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
               <input
                 {...register("rentFrom")}
                 type="text"
@@ -199,7 +201,7 @@ export default function PostToLet() {
             <input
               {...register("address")}
               type="text"
-              placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
+              placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
               className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
                 errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
               }`}
@@ -207,18 +209,38 @@ export default function PostToLet() {
             {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
           </div>
 
-          {/* Contact Info */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
-            <input
-              {...register("contactInfo")}
-              type="text"
-              placeholder="01XXXXXXXXX"
-              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-              }`}
-            />
-            {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
+          {/* NEW: Contact Info and Map Link placed side-by-side */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            
+            {/* Contact Info (Now smaller and restricted to 11 digits) */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
+              <input
+                {...register("contactInfo")}
+                type="text"
+                maxLength={11} // Physically restricts input to 11 characters
+                placeholder="01XXXXXXXXX"
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
+                  errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                }`}
+              />
+              {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
+            </div>
+
+            {/* Google Maps Link */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
+              <input
+                {...register("mapLink")}
+                type="text"
+                placeholder="লিংক / কোড দিন "
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
+                  errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                }`}
+              />
+              {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
+            </div>
+            
           </div>
 
           {/* Image Upload Mockup */}
