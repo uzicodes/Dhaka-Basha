@@ -281,7 +281,7 @@ export default function SignUp() {
         <button 
           disabled={!isLoaded}
           type="submit"
-          className="mt-3 mb-2 bg-[#151717] text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50"
+          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
         >
           সাইন আপ 
         </button>

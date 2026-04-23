@@ -42,7 +42,7 @@ export default function Navbar() {
           
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
             <span className="text-xl font-bold text-slate-900">
-              ঢাকা-<span className="text-slate-900">বাসা</span>
+              ঢাকা-<span className="text-blue-600">বাসা</span>
             </span>
           </div>
 

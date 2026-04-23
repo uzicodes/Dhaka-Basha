@@ -43,7 +43,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="fixed bottom-2 text-slate-500 font-medium text-sm z-10">
-        © ২০२६ ঢাকা-বাসা প্ল্যাটফর্ম
+        © ২০২৬  ঢাকা-বাসা প্ল্যাটফর্ম
       </footer>
     </main>
   );
