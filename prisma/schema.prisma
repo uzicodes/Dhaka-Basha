@@ -57,7 +57,8 @@ model User {
   clerkId   String   @unique
   email     String   @unique
   name      String?
-  phone     String?  // Good to have for a To-Let site
+  phone     String?  
+  address   String?
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
