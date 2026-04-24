@@ -23,6 +23,7 @@ export default function Navbar() {
     if (pathname === "/post") return "post";
     if (pathname === "/contact") return "contact";
     if (pathname === "/login") return "login";
+    if (pathname === "/profile") return "profile";
     return "home";
   };
   
@@ -124,7 +125,9 @@ export default function Navbar() {
 
           {/* Profile Icon */}
           <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-blue-600 transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
-            <div className="scale-130 origin-center">
+            <div className={`scale-130 origin-center rounded-full ${
+              active === "profile" ? "ring-2 ring-blue-600" : ""
+            }`}>
               {isSignedIn && isGoogleUser && user?.imageUrl ? (
                 <img
                   src={user.imageUrl}

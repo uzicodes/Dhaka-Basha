@@ -1,11 +1,23 @@
-import { currentUser } from "@clerk/nextjs/server";
+import { auth, currentUser } from "@clerk/nextjs/server";
 import { SignOutButton } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import Link from "next/link";
 
 export default async function ProfilePage() {
+  const { userId } = await auth();
+
+  // If they aren't logged in, send them to the login page
+  if (!userId) {
+    redirect("/login");
+  }
+
   // Fetch the real logged-in user from Clerk
-  const user = await currentUser();
+  let user = null;
+  try {
+    user = await currentUser();
+  } catch {
+    redirect("/login");
+  }
 
   // If they aren't logged in, send them to the login page
   if (!user) {
@@ -106,14 +118,11 @@ export default async function ProfilePage() {
                   </button>
                 </li>
                 <li>
-                  <SignOutButton
-                    redirectUrl="/"
-                    children={
-                      <button className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer">
-                        লগ আউট
-                      </button>
-                    }
-                  />
+                  <SignOutButton redirectUrl="/">{(
+                    <button className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer">
+                      লগ আউট
+                    </button>
+                  )}</SignOutButton>
                 </li>
               </ul>
             </div>
