@@ -4,10 +4,12 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
+import { useAuth } from "@clerk/nextjs";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isSignedIn } = useAuth();
   
   // Map pathname to active nav item
   const getActiveId = () => {
@@ -94,22 +96,26 @@ export default function Navbar() {
           <div className="hidden md:block h-6 w-px bg-slate-200 mx-1"></div>
           <div className="md:hidden w-full h-px bg-slate-100 my-2"></div>
 
-          {/* Login Button */}
-          <Link
-            href="/login"
-            onClick={() => {
-              setIsMenuOpen(false);
-            }}
-            className="px-6 py-2 rounded-md text-sm font-semibold text-red-600 hover:bg-green-50 transition-colors relative w-full md:w-auto text-center"
-          >
-            <span className={`inline-block ${
-              active === "login"
-                ? "border-b-2 border-blue-600"
-                : ""
-            }`}>
-              লগইন
-            </span>
-          </Link>
+          {!isSignedIn && (
+            <>
+              {/* Login Button */}
+              <Link
+                href="/login"
+                onClick={() => {
+                  setIsMenuOpen(false);
+                }}
+                className="px-6 py-2 rounded-md text-sm font-semibold text-red-600 hover:bg-green-50 transition-colors relative w-full md:w-auto text-center"
+              >
+                <span className={`inline-block ${
+                  active === "login"
+                    ? "border-b-2 border-blue-600"
+                    : ""
+                }`}>
+                  লগইন
+                </span>
+              </Link>
+            </>
+          )}
 
           {/* Profile Icon */}
           <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-blue-600 transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
