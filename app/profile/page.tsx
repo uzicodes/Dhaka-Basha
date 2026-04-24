@@ -12,6 +12,10 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
+  const isGoogleUser = user.externalAccounts?.some(
+    (account) => account.provider === "oauth_google" || account.provider === "google",
+  );
+
   // --- DUMMY DATA FOR THE UI ---
   const myListings = [
     {
@@ -40,11 +44,24 @@ export default async function ProfilePage() {
         <div className="bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3] flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* Profile Picture (From Clerk) */}
           <div className="shrink-0">
-            <img
-              src={user.imageUrl}
-              alt="Profile"
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
-            />
+            {isGoogleUser && user.imageUrl ? (
+              <img
+                src={user.imageUrl}
+                alt="Profile"
+                className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
+              />
+            ) : (
+              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 bg-slate-100 shadow-sm flex items-center justify-center text-slate-500">
+                <svg
+                  className="w-12 h-12 md:w-16 md:h-16"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              </div>
+            )}
           </div>
 
           {/* User Info */}
@@ -89,11 +106,14 @@ export default async function ProfilePage() {
                   </button>
                 </li>
                 <li>
-                  <SignOutButton redirectUrl="/">
-                    <button className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer">
-                      লগ আউট
-                    </button>
-                  </SignOutButton>
+                  <SignOutButton
+                    redirectUrl="/"
+                    children={
+                      <button className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer">
+                        লগ আউট
+                      </button>
+                    }
+                  />
                 </li>
               </ul>
             </div>

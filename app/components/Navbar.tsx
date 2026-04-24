@@ -4,12 +4,17 @@ import Link from "next/link";
 import Image from "next/image";
 import { useState } from "react";
 import { usePathname } from "next/navigation";
-import { useAuth } from "@clerk/nextjs";
+import { useAuth, useUser } from "@clerk/nextjs";
 
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isSignedIn } = useAuth();
+  const { user } = useUser();
+
+  const isGoogleUser = user?.externalAccounts?.some(
+    (account: any) => account.provider === "oauth_google" || account.provider === "google",
+  );
   
   // Map pathname to active nav item
   const getActiveId = () => {
@@ -120,14 +125,22 @@ export default function Navbar() {
           {/* Profile Icon */}
           <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-blue-600 transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
             <div className="scale-130 origin-center">
-              <svg
-                className="w-5 h-5"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
+              {isSignedIn && isGoogleUser && user?.imageUrl ? (
+                <img
+                  src={user.imageUrl}
+                  alt="Profile"
+                  className="w-5 h-5 rounded-full object-cover"
+                />
+              ) : (
+                <svg
+                  className="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              )}
             </div>
           </Link>
         </div>
