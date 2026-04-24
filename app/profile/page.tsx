@@ -1,32 +1,42 @@
-import { auth, currentUser } from "@clerk/nextjs/server";
-import { SignOutButton } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+"use client";
+
+import { useClerk, useUser } from "@clerk/nextjs";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useEffect, useState } from "react";
 
-export default async function ProfilePage() {
-  const { userId } = await auth();
+export default function ProfilePage() {
+  const router = useRouter();
+  const { signOut } = useClerk();
+  const { isLoaded, user } = useUser();
+  const [isEditing, setIsEditing] = useState(false);
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState("");
 
-  // If they aren't logged in, send them to the login page
-  if (!userId) {
-    redirect("/login");
-  }
+  useEffect(() => {
+    if (isLoaded && !user) {
+      router.push("/login");
+    }
+  }, [isLoaded, user, router]);
 
-  // Fetch the real logged-in user from Clerk
-  let user = null;
-  try {
-    user = await currentUser();
-  } catch {
-    redirect("/login");
-  }
+  useEffect(() => {
+    if (user) {
+      setPhone(user.phoneNumbers?.[0]?.phoneNumber ?? "");
+    }
+  }, [user]);
 
-  // If they aren't logged in, send them to the login page
-  if (!user) {
-    redirect("/login");
+  if (!isLoaded || !user) {
+    return null;
   }
 
   const isGoogleUser = user.externalAccounts?.some(
-    (account) => account.provider === "oauth_google" || account.provider === "google",
+    (account) => account.provider === "google",
   );
+
+  const handlePhoneChange = (value: string) => {
+    const digitsOnly = value.replace(/\D/g, "").slice(0, 11);
+    setPhone(digitsOnly);
+  };
 
   // --- DUMMY DATA FOR THE UI ---
   const myListings = [
@@ -76,19 +86,63 @@ export default async function ProfilePage() {
             )}
           </div>
 
-          {/* User Info */}
           <div className="flex flex-col items-center md:items-start grow text-center md:text-left">
             <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
-              {user.firstName} {user.lastName}
+              {`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "N/A"}
             </h1>
-            <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress}</p>
-            
+            <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress ?? "N/A"}</p>
+
+            <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
+              <div className="w-full rounded-[10px] border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+                <p className="text-xs text-slate-400 mb-1">ফোন নম্বর</p>
+                {isEditing ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      inputMode="numeric"
+                      maxLength={11}
+                      value={phone}
+                      onChange={(e) => handlePhoneChange(e.target.value)}
+                      placeholder="১১ ডিজিট নম্বর"
+                      className="w-full border-none p-0 leading-tight focus:outline-none"
+                    />
+                    <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11 16H9v-2l8.586-8.586z" />
+                    </svg>
+                  </div>
+                ) : (
+                  <p>{phone || "N/A"}</p>
+                )}
+              </div>
+
+              <div className="w-full rounded-[10px] border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+                <p className="text-xs text-slate-400 mb-1">ঠিকানা</p>
+                {isEditing ? (
+                  <div className="flex items-center gap-2">
+                    <input
+                      type="text"
+                      value={address}
+                      onChange={(e) => setAddress(e.target.value)}
+                      placeholder="আপনার ঠিকানা"
+                      className="w-full border-none p-0 leading-tight focus:outline-none"
+                    />
+                    <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </div>
+                ) : (
+                  <p>{address || "N/A"}</p>
+                )}
+              </div>
+            </div>
+
             <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
-              <span className="px-4 py-1.5 bg-green-100 text-green-700 text-sm font-medium rounded-full">
-                ভেরিফাইড ইউজার
-              </span>
-              <button className="px-4 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 text-sm font-medium rounded-full transition-colors cursor-pointer">
-                প্রোফাইল এডিট করুন
+              <button
+                type="button"
+                onClick={() => setIsEditing((prev) => !prev)}
+                className="px-4 py-1.5 bg-slate-100 text-red-700 hover:bg-slate-300 text-sm font-medium rounded-full transition-colors cursor-pointer"
+              >
+                {isEditing ? "সেভ" : "প্রোফাইল এডিট"}
               </button>
             </div>
           </div>
@@ -118,11 +172,13 @@ export default async function ProfilePage() {
                   </button>
                 </li>
                 <li>
-                  <SignOutButton redirectUrl="/">{(
-                    <button className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer">
-                      লগ আউট
-                    </button>
-                  )}</SignOutButton>
+                  <button
+                    type="button"
+                    onClick={() => signOut({ redirectUrl: "/" })}
+                    className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer"
+                  >
+                    লগ আউট
+                  </button>
                 </li>
               </ul>
             </div>
