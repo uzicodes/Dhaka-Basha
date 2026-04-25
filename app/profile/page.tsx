@@ -4,6 +4,7 @@ import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { getUserProfile, updateUserProfile } from "@/app/actions/user";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -12,6 +13,7 @@ export default function ProfilePage() {
   const [isEditing, setIsEditing] = useState(false);
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [isSaving, setIsSaving] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -20,10 +22,40 @@ export default function ProfilePage() {
   }, [isLoaded, user, router]);
 
   useEffect(() => {
-    if (user) {
-      setPhone(user.phoneNumbers?.[0]?.phoneNumber ?? "");
+    async function loadData() {
+      if (user) {
+        try {
+          const dbUser = await getUserProfile();
+          if (dbUser) {
+            setPhone(dbUser.phone || user.phoneNumbers?.[0]?.phoneNumber || "");
+            setAddress(dbUser.address || "");
+          } else {
+            setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
+          }
+        } catch (error) {
+          console.error("Error loading user profile:", error);
+          setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
+        }
+      }
     }
+    loadData();
   }, [user]);
+
+  const handleSave = async () => {
+    if (isEditing) {
+      setIsSaving(true);
+      try {
+        await updateUserProfile({ phone, address });
+        setIsEditing(false);
+      } catch (error) {
+        console.error("Failed to update profile", error);
+      } finally {
+        setIsSaving(false);
+      }
+    } else {
+      setIsEditing(true);
+    }
+  };
 
   if (!isLoaded || !user) {
     return null;
@@ -139,10 +171,11 @@ export default function ProfilePage() {
             <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
               <button
                 type="button"
-                onClick={() => setIsEditing((prev) => !prev)}
-                className="px-4 py-1.5 bg-slate-100 text-red-700 hover:bg-slate-300 text-sm font-medium rounded-full transition-colors cursor-pointer"
+                onClick={handleSave}
+                disabled={isSaving}
+                className="px-4 py-1.5 bg-slate-100 text-red-700 hover:bg-slate-300 text-sm font-medium rounded-full transition-colors cursor-pointer disabled:opacity-50"
               >
-                {isEditing ? "সেভ" : "প্রোফাইল এডিট"}
+                {isSaving ? "সেভিং..." : (isEditing ? "সেভ" : "প্রোফাইল এডিট")}
               </button>
             </div>
           </div>
