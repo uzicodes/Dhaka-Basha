@@ -91,9 +91,9 @@ export default function ProfilePage() {
   ];
 
   return (
-    <main className="grow flex flex-col items-center px-4 bg-slate-50 pt-32 pb-12 min-h-screen">
+    <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12 min-h-screen">
       <div className="w-full max-w-4xl space-y-6">
-        
+
         {/* --- PROFILE HEADER CARD --- */}
         <div className="bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3] flex flex-col md:flex-row items-center md:items-start gap-6">
           {/* Profile Picture (From Clerk) */}
@@ -183,7 +183,7 @@ export default function ProfilePage() {
 
         {/* --- DASHBOARD SECTIONS --- */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          
+
           {/* Sidebar / Quick Links */}
           <div className="md:col-span-1 space-y-4">
             <div className="bg-white p-5 rounded-[20px] shadow-sm border-[1.5px] border-[#ecedec]">
@@ -221,8 +221,8 @@ export default function ProfilePage() {
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center justify-between mb-4">
               <h2 className="text-xl font-bold text-[#151717]">আমার বিজ্ঞাপন সমূহ</h2>
-              <Link 
-                href="/post" 
+              <Link
+                href="/post"
                 className="text-sm font-medium text-[#2d79f3] hover:underline"
               >
                 + নতুন পোস্ট করুন
@@ -231,8 +231,8 @@ export default function ProfilePage() {
 
             {/* Dummy Listing Cards */}
             {myListings.map((listing) => (
-              <div 
-                key={listing.id} 
+              <div
+                key={listing.id}
                 className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
               >
                 <div>
@@ -254,12 +254,11 @@ export default function ProfilePage() {
 
                 {/* Status & Actions */}
                 <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${
-                    listing.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
-                  }`}>
+                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${listing.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
+                    }`}>
                     {listing.status === 'Active' ? 'সক্রিয়' : 'ভাড়া হয়েছে'}
                   </span>
-                  
+
                   <div className="flex gap-2 ml-auto sm:ml-0">
                     <button className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

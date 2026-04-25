@@ -13,8 +13,8 @@ export default function Listings() {
 
 
   const locations = [
-    { 
-      value: "gulshan", 
+    {
+      value: "gulshan",
       label: "গুলশান (Gulshan)",
       subLocations: [
         { value: "1", label: "১ (1)" },
@@ -22,8 +22,8 @@ export default function Listings() {
       ]
     },
     { value: "banani", label: "বনানী (Banani)" },
-    { 
-      value: "baridhara", 
+    {
+      value: "baridhara",
       label: "বারিধারা (Baridhara)",
       subLocations: [
         { value: "block-j", label: "ব্লক জে (Block J)" },
@@ -31,8 +31,8 @@ export default function Listings() {
         { value: "block-h", label: "ব্লক এইচ (Block H)" }
       ]
     },
-    { 
-      value: "dhanmondi", 
+    {
+      value: "dhanmondi",
       label: "ধানমন্ডি (Dhanmondi)",
       subLocations: [
         { value: "road-27", label: "রোড ২৭ (Road 27)" },
@@ -40,8 +40,8 @@ export default function Listings() {
         { value: "road-32", label: "রোড ৩২ (Road 32)" }
       ]
     },
-    { 
-      value: "mirpur", 
+    {
+      value: "mirpur",
       label: "মিরপুর (Mirpur)",
       subLocations: [
         { value: "1", label: "১ (1)" },
@@ -51,8 +51,8 @@ export default function Listings() {
         { value: "12", label: "১২ (12)" }
       ]
     },
-    { 
-      value: "uttara", 
+    {
+      value: "uttara",
       label: "উত্তরা (Uttara)",
       subLocations: [
         { value: "sectors-1-10", label: "সেক্টর ১-১০ (Sectors 1-10)" },
@@ -62,8 +62,8 @@ export default function Listings() {
     },
     { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
     { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
-    { 
-      value: "bashundhara", 
+    {
+      value: "bashundhara",
       label: "বসুন্ধরা (Bashundhara)",
       subLocations: [
         { value: "block-a", label: "ব্লক এ (Block A)" },
@@ -78,8 +78,8 @@ export default function Listings() {
         { value: "block-j", label: "ব্লক জে (Block J)" }
       ]
     },
-    { 
-      value: "badda", 
+    {
+      value: "badda",
       label: "বাড্ডা (Badda)",
       subLocations: [
         { value: "moddho-badda", label: "মধ্য বাড্ডা (Moddho Badda)" },
@@ -127,7 +127,7 @@ export default function Listings() {
   ];
 
   return (
-    <main className="grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
+    <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12">
       <div className="max-w-5xl w-full space-y-10">
 
         {/* Header & Search Section */}
@@ -160,20 +160,20 @@ export default function Listings() {
               >
                 {selectedLocation
                   ? (() => {
-                      const loc = locations.find(l => l.value === selectedLocation);
-                      if (!loc) return <span className="text-gray-500">এলাকা নির্বাচন করুন</span>;
-                      if (selectedSubLocation) {
-                        const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
-                        return <span className="truncate pr-4">{loc.label} - {sub?.label}</span>;
-                      }
-                      return <span className="truncate pr-4">{loc.label}</span>;
-                    })()
+                    const loc = locations.find(l => l.value === selectedLocation);
+                    if (!loc) return <span className="text-gray-500">এলাকা নির্বাচন করুন</span>;
+                    if (selectedSubLocation) {
+                      const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
+                      return <span className="truncate pr-4">{loc.label} - {sub?.label}</span>;
+                    }
+                    return <span className="truncate pr-4">{loc.label}</span>;
+                  })()
                   : <span className="text-gray-500">এলাকা নির্বাচন করুন</span>}
               </button>
 
               {/* Custom Dropdown Menu */}
               {isSelectOpen && (
-                <ul 
+                <ul
                   className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1"
                   onMouseDown={(e) => e.preventDefault()}
                 >
@@ -198,7 +198,7 @@ export default function Listings() {
                           <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#2d79f3]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
                         )}
                       </li>
-                      
+
                       {loc.subLocations && expandedLoc === loc.value && (
                         <ul className="bg-slate-50 border-y border-gray-100">
                           <li

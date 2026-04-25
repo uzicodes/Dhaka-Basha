@@ -193,7 +193,7 @@ export default function PostToLet() {
   ];
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-slate-50 pt-24 pb-12">
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12">
       <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">টু-লেট পোস্ট করুন</h1>
 
