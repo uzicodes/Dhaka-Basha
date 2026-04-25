@@ -273,7 +273,13 @@ export default function PostToLet() {
                       if (!loc) return "-- নির্বাচন করুন --";
                       if (selectedSubLocation) {
                         const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
-                        return `${loc.label.split(" ")[0]} - ${sub?.label.split(" ")[0] || ""}`;
+                        if (sub) {
+                          const locBn = loc.label.split(" (")[0];
+                          const locEn = loc.label.split(" (")[1]?.replace(")", "") || "";
+                          const subBn = sub.label.split(" (")[0];
+                          const subEn = sub.label.split(" (")[1]?.replace(")", "") || "";
+                          return `${locBn} - ${subBn} (${locEn} - ${subEn})`;
+                        }
                       }
                       return loc.label;
                     })()

@@ -164,7 +164,7 @@ export default function Listings() {
                       if (!loc) return <span className="text-gray-500">এলাকা নির্বাচন করুন</span>;
                       if (selectedSubLocation) {
                         const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
-                        return <span className="truncate pr-4">{loc.label.split(" ")[0]} - {sub?.label.split(" ")[0]}</span>;
+                        return <span className="truncate pr-4">{loc.label} - {sub?.label}</span>;
                       }
                       return <span className="truncate pr-4">{loc.label}</span>;
                     })()
