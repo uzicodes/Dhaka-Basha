@@ -22,27 +22,22 @@ model User {
 
 // 3. The To-Let Listing Model
 model Listing {
-  id           String       @id @default(cuid())
+  id           String   @id @default(cuid())
   title        String
-  description  String
-  rentPrice    Int          // In BDT
-  rentFrom     String       // e.g., "05/2026"
-  contactInfo  String       // e.g., "017XXXXXXXX"
-  mapLink      String?
-  
-  location     String
+  rentPrice    Int
   propertyType String
+  location     String
   subLocation  String?
-  
-  address      String?      // Exact house number/road (optional)
-  images       String[]     // Array of Cloudinary Image URLs
-  
-  isAvailable  Boolean      @default(true)
-  
-  createdAt    DateTime     @default(now())
-  updatedAt    DateTime     @updatedAt
+  rentFrom     String
+  address      String
+  contactInfo  String
+  mapLink      String?
+  images       String[]
+
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
 
   // Relationship to the User who posted it
   userId       String
-  user         User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
