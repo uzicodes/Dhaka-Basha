@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from 'react';
+import { locations, propertyTypes } from "@/src/lib/constants";
 
 export default function Listings() {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
@@ -12,119 +13,7 @@ export default function Listings() {
   const [selectedType, setSelectedType] = useState<string>("");
 
 
-  const locations = [
-    {
-      value: "gulshan",
-      label: "গুলশান (Gulshan)",
-      subLocations: [
-        { value: "1", label: "১ (1)" },
-        { value: "2", label: "২ (2)" }
-      ]
-    },
-    { value: "banani", label: "বনানী (Banani)" },
-    {
-      value: "baridhara",
-      label: "বারিধারা (Baridhara)",
-      subLocations: [
-        { value: "block-j", label: "ব্লক জে (Block J)" },
-        { value: "block-k", label: "ব্লক কে (Block K)" },
-        { value: "block-h", label: "ব্লক এইচ (Block H)" }
-      ]
-    },
-    {
-      value: "dhanmondi",
-      label: "ধানমন্ডি (Dhanmondi)",
-      subLocations: [
-        { value: "road-27", label: "রোড ২৭ (Road 27)" },
-        { value: "road-8", label: "রোড ৮ (Road 8)" },
-        { value: "road-32", label: "রোড ৩২ (Road 32)" }
-      ]
-    },
-    {
-      value: "mirpur",
-      label: "মিরপুর (Mirpur)",
-      subLocations: [
-        { value: "1", label: "১ (1)" },
-        { value: "2", label: "২ (2)" },
-        { value: "10", label: "১০ (10)" },
-        { value: "11", label: "১১ (11)" },
-        { value: "12", label: "১২ (12)" }
-      ]
-    },
-    {
-      value: "uttara",
-      label: "উত্তরা (Uttara)",
-      subLocations: [
-        { value: "sectors-1-10", label: "সেক্টর ১-১০ (Sectors 1-10)" },
-        { value: "sectors-11-14", label: "সেক্টর ১১-১৪ (Sectors 11-14)" },
-        { value: "sectors-15-18", label: "সেক্টর ১৫-১৮ (Sectors 15-18)" }
-      ]
-    },
-    { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
-    { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
-    {
-      value: "bashundhara",
-      label: "বসুন্ধরা (Bashundhara)",
-      subLocations: [
-        { value: "block-a", label: "ব্লক এ (Block A)" },
-        { value: "block-b", label: "ব্লক বি (Block B)" },
-        { value: "block-c", label: "ব্লক সি (Block C)" },
-        { value: "block-d", label: "ব্লক ডি (Block D)" },
-        { value: "block-e", label: "ব্লক ই (Block E)" },
-        { value: "block-f", label: "ব্লক এফ (Block F)" },
-        { value: "block-g", label: "ব্লক জি (Block G)" },
-        { value: "block-h", label: "ব্লক এইচ (Block H)" },
-        { value: "block-i", label: "ব্লক আই (Block I)" },
-        { value: "block-j", label: "ব্লক জে (Block J)" }
-      ]
-    },
-    {
-      value: "badda",
-      label: "বাড্ডা (Badda)",
-      subLocations: [
-        { value: "moddho-badda", label: "মধ্য বাড্ডা (Moddho Badda)" },
-        { value: "uttar-badda", label: "উত্তর বাড্ডা (Uttar Badda)" },
-        { value: "merul-badda", label: "মেরুল বাড্ডা (Merul Badda)" }
-      ]
-    },
-    { value: "niketon", label: "নিকেতন (Niketon)" },
-    { value: "motijheel", label: "মতিঝিল (Motijheel)" },
-    { value: "aftabnagar", label: "আফতাবনগর (Aftabnagar)" },
-    { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
-    { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
-    { value: "jigatola", label: "জিগাতলা (Jigatola)" },
-    { value: "pilkhana", label: "পিলখানা (Pilkhana)" },
-    { value: "hazaribagh", label: "হাজারীবাগ (Hazaribagh)" },
-    { value: "malibagh", label: "মালিবাগ (Malibagh)" },
-    { value: "rampura", label: "রামপুরা (Rampura)" },
-    { value: "banasree", label: "বনশ্রী (Banasree)" },
-    { value: "shantinagar", label: "শান্তিনগর (Shantinagar)" },
-    { value: "demra", label: "ডেমরা (Demra)" },
-    { value: "shyamoli", label: "শ্যামলী (Shyamoli)" },
-    { value: "kallyanpur", label: "কল্যাণপুর (Kallyanpur)" },
-    { value: "agargaon", label: "আগারগাঁও (Agargaon)" },
-    { value: "kuril", label: "কুড়িল (Kuril)" },
-    { value: "azimpur", label: "আজিমপুর (Azimpur)" },
-    { value: "gulistan", label: "গুলিস্তান (Gulistan)" },
-    { value: "farmgate", label: "ফার্মগেট (Farmgate)" },
-    { value: "karwan bazar", label: "কারওয়ান বাজার (Karwan Bazar)" },
-    { value: "shiddheswari", label: "সিদ্ধেশ্বরী (Shiddheswari)" },
-    { value: "new eskaton", label: "নিউ ইস্কাটন (New Eskaton)" },
-    { value: "old dhaka", label: "পুরান ঢাকা (Old Dhaka)" },
-    { value: "rajarbagh", label: "রাজারবাগ (Rajarbagh)" },
-    { value: "jatrabari", label: "যাত্রাবাড়ী (Jatrabari)" },
-    { value: "sadarghat", label: "সদরঘাট (Sadarghat)" }
-  ];
 
-  const propertyTypes = [
-    { value: "single-room", label: "সিঙ্গেল রুম (Single room)" },
-    { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)" },
-    { value: "flat", label: "ফ্ল্যাট (Flat)" },
-    { value: "master-bedroom", label: "মাস্টার বেডরুম (Master Bedroom)" },
-    { value: "office", label: "অফিস / করপোরেট (Office / Corporate)" },
-    { value: "bachelors-male", label: "ব্যাচেলর - পুরুষ (Bachelors - Male)" },
-    { value: "bachelors-female", label: "ব্যাচেলর - মহিলা (Bachelors - Female)" }
-  ];
 
   return (
     <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12">
