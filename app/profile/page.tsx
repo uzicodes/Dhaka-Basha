@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
+import { getUserListings } from "@/app/actions/getListings";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -14,6 +15,8 @@ export default function ProfilePage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [myListings, setMyListings] = useState<any[]>([]);
+  const [isLoadingListings, setIsLoadingListings] = useState(true);
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -32,9 +35,14 @@ export default function ProfilePage() {
           } else {
             setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
           }
+
+          const listings = await getUserListings();
+          setMyListings(listings);
         } catch (error) {
           console.error("Error loading user profile:", error);
           setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
+        } finally {
+          setIsLoadingListings(false);
         }
       }
     }
@@ -70,25 +78,7 @@ export default function ProfilePage() {
     setPhone(digitsOnly);
   };
 
-  // --- DUMMY DATA FOR THE UI ---
-  const myListings = [
-    {
-      id: "1",
-      title: "মিরপুর ১০ এ দক্ষিণমুখী ৩ বেডরুমের ফ্ল্যাট",
-      location: "মিরপুর",
-      price: "15,000",
-      status: "Active",
-      date: "12 May, 2026",
-    },
-    {
-      id: "2",
-      title: "বনানীতে ২ বেডরুমের সাবলেট",
-      location: "বনানী",
-      price: "8,500",
-      status: "Rented",
-      date: "05 May, 2026",
-    },
-  ];
+
 
   return (
     <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12 min-h-screen">
@@ -229,8 +219,12 @@ export default function ProfilePage() {
               </Link>
             </div>
 
-            {/* Dummy Listing Cards */}
-            {myListings.map((listing) => (
+            {/* Real Listing Cards */}
+            {isLoadingListings ? (
+              <p className="text-slate-500">লোডিং...</p>
+            ) : myListings.length === 0 ? (
+              <p className="text-slate-500">আপনার কোনো বিজ্ঞাপন নেই।</p>
+            ) : myListings.map((listing) => (
               <div
                 key={listing.id}
                 className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
@@ -245,18 +239,17 @@ export default function ProfilePage() {
                       </svg>
                       {listing.location}
                     </span>
-                    <span>• {listing.date}</span>
+                    <span>• {new Date(listing.createdAt).toLocaleDateString()}</span>
                   </div>
                   <div className="text-[#2d79f3] font-bold mt-2">
-                    ৳ {listing.price} / মাস
+                    ৳ {listing.rentPrice} / মাস
                   </div>
                 </div>
 
                 {/* Status & Actions */}
                 <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full ${listing.status === 'Active' ? 'bg-green-100 text-green-700' : 'bg-slate-100 text-slate-600'
-                    }`}>
-                    {listing.status === 'Active' ? 'সক্রিয়' : 'ভাড়া হয়েছে'}
+                  <span className={`px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700`}>
+                    সক্রিয়
                   </span>
 
                   <div className="flex gap-2 ml-auto sm:ml-0">
