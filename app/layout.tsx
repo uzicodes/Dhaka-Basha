@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Hind_Siliguri, Geist_Mono } from "next/font/google"; // Added Hind Siliguri for Bangla
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import GlobalLoader from "./components/GlobalLoader";
 import { ClerkProvider } from "@clerk/nextjs"; // <-- 1. Imported ClerkProvider
 
 // Modern Bangla font
@@ -56,6 +57,7 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <body className={`min-h-full flex flex-col font-sans`}>
+          <GlobalLoader />
           <Navbar />
           {children}
         </body>
