@@ -1,9 +1,15 @@
 import type { Metadata } from "next";
 import { Hind_Siliguri, Geist_Mono } from "next/font/google"; // Added Hind Siliguri for Bangla
+import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
 import GlobalLoader from "./components/GlobalLoader";
 import { ClerkProvider } from "@clerk/nextjs"; // <-- 1. Imported ClerkProvider
+
+const ekush = localFont({
+  src: "../public/fonts/Ekush-Regular.ttf",
+  variable: "--font-ekush",
+});
 
 // Modern Bangla font
 const hindSiliguri = Hind_Siliguri({
@@ -53,7 +59,7 @@ export default function RootLayout({
     <ClerkProvider>
       <html
         lang="bn"
-        className={`${hindSiliguri.variable} ${geistMono.variable} h-full antialiased`}
+        className={`${hindSiliguri.variable} ${geistMono.variable} ${ekush.variable} h-full antialiased`}
         suppressHydrationWarning
       >
         <body className={`min-h-full flex flex-col font-sans`}>

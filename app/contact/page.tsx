@@ -34,7 +34,7 @@ export default function Contact() {
 
             <div className="space-y-3">
               <h2 className="text-2xl font-bold text-slate-900">
-                ঢাকা-বাসা টিম
+                <span className="font-ekush font-bold">ঢাকা-বাসা</span> টিম
               </h2>
               <p>
                 আমাদের টিম অভিজ্ঞ পেশাদারদের নিয়ে গঠিত যারা রিয়েল এস্টেট এবং প্রযুক্তিতে বিশেষজ্ঞ। আমরা প্রতিদিন কাজ করি আপনার অভিজ্ঞতা আরও ভাল করতে।

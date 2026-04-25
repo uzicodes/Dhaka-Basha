@@ -16,7 +16,7 @@ export default function Home() {
           height={120}
           className="mx-auto mb-4 w-auto h-auto"
         />
-        <h1 className="text-5xl md:text-7xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-6xl md:text-8xl font-bold text-slate-900 tracking-tight font-ekush">
           ঢাকা-<span className="text-blue-600">বাসা</span>
         </h1>
 
@@ -25,7 +25,7 @@ export default function Home() {
         </p>
 
         {/* CTA buttons */}
-        <div className="flex flex-wrap justify-center gap-5 pt-4">
+        <div className="flex flex-wrap justify-center gap-5 -mt-2">
           <Link
             href="/listings"
             className="px-6 py-3 bg-white text-blue-600 border-2 border-blue-600 rounded-none hover:bg-green-200 transition-colors font-semibold shadow-sm"
@@ -43,7 +43,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="fixed bottom-2 text-slate-500 font-medium text-sm z-10">
-        © ২০২৬  ঢাকা-বাসা প্ল্যাটফর্ম
+        © ২০২৬  <span className="font-ekush text-base">ঢাকা-বাসা</span> প্ল্যাটফর্ম
       </footer>
     </main>
   );

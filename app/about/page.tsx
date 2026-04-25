@@ -9,7 +9,7 @@ export default function About() {
         <div className="space-y-6 text-slate-700 leading-relaxed">
           <section className="space-y-3">
             <h2 className="text-2xl font-bold text-slate-900">
-              ঢাকা-বাসা এর সূচনা
+              <span className="font-ekush font-bold">ঢাকা-বাসা</span> এর সূচনা
             </h2>
             <p>
               ঢাকা-বাসা হল ঢাকা শহরে ভাড়া বাড়ি খুঁজে পাওয়ার জন্য একটি আধুনিক এবং নির্ভরযোগ্য প্ল্যাটফর্ম। আমরা বিশ্বাস করি যে প্রতিটি ব্যক্তি তাদের স্বপ্নের বাড়ি খুঁজে পাওয়ার অধিকার রাখে।
