@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
 import { locations, propertyTypes } from "@/src/lib/constants";
+import { createListing } from "@/app/actions/createListing";
 
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
@@ -63,10 +64,14 @@ export default function PostToLet() {
         rentPrice: Number(data.rentPrice),
       };
 
-      console.log("Data ready for Prisma:", finalDataForDatabase);
+      const result = await createListing(finalDataForDatabase);
 
-      alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
-      router.push("/");
+      if (result.success) {
+        alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
+        router.push("/");
+      } else {
+        alert(result.error || "পোস্ট করতে সমস্যা হয়েছে।");
+      }
     } catch (error) {
       console.error(error);
       alert("পোস্ট করতে সমস্যা হয়েছে।");
