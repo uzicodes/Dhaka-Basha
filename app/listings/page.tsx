@@ -21,11 +21,16 @@ export default function Listings() {
     { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
     { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)" },
     { value: "badda", label: "বাড্ডা (Badda)" },
+    { value: "niketon", label: "নিকেতন (Niketon)" },
     { value: "motijheel", label: "মতিঝিল (Motijheel)" },
     { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
     { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
+    { value: "jigatola", label: "জিগাতলা (Jigatola)" },
+    { value: "pilkhana", label: "পিলখানা (Pilkhana)" },
+    { value: "hazaribagh", label: "হাজারীবাগ (Hazaribagh)" },
     { value: "malibagh", label: "মালিবাগ (Malibagh)" },
     { value: "rampura", label: "রামপুরা (Rampura)" },
+    { value: "banasree", label: "বনশ্রী (Banasree)" },
     { value: "shantinagar", label: "শান্তিনগর (Shantinagar)" },
     { value: "demra", label: "ডেমরা (Demra)" },
     { value: "shyamoli", label: "শ্যামলী (Shyamoli)" },
@@ -57,15 +62,15 @@ export default function Listings() {
   return (
     <main className="grow flex flex-col items-center px-4 bg-white pt-32 pb-12">
       <div className="max-w-5xl w-full space-y-10">
-        
+
         {/* Header & Search Section */}
         <div className="flex flex-col items-center text-center space-y-8 mt-16">
           <h1 className="text-3xl md:text-5xl font-bold text-slate-900">
             আপনার পছন্দের বাসা খুঁজুন
           </h1>
-          
+
           <div className="w-full max-w-3xl flex flex-col md:flex-row shadow-sm rounded-xl overflow-visible border-2 border-[#2d79f3] bg-white transition-all hover:shadow-md">
-            
+
             {/* Dropdown Dhaka places */}
             <div className="relative w-full md:w-[43%] border-b md:border-b-0 md:border-r border-slate-500 group">
               {/* Location Pin Icon */}
@@ -75,7 +80,7 @@ export default function Listings() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
               </div>
-              
+
               {/* Custom Select Button */}
               <button
                 type="button"
@@ -84,10 +89,10 @@ export default function Listings() {
                   setIsSelectOpen(!isSelectOpen);
                   setIsTypeSelectOpen(false);
                 }}
-                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)} 
+                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
               >
-                {selectedLocation 
-                  ? locations.find(l => l.value === selectedLocation)?.label 
+                {selectedLocation
+                  ? locations.find(l => l.value === selectedLocation)?.label
                   : <span className="text-gray-500">এলাকা নির্বাচন করুন</span>}
               </button>
 
@@ -108,7 +113,7 @@ export default function Listings() {
                   ))}
                 </ul>
               )}
-              
+
               {/* Dropdown Icon */}
               <div className={`absolute right-4 top-1/2 -translate-y-1/2 pointer-events-none text-slate-500 z-20 transition-transform duration-200 ${isSelectOpen ? 'rotate-180' : ''}`}>
                 <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -116,7 +121,7 @@ export default function Listings() {
                 </svg>
               </div>
             </div>
-            
+
             {/* Property Type Dropdown */}
             <div className="relative grow border-b md:border-b-0 group">
               {/* Search Icon */}
@@ -125,19 +130,19 @@ export default function Listings() {
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                 </svg>
               </div>
-              
+
               {/* Custom Property Type Select */}
               <button
                 type="button"
                 className="w-full h-full pl-11 pr-10 py-3.5 bg-transparent text-[#151717] outline-none cursor-pointer font-medium z-10 relative focus:bg-slate-50 flex items-center text-left"
                 onClick={() => {
                   setIsTypeSelectOpen(!isTypeSelectOpen);
-                  setIsSelectOpen(false); 
+                  setIsSelectOpen(false);
                 }}
                 onBlur={() => setTimeout(() => setIsTypeSelectOpen(false), 200)}
               >
-                {selectedType 
-                  ? propertyTypes.find(t => t.value === selectedType)?.label 
+                {selectedType
+                  ? propertyTypes.find(t => t.value === selectedType)?.label
                   : <span className="text-gray-500">কি খুঁজছেন?</span>}
               </button>
 
@@ -166,12 +171,12 @@ export default function Listings() {
                 </svg>
               </div>
             </div>
-            
+
             {/* Search Button */}
             <button className="w-full md:w-auto px-8 py-3.5 bg-[#2d79f3] text-white font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shrink-0 z-20 rounded-b-[10px] md:rounded-none md:rounded-r-[10px]">
               খুঁজুন
             </button>
-            
+
           </div>
         </div>
       </div>

@@ -9,14 +9,14 @@ import { useRouter } from "next/navigation";
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
   title: z.string().min(5, "টাইটেল কমপক্ষে ৫ অক্ষরের হতে হবে").max(100, "টাইটেল ১০০ অক্ষরের বেশি হতে পারবে না"),
-  rentPrice: z.string().min(3, "ভাড়ার পরিমাণ দিন"), 
+  rentPrice: z.string().min(3, "ভাড়ার পরিমাণ দিন"),
   propertyType: z.string().min(1, "প্রপার্টির ধরন নির্বাচন করুন"),
   location: z.string().min(1, "লোকেশন নির্বাচন করুন"),
   rentFrom: z.string().regex(/^(0[1-9]|1[0-2])\/\d{4}$/, "MM/YYYY ফরম্যাটে দিন (যেমন: 06/2026)"),
   address: z.string().min(5, "সম্পূর্ণ ঠিকানা দিন (বাড়ি, ব্লক, রাস্তা)"),
   contactInfo: z.string().min(11, "সঠিক মোবাইল নম্বর দিন").max(11, "সঠিক মোবাইল নম্বর দিন (১১ ডিজিট)"),
-  mapLink: z.string().optional(), 
-  images: z.array(z.string()), 
+  mapLink: z.string().optional(),
+  images: z.array(z.string()),
 });
 
 type PostFormValues = z.infer<typeof formSchema>;
@@ -34,14 +34,14 @@ export default function PostToLet() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
-      rentPrice: "", 
+      rentPrice: "",
       propertyType: "",
       location: "",
       rentFrom: "",
       address: "",
       contactInfo: "",
-      mapLink: "", 
-      images: [], 
+      mapLink: "",
+      images: [],
     },
   });
 
@@ -54,7 +54,7 @@ export default function PostToLet() {
       };
 
       console.log("Data ready for Prisma:", finalDataForDatabase);
-      
+
       alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
       router.push("/");
     } catch (error) {
@@ -65,9 +65,8 @@ export default function PostToLet() {
     }
   };
 
-// --- ARRAYS FOR DROPDOWNS ---
+  // --- ARRAYS FOR DROPDOWNS ---
   const locations = [
-    { value: "", label: "-- লোকেশন নির্বাচন করুন --" },
     { value: "gulshan", label: "গুলশান (Gulshan)" },
     { value: "banani", label: "বনানী (Banani)" },
     { value: "baridhara", label: "বারিধারা (Baridhara)" },
@@ -78,11 +77,16 @@ export default function PostToLet() {
     { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
     { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)" },
     { value: "badda", label: "বাড্ডা (Badda)" },
+    { value: "niketon", label: "নিকেতন (Niketon)" },
     { value: "motijheel", label: "মতিঝিল (Motijheel)" },
     { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
     { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
+    { value: "jigatola", label: "জিগাতলা (Jigatola)" },
+    { value: "pilkhana", label: "পিলখানা (Pilkhana)" },
+    { value: "hazaribagh", label: "হাজারীবাগ (Hazaribagh)" },
     { value: "malibagh", label: "মালিবাগ (Malibagh)" },
     { value: "rampura", label: "রামপুরা (Rampura)" },
+    { value: "banasree", label: "বনশ্রী (Banasree)" },
     { value: "shantinagar", label: "শান্তিনগর (Shantinagar)" },
     { value: "demra", label: "ডেমরা (Demra)" },
     { value: "shyamoli", label: "শ্যামলী (Shyamoli)" },
@@ -116,18 +120,17 @@ export default function PostToLet() {
     <main className="grow flex flex-col items-center justify-center px-4 bg-slate-50 pt-24 pb-12">
       <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">টু-লেট পোস্ট করুন</h1>
-        
+
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          
+
           {/* Title */}
           <div className="flex flex-col gap-1.5">
             <label className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
             <input
               {...register("title")}
               type="text"
-              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-              }`}
+              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                }`}
             />
             {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
           </div>
@@ -139,9 +142,8 @@ export default function PostToLet() {
               <input
                 {...register("rentPrice")}
                 type="number"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                    errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               />
               {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
             </div>
@@ -153,9 +155,8 @@ export default function PostToLet() {
                 {...register("rentFrom")}
                 type="text"
                 placeholder="MM / YYYY"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                    errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               />
               {errors.rentFrom && <span className="text-red-500 text-xs">{errors.rentFrom.message}</span>}
             </div>
@@ -167,9 +168,8 @@ export default function PostToLet() {
               <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
               <select
                 {...register("propertyType")}
-                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${
-                  errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               >
                 {propertyTypes.map((type) => (
                   <option key={type.value} value={type.value} className="text-green-600">{type.label}</option>
@@ -183,9 +183,8 @@ export default function PostToLet() {
               <label className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
               <select
                 {...register("location")}
-                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${
-                  errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               >
                 {locations.map((loc) => (
                   <option key={loc.value} value={loc.value} className="text-green-600">{loc.label}</option>
@@ -202,27 +201,25 @@ export default function PostToLet() {
               {...register("address")}
               type="text"
               placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-              }`}
+              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                }`}
             />
             {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
           </div>
 
           {/* Contact Info & Map Link placed */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            
+
             {/* Contact Info */}
             <div className="flex flex-col gap-1.5">
               <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
               <input
                 {...register("contactInfo")}
                 type="text"
-                maxLength={11} 
+                maxLength={11}
                 placeholder="01XXXXXXXXX"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                  errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               />
               {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
             </div>
@@ -234,13 +231,12 @@ export default function PostToLet() {
                 {...register("mapLink")}
                 type="text"
                 placeholder="লিংক / কোড দিন "
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${
-                  errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
+                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
               />
               {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
             </div>
-            
+
           </div>
 
           {/* Image Upload Mockup */}
