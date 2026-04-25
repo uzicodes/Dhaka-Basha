@@ -1,12 +1,8 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { usePathname, useSearchParams } from "next/navigation";
-
 export default function GlobalLoader() {
   const [isLoading, setIsLoading] = useState(true);
-  const pathname = usePathname();
-  const searchParams = useSearchParams();
 
   // Handle initial page load
   useEffect(() => {
@@ -20,14 +16,6 @@ export default function GlobalLoader() {
 
     return () => window.removeEventListener("load", handleLoad);
   }, []);
-
-  // Removed artificial timeout on route changes to prevent annoying flashes.
-  // Next.js handles SPA navigations instantly, and Next.js `loading.tsx` can be used if data fetching takes time.
-  useEffect(() => {
-    // If you want to show it on route changes, you can toggle state here, 
-    // but for SPA it's generally better to only show full-screen overlays on initial load.
-    setIsLoading(false);
-  }, [pathname, searchParams]);
 
   if (!isLoading) return null;
 
