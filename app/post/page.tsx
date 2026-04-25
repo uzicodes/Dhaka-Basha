@@ -17,6 +17,7 @@ const formSchema = z.object({
   contactInfo: z.string().min(11, "সঠিক মোবাইল নম্বর দিন").max(11, "সঠিক মোবাইল নম্বর দিন (১১ ডিজিট)"),
   mapLink: z.string().optional(),
   images: z.array(z.string()),
+  subLocation: z.string().optional(),
 });
 
 type PostFormValues = z.infer<typeof formSchema>;
@@ -24,11 +25,15 @@ type PostFormValues = z.infer<typeof formSchema>;
 export default function PostToLet() {
   const router = useRouter();
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [expandedLoc, setExpandedLoc] = useState("");
 
   // Initialize React Hook Form 
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<PostFormValues>({
     resolver: zodResolver(formSchema),
@@ -42,8 +47,12 @@ export default function PostToLet() {
       contactInfo: "",
       mapLink: "",
       images: [],
+      subLocation: "",
     },
   });
+
+  const selectedLocation = watch("location");
+  const selectedSubLocation = watch("subLocation");
 
   const onSubmit = async (data: PostFormValues) => {
     setIsSubmitting(true);
@@ -65,20 +74,84 @@ export default function PostToLet() {
     }
   };
 
-  // --- ARRAYS FOR DROPDOWNS ---
   const locations = [
-    { value: "gulshan", label: "গুলশান (Gulshan)" },
+    {
+      value: "gulshan",
+      label: "গুলশান (Gulshan)",
+      subLocations: [
+        { value: "1", label: "১ (1)" },
+        { value: "2", label: "২ (2)" }
+      ]
+    },
     { value: "banani", label: "বনানী (Banani)" },
-    { value: "baridhara", label: "বারিধারা (Baridhara)" },
-    { value: "dhanmondi", label: "ধানমন্ডি (Dhanmondi)" },
-    { value: "mirpur", label: "মিরপুর (Mirpur)" },
-    { value: "uttara", label: "উত্তরা (Uttara)" },
+    {
+      value: "baridhara",
+      label: "বারিধারা (Baridhara)",
+      subLocations: [
+        { value: "block-j", label: "ব্লক জে (Block J)" },
+        { value: "block-k", label: "ব্লক কে (Block K)" },
+        { value: "block-h", label: "ব্লক এইচ (Block H)" }
+      ]
+    },
+    {
+      value: "dhanmondi",
+      label: "ধানমন্ডি (Dhanmondi)",
+      subLocations: [
+        { value: "road-27", label: "রোড ২৭ (Road 27)" },
+        { value: "road-8", label: "রোড ৮ (Road 8)" },
+        { value: "road-32", label: "রোড ৩২ (Road 32)" }
+      ]
+    },
+    {
+      value: "mirpur",
+      label: "মিরপুর (Mirpur)",
+      subLocations: [
+        { value: "1", label: "১ (1)" },
+        { value: "2", label: "২ (2)" },
+        { value: "10", label: "১০ (10)" },
+        { value: "11", label: "১১ (11)" },
+        { value: "12", label: "১২ (12)" }
+      ]
+    },
+    {
+      value: "uttara",
+      label: "উত্তরা (Uttara)",
+      subLocations: [
+        { value: "sectors-1-10", label: "সেক্টর ১-১০ (Sectors 1-10)" },
+        { value: "sectors-11-14", label: "সেক্টর ১১-১৪ (Sectors 11-14)" },
+        { value: "sectors-15-18", label: "সেক্টর ১৫-১৮ (Sectors 15-18)" }
+      ]
+    },
     { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
     { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
-    { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)" },
-    { value: "badda", label: "বাড্ডা (Badda)" },
+    {
+      value: "bashundhara",
+      label: "বসুন্ধরা (Bashundhara)",
+      subLocations: [
+        { value: "block-a", label: "ব্লক এ (Block A)" },
+        { value: "block-b", label: "ব্লক বি (Block B)" },
+        { value: "block-c", label: "ব্লক সি (Block C)" },
+        { value: "block-d", label: "ব্লক ডি (Block D)" },
+        { value: "block-e", label: "ব্লক ই (Block E)" },
+        { value: "block-f", label: "ব্লক এফ (Block F)" },
+        { value: "block-g", label: "ব্লক জি (Block G)" },
+        { value: "block-h", label: "ব্লক এইচ (Block H)" },
+        { value: "block-i", label: "ব্লক আই (Block I)" },
+        { value: "block-j", label: "ব্লক জে (Block J)" }
+      ]
+    },
+    {
+      value: "badda",
+      label: "বাড্ডা (Badda)",
+      subLocations: [
+        { value: "moddho-badda", label: "মধ্য বাড্ডা (Moddho Badda)" },
+        { value: "uttar-badda", label: "উত্তর বাড্ডা (Uttar Badda)" },
+        { value: "merul-badda", label: "মেরুল বাড্ডা (Merul Badda)" }
+      ]
+    },
     { value: "niketon", label: "নিকেতন (Niketon)" },
     { value: "motijheel", label: "মতিঝিল (Motijheel)" },
+    { value: "aftabnagar", label: "আফতাবনগর (Aftabnagar)" },
     { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
     { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
     { value: "jigatola", label: "জিগাতলা (Jigatola)" },
@@ -104,6 +177,9 @@ export default function PostToLet() {
     { value: "jatrabari", label: "যাত্রাবাড়ী (Jatrabari)" },
     { value: "sadarghat", label: "সদরঘাট (Sadarghat)" }
   ];
+
+  const activeLocationObj = locations.find(loc => loc.value === selectedLocation);
+
 
   const propertyTypes = [
     { value: "", label: "-- প্রপার্টির ধরন নির্বাচন করুন --" },
@@ -178,18 +254,94 @@ export default function PostToLet() {
               {errors.propertyType && <span className="text-red-500 text-xs">{errors.propertyType.message}</span>}
             </div>
 
-            {/* Location */}
-            <div className="flex flex-col gap-1.5">
+            {/* Location (Custom Dropdown) */}
+            <div className="flex flex-col gap-1.5 relative">
               <label className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
-              <select
-                {...register("location")}
-                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                  }`}
+              <input type="hidden" {...register("location")} />
+              <input type="hidden" {...register("subLocation")} />
+
+              <button
+                type="button"
+                className={`w-full border-[1.5px] bg-white rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                onClick={() => setIsSelectOpen(!isSelectOpen)}
+                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
               >
-                {locations.map((loc) => (
-                  <option key={loc.value} value={loc.value} className="text-green-600">{loc.label}</option>
-                ))}
-              </select>
+                <span className={selectedLocation ? "text-green-600 truncate pr-4" : "text-green-600"}>
+                  {selectedLocation
+                    ? (() => {
+                      const loc = locations.find(l => l.value === selectedLocation);
+                      if (!loc) return "-- নির্বাচন করুন --";
+                      if (selectedSubLocation) {
+                        const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
+                        return `${loc.label.split(" ")[0]} - ${sub?.label.split(" ")[0] || ""}`;
+                      }
+                      return loc.label;
+                    })()
+                    : "-- নির্বাচন করুন --"}
+                </span>
+                <svg className={`w-5 h-5 text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+
+              {isSelectOpen && (
+                <ul
+                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  {locations.map((loc) => (
+                    <div key={loc.value}>
+                      <li
+                        className={`px-4 py-2.5 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-slate-100 font-semibold' : ''}`}
+                        onClick={(e) => {
+                          if (loc.subLocations) {
+                            e.stopPropagation();
+                            setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
+                          } else {
+                            setValue("location", loc.value, { shouldValidate: true });
+                            setValue("subLocation", "");
+                            setIsSelectOpen(false);
+                            setExpandedLoc("");
+                          }
+                        }}
+                      >
+                        <span>{loc.label}</span>
+                        {loc.subLocations && (
+                          <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#2d79f3]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                        )}
+                      </li>
+
+                      {loc.subLocations && expandedLoc === loc.value && (
+                        <ul className="bg-slate-50 border-y border-gray-100">
+                          <li
+                            className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                            onClick={() => {
+                              setValue("location", loc.value, { shouldValidate: true });
+                              setValue("subLocation", "");
+                              setIsSelectOpen(false);
+                              setExpandedLoc("");
+                            }}
+                          >
+                            যেকোনো (Any)
+                          </li>
+                          {loc.subLocations.map((sub) => (
+                            <li
+                              key={sub.value}
+                              className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                              onClick={() => {
+                                setValue("location", loc.value, { shouldValidate: true });
+                                setValue("subLocation", sub.value, { shouldValidate: true });
+                                setIsSelectOpen(false);
+                                setExpandedLoc("");
+                              }}
+                            >
+                              {sub.label}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
+                  ))}
+                </ul>
+              )}
               {errors.location && <span className="text-red-500 text-xs">{errors.location.message}</span>}
             </div>
           </div>

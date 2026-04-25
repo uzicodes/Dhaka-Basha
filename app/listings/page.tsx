@@ -7,22 +7,89 @@ export default function Listings() {
   const [isTypeSelectOpen, setIsTypeSelectOpen] = useState<boolean>(false);
 
   const [selectedLocation, setSelectedLocation] = useState<string>("");
+  const [selectedSubLocation, setSelectedSubLocation] = useState<string>("");
+  const [expandedLoc, setExpandedLoc] = useState<string>("");
   const [selectedType, setSelectedType] = useState<string>("");
 
 
   const locations = [
-    { value: "gulshan", label: "গুলশান (Gulshan)" },
+    { 
+      value: "gulshan", 
+      label: "গুলশান (Gulshan)",
+      subLocations: [
+        { value: "1", label: "১ (1)" },
+        { value: "2", label: "২ (2)" }
+      ]
+    },
     { value: "banani", label: "বনানী (Banani)" },
-    { value: "baridhara", label: "বারিধারা (Baridhara)" },
-    { value: "dhanmondi", label: "ধানমন্ডি (Dhanmondi)" },
-    { value: "mirpur", label: "মিরপুর (Mirpur)" },
-    { value: "uttara", label: "উত্তরা (Uttara)" },
+    { 
+      value: "baridhara", 
+      label: "বারিধারা (Baridhara)",
+      subLocations: [
+        { value: "block-j", label: "ব্লক জে (Block J)" },
+        { value: "block-k", label: "ব্লক কে (Block K)" },
+        { value: "block-h", label: "ব্লক এইচ (Block H)" }
+      ]
+    },
+    { 
+      value: "dhanmondi", 
+      label: "ধানমন্ডি (Dhanmondi)",
+      subLocations: [
+        { value: "road-27", label: "রোড ২৭ (Road 27)" },
+        { value: "road-8", label: "রোড ৮ (Road 8)" },
+        { value: "road-32", label: "রোড ৩২ (Road 32)" }
+      ]
+    },
+    { 
+      value: "mirpur", 
+      label: "মিরপুর (Mirpur)",
+      subLocations: [
+        { value: "1", label: "১ (1)" },
+        { value: "2", label: "২ (2)" },
+        { value: "10", label: "১০ (10)" },
+        { value: "11", label: "১১ (11)" },
+        { value: "12", label: "১২ (12)" }
+      ]
+    },
+    { 
+      value: "uttara", 
+      label: "উত্তরা (Uttara)",
+      subLocations: [
+        { value: "sectors-1-10", label: "সেক্টর ১-১০ (Sectors 1-10)" },
+        { value: "sectors-11-14", label: "সেক্টর ১১-১৪ (Sectors 11-14)" },
+        { value: "sectors-15-18", label: "সেক্টর ১৫-১৮ (Sectors 15-18)" }
+      ]
+    },
     { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
     { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
-    { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)" },
-    { value: "badda", label: "বাড্ডা (Badda)" },
+    { 
+      value: "bashundhara", 
+      label: "বসুন্ধরা (Bashundhara)",
+      subLocations: [
+        { value: "block-a", label: "ব্লক এ (Block A)" },
+        { value: "block-b", label: "ব্লক বি (Block B)" },
+        { value: "block-c", label: "ব্লক সি (Block C)" },
+        { value: "block-d", label: "ব্লক ডি (Block D)" },
+        { value: "block-e", label: "ব্লক ই (Block E)" },
+        { value: "block-f", label: "ব্লক এফ (Block F)" },
+        { value: "block-g", label: "ব্লক জি (Block G)" },
+        { value: "block-h", label: "ব্লক এইচ (Block H)" },
+        { value: "block-i", label: "ব্লক আই (Block I)" },
+        { value: "block-j", label: "ব্লক জে (Block J)" }
+      ]
+    },
+    { 
+      value: "badda", 
+      label: "বাড্ডা (Badda)",
+      subLocations: [
+        { value: "moddho-badda", label: "মধ্য বাড্ডা (Moddho Badda)" },
+        { value: "uttar-badda", label: "উত্তর বাড্ডা (Uttar Badda)" },
+        { value: "merul-badda", label: "মেরুল বাড্ডা (Merul Badda)" }
+      ]
+    },
     { value: "niketon", label: "নিকেতন (Niketon)" },
     { value: "motijheel", label: "মতিঝিল (Motijheel)" },
+    { value: "aftabnagar", label: "আফতাবনগর (Aftabnagar)" },
     { value: "khilgaon", label: "খিলগাঁও (Khilgaon)" },
     { value: "tejgaon", label: "তেজগাঁও (Tejgaon)" },
     { value: "jigatola", label: "জিগাতলা (Jigatola)" },
@@ -92,24 +159,76 @@ export default function Listings() {
                 onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
               >
                 {selectedLocation
-                  ? locations.find(l => l.value === selectedLocation)?.label
+                  ? (() => {
+                      const loc = locations.find(l => l.value === selectedLocation);
+                      if (!loc) return <span className="text-gray-500">এলাকা নির্বাচন করুন</span>;
+                      if (selectedSubLocation) {
+                        const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
+                        return <span className="truncate pr-4">{loc.label.split(" ")[0]} - {sub?.label.split(" ")[0]}</span>;
+                      }
+                      return <span className="truncate pr-4">{loc.label}</span>;
+                    })()
                   : <span className="text-gray-500">এলাকা নির্বাচন করুন</span>}
               </button>
 
               {/* Custom Dropdown Menu */}
               {isSelectOpen && (
-                <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
+                <ul 
+                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
                   {locations.map((loc) => (
-                    <li
-                      key={loc.value}
-                      className="px-4 py-2 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors text-left"
-                      onClick={() => {
-                        setSelectedLocation(loc.value);
-                        setIsSelectOpen(false);
-                      }}
-                    >
-                      {loc.label}
-                    </li>
+                    <div key={loc.value}>
+                      <li
+                        className={`px-4 py-2 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-slate-100 font-semibold' : ''}`}
+                        onClick={(e) => {
+                          if (loc.subLocations) {
+                            e.stopPropagation();
+                            setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
+                          } else {
+                            setSelectedLocation(loc.value);
+                            setSelectedSubLocation("");
+                            setIsSelectOpen(false);
+                            setExpandedLoc("");
+                          }
+                        }}
+                      >
+                        <span>{loc.label}</span>
+                        {loc.subLocations && (
+                          <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#2d79f3]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                        )}
+                      </li>
+                      
+                      {loc.subLocations && expandedLoc === loc.value && (
+                        <ul className="bg-slate-50 border-y border-gray-100">
+                          <li
+                            className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                            onClick={() => {
+                              setSelectedLocation(loc.value);
+                              setSelectedSubLocation("");
+                              setIsSelectOpen(false);
+                              setExpandedLoc("");
+                            }}
+                          >
+                            যেকোনো (Any)
+                          </li>
+                          {loc.subLocations.map((sub) => (
+                            <li
+                              key={sub.value}
+                              className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                              onClick={() => {
+                                setSelectedLocation(loc.value);
+                                setSelectedSubLocation(sub.value);
+                                setIsSelectOpen(false);
+                                setExpandedLoc("");
+                              }}
+                            >
+                              {sub.label}
+                            </li>
+                          ))}
+                        </ul>
+                      )}
+                    </div>
                   ))}
                 </ul>
               )}
