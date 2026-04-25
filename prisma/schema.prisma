@@ -32,6 +32,7 @@ model Listing {
   
   location     String
   propertyType String
+  subLocation  String?
   
   address      String?      // Exact house number/road (optional)
   images       String[]     // Array of Cloudinary Image URLs
