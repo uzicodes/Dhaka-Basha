@@ -81,7 +81,7 @@ export default function Login() {
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && !email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && !email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
@@ -90,14 +90,14 @@ export default function Login() {
             placeholder="আপনার ইমেইল দিন"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
 
         <div className="flex flex-col mt-3">
           <label className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && !password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && !password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
@@ -106,7 +106,7 @@ export default function Login() {
             placeholder="আপনার পাসওয়ার্ড দিন"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
           <button
             type="button"
@@ -130,7 +130,7 @@ export default function Login() {
         <button
           disabled={!isLoaded}
           type="submit"
-          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
+          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
         >
           লগইন
         </button>
@@ -142,7 +142,7 @@ export default function Login() {
           </Link>
         </p>
 
-        <button type="button" onClick={loginWithGoogle} className="mt-2 w-30 h-11 mx-auto rounded-[10px] flex justify-center items-center font-medium text-[14px] text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
+        <button type="button" onClick={loginWithGoogle} className="mt-2 w-30 h-11 mx-auto rounded-none flex justify-center items-center font-medium text-[14px] text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />

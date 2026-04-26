@@ -82,7 +82,7 @@ export default function Listings() {
               {/* Custom Dropdown Menu */}
               {isSelectOpen && (
                 <ul
-                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1"
+                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
                   onMouseDown={(e) => e.preventDefault()}
                 >
                   {locations.map((loc) => (
@@ -175,7 +175,7 @@ export default function Listings() {
 
               {/* Custom Dropdown Menu */}
               {isTypeSelectOpen && (
-                <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1">
+                <ul className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1">
                   {propertyTypes.map((type) => (
                     <li
                       key={type.value}

@@ -87,7 +87,7 @@ export default function Contact() {
             </div>
 
             {/* Contact Form */}
-            <form className="space-y-4 bg-slate-50 p-6 rounded-lg border border-slate-100">
+            <form className="space-y-4 bg-slate-50 p-6 rounded-none border border-slate-100">
               <div>
                 <label className="block text-slate-700 font-semibold mb-2">
                   নাম
@@ -95,7 +95,7 @@ export default function Contact() {
                 <input
                   type="text"
                   placeholder="আপনার নাম"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-none focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -106,7 +106,7 @@ export default function Contact() {
                 <input
                   type="email"
                   placeholder="আপনার ইমেইল"
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-none focus:outline-none focus:border-blue-500"
                 />
               </div>
 
@@ -117,13 +117,13 @@ export default function Contact() {
                 <textarea
                   placeholder="আপনার বার্তা লিখুন"
                   rows={4}
-                  className="w-full px-4 py-2 border border-slate-200 rounded-lg focus:outline-none focus:border-blue-500"
+                  className="w-full px-4 py-2 border border-slate-200 rounded-none focus:outline-none focus:border-blue-500"
                 />
               </div>
 
               <button
                 type="submit"
-                className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition-colors font-semibold"
+                className="w-full bg-blue-600 text-white py-2 rounded-none hover:bg-blue-700 transition-colors font-semibold"
               >
                 পাঠান
               </button>

@@ -115,7 +115,7 @@ export default function ProfilePage() {
             <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress ?? "N/A"}</p>
 
             <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="w-full rounded-[10px] border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+              <div className="w-full rounded-none border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
                 <p className="text-xs text-slate-400 mb-1">ফোন নম্বর</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
@@ -137,7 +137,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              <div className="w-full rounded-[10px] border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+              <div className="w-full rounded-none border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
                 <p className="text-xs text-slate-400 mb-1">ঠিকানা</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
@@ -180,17 +180,17 @@ export default function ProfilePage() {
               <h2 className="text-lg font-bold text-[#151717] mb-4 border-b pb-2">ড্যাশবোর্ড মেনু</h2>
               <ul className="space-y-2">
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 bg-[#2d79f3] text-white rounded-[10px] font-medium transition-colors">
+                  <button className="w-full text-left px-4 py-2.5 bg-[#2d79f3] text-white rounded-none font-medium transition-colors">
                     আমার বিজ্ঞাপন সমূহ
                   </button>
                 </li>
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-[10px] font-medium transition-colors cursor-pointer">
+                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer">
                     সংরক্ষিত বিজ্ঞাপন (Saved)
                   </button>
                 </li>
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-[10px] font-medium transition-colors cursor-pointer">
+                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer">
                     ম্যাসেজ সমূহ
                   </button>
                 </li>
@@ -198,7 +198,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => signOut({ redirectUrl: "/" })}
-                    className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-[10px] font-medium transition-colors cursor-pointer"
+                    className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-none font-medium transition-colors cursor-pointer"
                   >
                     লগ আউট
                   </button>
@@ -253,12 +253,12 @@ export default function ProfilePage() {
                   </span>
 
                   <div className="flex gap-2 ml-auto sm:ml-0">
-                    <button className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-lg transition-colors" title="Edit">
+                    <button className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors" title="Edit">
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </button>
-                    <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg transition-colors" title="Delete">
+                    <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors" title="Delete">
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>

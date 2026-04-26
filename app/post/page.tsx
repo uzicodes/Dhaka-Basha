@@ -100,7 +100,7 @@ export default function PostToLet() {
             <input
               {...register("title")}
               type="text"
-              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+              className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                 }`}
             />
             {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
@@ -113,7 +113,7 @@ export default function PostToLet() {
               <input
                 {...register("rentPrice")}
                 type="number"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
@@ -126,7 +126,7 @@ export default function PostToLet() {
                 {...register("rentFrom")}
                 type="text"
                 placeholder="MM / YYYY"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.rentFrom && <span className="text-red-500 text-xs">{errors.rentFrom.message}</span>}
@@ -139,7 +139,7 @@ export default function PostToLet() {
               <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
               <select
                 {...register("propertyType")}
-                className={`border-[1.5px] bg-white text-green-600 rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] bg-white text-green-600 rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               >
                 {propertyTypes.map((type) => (
@@ -157,7 +157,7 @@ export default function PostToLet() {
 
               <button
                 type="button"
-                className={`w-full border-[1.5px] bg-white rounded-[10px] h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
                 onClick={() => setIsSelectOpen(!isSelectOpen)}
                 onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
               >
@@ -185,7 +185,7 @@ export default function PostToLet() {
 
               {isSelectOpen && (
                 <ul
-                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-lg max-h-60 overflow-y-auto z-50 py-1"
+                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
                   onMouseDown={(e) => e.preventDefault()}
                 >
                   {locations.map((loc) => (
@@ -254,7 +254,7 @@ export default function PostToLet() {
               {...register("address")}
               type="text"
               placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-              className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+              className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                 }`}
             />
             {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
@@ -271,7 +271,7 @@ export default function PostToLet() {
                 type="text"
                 maxLength={11}
                 placeholder="01XXXXXXXXX"
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
@@ -284,7 +284,7 @@ export default function PostToLet() {
                 {...register("mapLink")}
                 type="text"
                 placeholder="লিংক / কোড দিন "
-                className={`border-[1.5px] rounded-[10px] h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
@@ -295,7 +295,7 @@ export default function PostToLet() {
           {/* Image Upload Mockup */}
           <div className="flex flex-col gap-1.5 mt-2">
             <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড</label>
-            <div className="border-2 border-dashed border-[#ecedec] rounded-[10px] h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] transition-colors cursor-pointer">
+            <div className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] transition-colors cursor-pointer">
               <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -308,7 +308,7 @@ export default function PostToLet() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-[10px] h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50"
+            className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50"
           >
             {isSubmitting ? "প্রসেস হচ্ছে..." : "বিজ্ঞাপন পোস্ট করুন"}
           </button>

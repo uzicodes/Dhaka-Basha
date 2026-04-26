@@ -79,11 +79,11 @@ export default async function ListingDetails({ params }: { params: { id: string 
             <div className="bg-[#2d79f3]/10 p-6 rounded-[15px] border-2 border-[#2d79f3]">
               <h2 className="text-xl font-bold text-[#151717] mb-4 border-b border-[#2d79f3]/20 pb-2">যোগাযোগ করুন</h2>
               <p className="text-slate-700 mb-4">এই টু-লেট সম্পর্কে বিস্তারিত জানতে বা বুকিং করতে কল করুন:</p>
-              <div className="bg-white p-4 rounded-[10px] flex items-center justify-center gap-3 shadow-sm border border-blue-100">
+              <div className="bg-white p-4 rounded-none flex items-center justify-center gap-3 shadow-sm border border-blue-100">
                 <svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                 <span className="text-2xl font-bold text-[#151717]">{listing.contactInfo}</span>
               </div>
-              <a href={`tel:${listing.contactInfo}`} className="w-full mt-4 bg-[#2d79f3] text-white text-center font-semibold py-3 rounded-[10px] shadow-sm hover:bg-blue-700 transition-colors block">
+              <a href={`tel:${listing.contactInfo}`} className="w-full mt-4 bg-[#2d79f3] text-white text-center font-semibold py-3 rounded-none shadow-sm hover:bg-blue-700 transition-colors block">
                 কল করুন (Call Now)
               </a>
             </div>

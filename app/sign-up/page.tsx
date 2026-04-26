@@ -185,17 +185,17 @@ export default function SignUp() {
           <div className="flex flex-col">
             <label className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
           </div>
-          <div className="border-[1.5px] border-[#ecedec] rounded-[10px] h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+          <div className="border-[1.5px] border-[#ecedec] rounded-none h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
             <input
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
               placeholder="কোড দিন"
-              className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
+              className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
             />
           </div>
 
-          <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-[10px] h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
+          <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-none h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
             যাচাই করুন
           </button>
         </form>
@@ -215,7 +215,7 @@ export default function SignUp() {
         <div className="flex flex-col">
           <label className="text-[#151717] text-sm font-semibold mb-1">আপনার নাম</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.name ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.name ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
@@ -224,7 +224,7 @@ export default function SignUp() {
             placeholder="আপনার পুরো নাম দিন"
             value={formData.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
         {submitted && errors.name && <p className="text-red-500 text-xs mt-1 mb-2">{errors.name}</p>}
@@ -233,7 +233,7 @@ export default function SignUp() {
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
@@ -242,7 +242,7 @@ export default function SignUp() {
             placeholder="আপনার ইমেইল দিন"
             value={formData.email}
             onChange={(e) => handleChange("email", e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
         {submitted && errors.email && <p className="text-red-500 text-xs mt-1 mb-2">{errors.email}</p>}
@@ -251,7 +251,7 @@ export default function SignUp() {
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">ফোন নম্বর</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.phone ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.phone ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
@@ -260,7 +260,7 @@ export default function SignUp() {
             placeholder="আপনার ফোন নম্বর দিন"
             value={formData.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
         </div>
         {submitted && errors.phone && <p className="text-red-500 text-xs mt-1 mb-2">{errors.phone}</p>}
@@ -269,7 +269,7 @@ export default function SignUp() {
         <div className="flex flex-col mt-0.5">
           <label className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
-        <div className={`border-[1.5px] rounded-[10px] h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && errors.password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && errors.password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
@@ -278,7 +278,7 @@ export default function SignUp() {
             placeholder="নতুন পাসওয়ার্ড দিন"
             value={formData.password}
             onChange={(e) => handleChange("password", e.target.value)}
-            className="ml-2.5 rounded-[10px] border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
           />
           <button
             type="button"
@@ -303,7 +303,7 @@ export default function SignUp() {
         <button
           disabled={!isLoaded}
           type="submit"
-          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-[10px] h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
+          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
         >
           সাইন আপ
         </button>
@@ -315,7 +315,7 @@ export default function SignUp() {
           </Link>
         </p>
 
-        <button type="button" onClick={signUpWithGoogle} className="mt-1 w-30 h-11 mx-auto rounded-[10px] flex justify-center items-center font-medium text-[14px] text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
+        <button type="button" onClick={signUpWithGoogle} className="mt-1 w-30 h-11 mx-auto rounded-none flex justify-center items-center font-medium text-[14px] text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
