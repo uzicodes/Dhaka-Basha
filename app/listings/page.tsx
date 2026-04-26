@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react';
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { getRecentListings } from "@/app/actions/getListings";
+import Link from 'next/link';
 
 export default function Listings() {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
@@ -257,9 +258,9 @@ export default function Listings() {
                     </div>
                   </div>
 
-                  <button className="w-full mt-5 bg-slate-50 text-[#2d79f3] font-semibold py-2.5 rounded-[10px] border border-blue-100 group-hover:bg-[#2d79f3] group-hover:text-white transition-colors">
+                  <Link href={`/listings/${listing.id}`} className="w-full mt-5 bg-slate-50 text-[#2d79f3] font-semibold py-2.5 rounded-[10px] border border-blue-100 group-hover:bg-[#2d79f3] group-hover:text-white transition-colors block text-center">
                     বিস্তারিত দেখুন
-                  </button>
+                  </Link>
                 </div>
               ))}
             </div>
