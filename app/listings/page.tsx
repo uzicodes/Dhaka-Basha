@@ -4,6 +4,7 @@ import { useState, useEffect } from 'react';
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { getRecentListings } from "@/app/actions/getListings";
 import Link from 'next/link';
+import { Loader } from "@/app/components/GlobalLoader";
 
 export default function Listings() {
   const [isSelectOpen, setIsSelectOpen] = useState<boolean>(false);
@@ -216,15 +217,7 @@ export default function Listings() {
 
           {isLoading ? (
             <div className="flex justify-center py-12">
-              <div className="loader">
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-                <div className="loader-square bg-[#2d79f3]"></div>
-              </div>
+              <Loader />
             </div>
           ) : recentListings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
