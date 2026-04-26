@@ -209,10 +209,14 @@ export default function Listings() {
 
         {/* Recent Listings Section */}
         <div className="w-full mt-36 pb-8">
-          <div className="flex justify-center mb-6">
-            <h2 className="text-2xl font-bold text-slate-900 border-b-2 border-[#2d79f3] pb-2 inline-block">
+          <div className="flex flex-col items-center mb-10 gap-2">
+            <span className="text-xs font-semibold uppercase tracking-widest text-[#2d79f3] mb-1">
+              সর্বশেষ প্রকাশিত
+            </span>
+            <h2 className="text-3xl font-bold text-slate-900">
               সাম্প্রতিক টু-লেট
             </h2>
+            <div className="w-12 h-1 bg-[#2d79f3] rounded-full mt-1" />
           </div>
 
           {isLoading ? (
@@ -222,44 +226,87 @@ export default function Listings() {
           ) : recentListings.length > 0 ? (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {recentListings.map((listing) => (
-                <div key={listing.id} className="bg-white rounded-[15px] p-5 shadow-sm border border-gray-100 hover:shadow-md hover:border-[#2d79f3] transition-all flex flex-col h-full group">
-                  <div className="flex justify-between items-start mb-3">
-                    <span className="bg-green-100 text-green-800 text-xs font-semibold px-2.5 py-1 rounded-full">
-                      {propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType}
-                    </span>
-                    <span className="text-[#2d79f3] font-bold">
-                      ৳{listing.rentPrice.toLocaleString('en-IN')} / মাস
-                    </span>
+                <div
+                  key={listing.id}
+                  className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
+                >
+                  {/* Card Top Accent */}
+                  <div className="h-1.5 w-full bg-gradient-to-r from-[#2d79f3] to-[#60a5fa]" />
+
+                  <div className="p-5 flex flex-col flex-1">
+                    {/* Badge + Price */}
+                    <div className="flex justify-between items-center mb-4">
+                      <span className="bg-blue-50 text-[#2d79f3] text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">
+                        {propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType}
+                      </span>
+                      <div className="text-right">
+                        <span className="text-[#2d79f3] font-bold text-lg leading-none">
+                          ৳{listing.rentPrice.toLocaleString('en-IN')}
+                        </span>
+                        <span className="text-slate-400 text-xs block">/মাস</span>
+                      </div>
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="font-bold text-base text-slate-900 mb-4 line-clamp-2 group-hover:text-[#2d79f3] transition-colors leading-snug">
+                      {listing.title}
+                    </h3>
+
+                    {/* Divider */}
+                    <div className="border-t border-gray-100 my-3" />
+
+                    {/* Meta Info */}
+                    <div className="space-y-2.5 mt-auto text-sm text-slate-500">
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-full bg-red-50 shrink-0">
+                          <svg className="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                          </svg>
+                        </span>
+                        <span className="line-clamp-1">
+                          {locations.find(l => l.value === listing.location)?.label || listing.location}
+                          {listing.subLocation && ` — ${listing.subLocation}`}
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 shrink-0">
+                          <svg className="w-3.5 h-3.5 text-[#2d79f3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                          </svg>
+                        </span>
+                        <span>শুরু: {listing.rentFrom}</span>
+                      </div>
+
+                      <div className="flex items-center gap-2.5">
+                        <span className="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 shrink-0">
+                          <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                          </svg>
+                        </span>
+                        <span className="line-clamp-1">পোস্ট করেছেন: {listing.user?.name || "ব্যবহারকারী"}</span>
+                      </div>
+                    </div>
+
+                    {/* CTA Button */}
+                    <Link
+                      href={`/listings/${listing.id}`}
+                      className="w-full mt-5 bg-[#2d79f3] text-white font-semibold py-2.5 rounded-xl hover:bg-blue-700 transition-colors block text-center text-sm shadow-sm shadow-blue-200"
+                    >
+                      বিস্তারিত দেখুন →
+                    </Link>
                   </div>
-
-                  <h3 className="font-bold text-lg text-slate-900 mb-2 line-clamp-2 group-hover:text-[#2d79f3] transition-colors">
-                    {listing.title}
-                  </h3>
-
-                  <div className="space-y-2 mt-auto pt-4 text-sm text-slate-600">
-                    <div className="flex items-start gap-2">
-                      <svg className="w-4 h-4 mt-0.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                      <span className="line-clamp-1">{locations.find(l => l.value === listing.location)?.label || listing.location}{listing.subLocation && ` - ${listing.subLocation}`}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-blue-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                      <span>শুরু: {listing.rentFrom}</span>
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <svg className="w-4 h-4 text-green-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
-                      <span className="line-clamp-1">পোস্ট করেছেন: {listing.user?.name || "ব্যবহারকারী"}</span>
-                    </div>
-                  </div>
-
-                  <Link href={`/listings/${listing.id}`} className="w-full mt-5 bg-slate-50 text-[#2d79f3] font-semibold py-2.5 rounded-[10px] border border-blue-100 group-hover:bg-[#2d79f3] group-hover:text-white transition-colors block text-center">
-                    বিস্তারিত দেখুন
-                  </Link>
                 </div>
               ))}
             </div>
           ) : (
-            <div className="text-center py-12 bg-white rounded-[15px] border border-gray-100">
-              <svg className="w-12 h-12 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" /></svg>
+            <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
+              <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                <svg className="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+                </svg>
+              </div>
               <p className="text-slate-500 font-medium">কোনো সাম্প্রতিক পোস্ট পাওয়া যায়নি</p>
             </div>
           )}
