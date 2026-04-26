@@ -28,3 +28,25 @@ export async function getUserListings() {
     return [];
   }
 }
+
+export async function getRecentListings() {
+  try {
+    const listings = await prisma.listing.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: 20, // Limit to recent 20 for performance
+      include: {
+        user: {
+          select: {
+            name: true,
+          }
+        }
+      }
+    });
+    return listings;
+  } catch (error) {
+    console.error("Error fetching recent listings:", error);
+    return [];
+  }
+}
