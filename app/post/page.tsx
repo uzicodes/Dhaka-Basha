@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { useRouter } from "next/navigation";
+import { useUser } from "@clerk/nextjs";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
 
@@ -26,9 +27,11 @@ type PostFormValues = z.infer<typeof formSchema>;
 
 export default function PostToLet() {
   const router = useRouter();
+  const { user, isLoaded } = useUser();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [expandedLoc, setExpandedLoc] = useState("");
+  const [showToast, setShowToast] = useState(false);
 
   // Initialize React Hook Form 
   const {
@@ -56,7 +59,30 @@ export default function PostToLet() {
   const selectedLocation = watch("location");
   const selectedSubLocation = watch("subLocation");
 
+  useEffect(() => {
+    const savedData = localStorage.getItem('savedPostData');
+    if (savedData) {
+      try {
+        const parsed = JSON.parse(savedData);
+        Object.keys(parsed).forEach(key => {
+          setValue(key as keyof PostFormValues, parsed[key]);
+        });
+      } catch (e) {
+        console.error("Failed to parse saved data");
+      }
+    }
+  }, [setValue]);
+
   const onSubmit = async (data: PostFormValues) => {
+    if (isLoaded && !user) {
+      localStorage.setItem('savedPostData', JSON.stringify(data));
+      setShowToast(true);
+      setTimeout(() => {
+        router.push("/login?redirectUrl=/post");
+      }, 2000);
+      return;
+    }
+
     setIsSubmitting(true);
     try {
       const finalDataForDatabase = {
@@ -67,6 +93,7 @@ export default function PostToLet() {
       const result = await createListing(finalDataForDatabase);
 
       if (result.success) {
+        localStorage.removeItem('savedPostData');
         alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
         router.push("/");
       } else {
@@ -88,7 +115,17 @@ export default function PostToLet() {
 
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12">
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12 relative">
+      {/* Toast Notification */}
+      {showToast && (
+        <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-fade-in-down">
+          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+          <span className="font-medium text-sm">দয়া করে আগে লগইন করুন। রিডাইরেক্ট করা হচ্ছে...</span>
+        </div>
+      )}
+
       <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">টু-লেট পোস্ট করুন</h1>
 

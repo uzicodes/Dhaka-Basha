@@ -141,7 +141,9 @@ export default function SignUp() {
       });
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        router.push("/");
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirectUrl') || "/";
+        router.push(redirectUrl);
       } else {
         setClerkError("যাচাইকরণ ব্যর্থ হয়েছে।");
       }
@@ -154,12 +156,14 @@ export default function SignUp() {
     if (!signUp) return;
 
     const signUpResource = signUp as any;
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirectUrl') || "/";
 
     if (typeof signUpResource.authenticateWithRedirect === "function") {
       await signUpResource.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+        redirectUrlComplete: redirectUrl,
       });
       return;
     }
@@ -167,7 +171,7 @@ export default function SignUp() {
     if (typeof signUpResource.sso === "function") {
       await signUpResource.sso({
         strategy: "oauth_google",
-        redirectUrl: "/",
+        redirectUrl: redirectUrl,
         redirectCallbackUrl: "/sso-callback",
       });
     }
@@ -310,7 +314,7 @@ export default function SignUp() {
 
         <p className="text-center text-black text-[13px] my-1">
           অ্যাকাউন্ট আছে?
-          <Link href="/login" className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href={`/login${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
             লগইন করুন
           </Link>
         </p>

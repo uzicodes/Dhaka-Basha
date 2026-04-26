@@ -35,7 +35,9 @@ export default function Login() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        router.push("/");
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirectUrl = urlParams.get('redirectUrl') || "/";
+        router.push(redirectUrl);
       } else {
         console.log(result);
         setClerkError("লগইন অসম্পূর্ণ। যাচাইকরণ প্রয়োজন।");
@@ -49,12 +51,14 @@ export default function Login() {
     if (!signIn) return;
 
     const signInResource = signIn as any;
+    const urlParams = new URLSearchParams(window.location.search);
+    const redirectUrl = urlParams.get('redirectUrl') || "/";
 
     if (typeof signInResource.authenticateWithRedirect === "function") {
       await signInResource.authenticateWithRedirect({
         strategy: "oauth_google",
         redirectUrl: "/sso-callback",
-        redirectUrlComplete: "/",
+        redirectUrlComplete: redirectUrl,
       });
       return;
     }
@@ -62,7 +66,7 @@ export default function Login() {
     if (typeof signInResource.sso === "function") {
       await signInResource.sso({
         strategy: "oauth_google",
-        redirectUrl: "/",
+        redirectUrl: redirectUrl,
         redirectCallbackUrl: "/sso-callback",
       });
     }
@@ -137,7 +141,7 @@ export default function Login() {
 
         <p className="text-center text-black text-[13px] my-2">
           অ্যাকাউন্ট নেই?
-          <Link href="/sign-up" className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href={`/sign-up${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
             সাইন আপ করুন
           </Link>
         </p>
