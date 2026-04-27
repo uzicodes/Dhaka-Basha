@@ -24,6 +24,19 @@ export async function toggleSaveListing(
     throw new Error("User not found");
   }
 
+  const listing = await prisma.listing.findUnique({
+    where: { id: listingId },
+    select: { userId: true },
+  });
+
+  if (!listing) {
+    throw new Error("Listing not found");
+  }
+
+  if (listing.userId === user.id) {
+    throw new Error("You cannot save your own listing");
+  }
+
   const savedListing = await prisma.savedListing.findUnique({
     where: { userId_listingId: { userId: user.id, listingId } },
   });
@@ -58,6 +71,15 @@ export async function checkIfSaved(listingId: string) {
   });
 
   if (!user) {
+    return false;
+  }
+
+  const listing = await prisma.listing.findUnique({
+    where: { id: listingId },
+    select: { userId: true },
+  });
+
+  if (!listing || listing.userId === user.id) {
     return false;
   }
 
