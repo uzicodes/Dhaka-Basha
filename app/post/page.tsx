@@ -4,10 +4,11 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
+import { getUserListingById, updateUserListing } from "@/app/actions/getListings";
 
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
@@ -27,11 +28,15 @@ type PostFormValues = z.infer<typeof formSchema>;
 
 export default function PostToLet() {
   const router = useRouter();
+  const searchParams = useSearchParams();
   const { user, isLoaded } = useUser();
+  const listingId = searchParams.get("listingId");
+  const isEditMode = Boolean(listingId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [expandedLoc, setExpandedLoc] = useState("");
   const [showToast, setShowToast] = useState(false);
+  const [isLoadingListing, setIsLoadingListing] = useState(isEditMode);
 
   // Initialize React Hook Form 
   const {
@@ -39,6 +44,7 @@ export default function PostToLet() {
     handleSubmit,
     watch,
     setValue,
+    reset,
     formState: { errors },
   } = useForm<PostFormValues>({
     resolver: zodResolver(formSchema),
@@ -60,6 +66,10 @@ export default function PostToLet() {
   const selectedSubLocation = watch("subLocation");
 
   useEffect(() => {
+    if (isEditMode) {
+      return;
+    }
+
     const savedData = localStorage.getItem('savedPostData');
     if (savedData) {
       try {
@@ -71,7 +81,57 @@ export default function PostToLet() {
         console.error("Failed to parse saved data");
       }
     }
-  }, [setValue]);
+  }, [setValue, isEditMode]);
+
+  useEffect(() => {
+    if (!isEditMode || !listingId) {
+      setIsLoadingListing(false);
+      return;
+    }
+
+    let isMounted = true;
+
+    const loadListing = async () => {
+      setIsLoadingListing(true);
+
+      try {
+        const listing = await getUserListingById(listingId);
+
+        if (!listing) {
+          alert("এই পোস্টটি খুঁজে পাওয়া যায়নি বা আপনার নয়।");
+          router.replace("/profile");
+          return;
+        }
+
+        reset({
+          title: listing.title,
+          rentPrice: String(listing.rentPrice),
+          propertyType: listing.propertyType,
+          location: listing.location,
+          rentFrom: listing.rentFrom,
+          address: listing.address,
+          contactInfo: listing.contactInfo,
+          mapLink: listing.mapLink ?? "",
+          images: listing.images ?? [],
+          subLocation: listing.subLocation ?? "",
+        });
+      } catch (error) {
+        console.error("Failed to load listing for edit:", error);
+        alert("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
+        router.replace("/profile");
+      } finally {
+        if (isMounted) {
+          setIsLoadingListing(false);
+        }
+      }
+    };
+
+    loadListing();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [isEditMode, listingId, reset, router]);
 
   const onSubmit = async (data: PostFormValues) => {
     if (isLoaded && !user) {
@@ -90,18 +150,20 @@ export default function PostToLet() {
         rentPrice: Number(data.rentPrice),
       };
 
-      const result = await createListing(finalDataForDatabase);
+      const result = isEditMode && listingId
+        ? await updateUserListing(listingId, finalDataForDatabase)
+        : await createListing(finalDataForDatabase);
 
       if (result.success) {
         localStorage.removeItem('savedPostData');
-        alert("আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
-        router.push("/");
+        alert(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
+        router.push(isEditMode ? "/profile" : "/");
       } else {
-        alert(result.error || "পোস্ট করতে সমস্যা হয়েছে।");
+        alert(result.error || (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
       }
     } catch (error) {
       console.error(error);
-      alert("পোস্ট করতে সমস্যা হয়েছে।");
+      alert(isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।");
     } finally {
       setIsSubmitting(false);
     }
@@ -127,8 +189,13 @@ export default function PostToLet() {
       )}
 
       <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">টু-লেট পোস্ট করুন</h1>
+        <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">
+          {isEditMode ? "টু-লেট পোস্ট এডিট করুন" : "টু-লেট পোস্ট করুন"}
+        </h1>
 
+        {isEditMode && isLoadingListing ? (
+          <p className="text-center text-slate-500 py-10">পোস্টের তথ্য লোড হচ্ছে...</p>
+        ) : (
         <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
           {/* Title */}
@@ -347,9 +414,10 @@ export default function PostToLet() {
             disabled={isSubmitting}
             className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50"
           >
-            {isSubmitting ? "প্রসেস হচ্ছে..." : "বিজ্ঞাপন পোস্ট করুন"}
+            {isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
           </button>
         </form>
+        )}
       </div>
     </main>
   );
