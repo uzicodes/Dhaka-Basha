@@ -2,10 +2,19 @@ import prisma from "@/src/lib/db";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
 
-export default async function ListingDetails({ params }: { params: { id: string } }) {
-  // Wait for params in Next.js 15+ if needed, but standard params.id works
+export default async function ListingDetails({
+  params,
+  searchParams,
+}: {
+  params: { id: string };
+  searchParams?: Promise<{ from?: string }> | { from?: string };
+}) {
   const { id } = await params;
+  const resolvedSearchParams = await searchParams;
   const listing = await prisma.listing.findUnique({ where: { id } });
+  const isFromProfile = resolvedSearchParams?.from === "profile";
+  const backHref = isFromProfile ? "/profile" : "/listings";
+  const backLabel = isFromProfile ? "← প্রোফাইল পেজে ফিরে যান" : "← সব টু-লেট এ ফিরে যান";
 
   if (!listing) {
     return <div className="text-center pt-32 text-xl text-slate-700">পোস্টটি পাওয়া যায়নি (Post not found)</div>;
@@ -91,8 +100,8 @@ export default async function ListingDetails({ params }: { params: { id: string 
         </div>
         
         <div className="mt-8 text-center">
-          <Link href="/listings" className="text-slate-500 hover:text-[#2d79f3] font-medium transition-colors">
-            &larr; সব টু-লেট এ ফিরে যান
+          <Link href={backHref} className="text-slate-500 hover:text-[#2d79f3] font-medium transition-colors">
+            {backLabel}
           </Link>
         </div>
 
