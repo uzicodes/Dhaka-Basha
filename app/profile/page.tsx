@@ -368,6 +368,11 @@ export default function ProfilePage() {
                           <div className="flex items-center gap-2">
                             <span className="text-purple-500">লেখক:</span>
                             <span className="font-medium text-slate-800">{authorName}</span>
+                            {listing.propertyType && (
+                              <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                                {listing.propertyType}
+                              </span>
+                            )}
                           </div>
                           <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                             <span className="flex items-center gap-1.5 text-slate-700">
@@ -415,63 +420,71 @@ export default function ProfilePage() {
               return (
                 <div
                   key={listing.id}
-                  className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
+                  className="group rounded-[18px] border border-[#d7e6ff] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2d79f3] hover:shadow-md"
                 >
-                  <div>
-                    <h3 className="text-lg font-semibold text-[#151717]">{listing.title}</h3>
-                    <div className="flex items-center gap-3 text-sm text-slate-500 mt-1.5">
-                      <span className="flex items-center gap-1">
-                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        {listing.location}
-                      </span>
-                      <span>• {new Date(listing.createdAt).toLocaleDateString()}</span>
-                    </div>
-                    <div className="text-[#2d79f3] font-bold mt-2">
-                      ৳ {listing.rentPrice} / মাস
-                    </div>
-                  </div>
+                  <div className="flex items-start gap-4">
 
-                  {/* Status & Actions */}
-                  <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                      সক্রিয়
-                    </span>
+                    <div className="min-w-0 flex-1">
+                      <div className="mt-2 flex items-center gap-2">
+                        <h3 className="truncate text-lg font-semibold text-[#151717]">
+                          {listing.title}
+                        </h3>
+                        {listing.propertyType && (
+                          <span className="inline-flex shrink-0 items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                            {listing.propertyType}
+                          </span>
+                        )}
+                      </div>
 
-                    <div className="flex gap-2 ml-auto sm:ml-0">
-                      <Link
-                        href={`/listings/${listing.id}?from=profile`}
-                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
-                        title="View"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      </Link>
-                      <button
-                        type="button"
-                        onClick={() => router.push(`/post?listingId=${listing.id}`)}
-                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
-                        title="Edit"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                        </svg>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => openDeleteDialog(listing)}
-                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors"
-                        title="Delete"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
+                      <div className="mt-3 space-y-2 text-sm text-slate-600">
+                        <div className="flex items-center gap-4">
+                          <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
+                            <span className="text-purple-500">ভাড়া শুরু:</span>
+                            <span className="font-medium text-slate-800">{rentFromText}</span>
+                          </span>
+                          <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
+                            <span className="text-purple-500">ভাড়া:</span>
+                            <span className="font-medium text-slate-800">৳ {listing.rentPrice} / মাস</span>
+                          </span>
+                          <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
+                            <svg className="h-4 w-4 text-[#2d79f3] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                            </svg>
+                            <span className="text-purple-500">স্থান:</span>
+                            <span className="font-medium text-slate-800">{listing.location}</span>
+                          </span>
+                        </div>
+                      </div>
                     </div>
+
+                    <Link
+                      href={`/listings/${listing.id}?from=profile`}
+                      className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#d7e6ff] px-3 py-2 text-sm font-medium text-[#043307] transition-colors hover:bg-red-100"
+                      title="View"
+                    >
+                      দেখুন
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => router.push(`/post?listingId=${listing.id}`)}
+                      className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors shrink-0"
+                      title="Edit"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                      </svg>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => openDeleteDialog(listing)}
+                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors shrink-0"
+                      title="Delete"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
                   </div>
                 </div>
               );
