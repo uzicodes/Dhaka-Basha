@@ -51,6 +51,57 @@ export async function getRecentListings() {
   }
 }
 
+export async function getSavedListings() {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return [];
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      return [];
+    }
+
+    const savedListings = await prisma.savedListing.findMany({
+      where: {
+        userId: user.id,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        listing: {
+          include: {
+            user: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+      },
+    });
+
+    return savedListings.map((savedListing) => ({
+      ...savedListing.listing,
+      savedAt: savedListing.createdAt,
+    }));
+  } catch (error) {
+    console.error("Error fetching saved listings:", error);
+    return [];
+  }
+}
+
 export async function deleteUserListing(listingId: string) {
   try {
     const { userId } = await auth();

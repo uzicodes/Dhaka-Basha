@@ -5,7 +5,9 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
-import { deleteUserListing, getUserListings } from "@/app/actions/getListings";
+import { deleteUserListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
+
+type DashboardSection = "my-listings" | "saved-listings";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -16,7 +18,10 @@ export default function ProfilePage() {
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
   const [myListings, setMyListings] = useState<any[]>([]);
+  const [savedListings, setSavedListings] = useState<any[]>([]);
   const [isLoadingListings, setIsLoadingListings] = useState(true);
+  const [isLoadingSavedListings, setIsLoadingSavedListings] = useState(false);
+  const [activeSection, setActiveSection] = useState<DashboardSection>("my-listings");
   const [listingToDelete, setListingToDelete] = useState<any | null>(null);
   const [isDeletingListing, setIsDeletingListing] = useState(false);
 
@@ -40,11 +45,15 @@ export default function ProfilePage() {
 
           const listings = await getUserListings();
           setMyListings(listings);
+
+          const savedPosts = await getSavedListings();
+          setSavedListings(savedPosts);
         } catch (error) {
           console.error("Error loading user profile:", error);
           setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
         } finally {
           setIsLoadingListings(false);
+          setIsLoadingSavedListings(false);
         }
       }
     }
@@ -91,6 +100,10 @@ export default function ProfilePage() {
 
     setListingToDelete(null);
   };
+
+  const currentListings = activeSection === "my-listings" ? myListings : savedListings;
+  const isLoadingCurrentListings = activeSection === "my-listings" ? isLoadingListings : isLoadingSavedListings;
+  const currentSectionTitle = activeSection === "my-listings" ? "আমার বিজ্ঞাপন সমূহ" : "সংরক্ষিত বিজ্ঞাপন";
 
   const confirmDeleteListing = async () => {
     if (!listingToDelete) {
@@ -214,12 +227,28 @@ export default function ProfilePage() {
               <h2 className="text-lg font-bold text-[#151717] mb-4 border-b pb-2">ড্যাশবোর্ড মেনু</h2>
               <ul className="space-y-2">
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 bg-[#2d79f3] text-white rounded-none font-medium transition-colors">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSection("my-listings")}
+                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${
+                      activeSection === "my-listings"
+                        ? "bg-[#2d79f3] text-white"
+                        : "text-slate-600 hover:bg-slate-50 cursor-pointer"
+                    }`}
+                  >
                     আমার বিজ্ঞাপন সমূহ
                   </button>
                 </li>
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer">
+                  <button
+                    type="button"
+                    onClick={() => setActiveSection("saved-listings")}
+                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${
+                      activeSection === "saved-listings"
+                        ? "bg-[#2d79f3] text-white"
+                        : "text-slate-600 hover:bg-slate-50 cursor-pointer"
+                    }`}
+                  >
                     সংরক্ষিত বিজ্ঞাপন (Saved)
                   </button>
                 </li>
@@ -244,7 +273,7 @@ export default function ProfilePage() {
           {/* Main Content Area (My Listings) */}
           <div className="md:col-span-2 space-y-4">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-bold text-[#151717]">আমার বিজ্ঞাপন সমূহ</h2>
+              <h2 className="text-xl font-bold text-[#151717]">{currentSectionTitle}</h2>
               <Link
                 href="/post"
                 className="text-sm font-medium text-[#2d79f3] hover:underline"
@@ -254,11 +283,15 @@ export default function ProfilePage() {
             </div>
 
             {/* Real Listing Cards */}
-            {isLoadingListings ? (
+            {isLoadingCurrentListings ? (
               <p className="text-slate-500">লোডিং...</p>
-            ) : myListings.length === 0 ? (
-              <p className="text-slate-500">আপনার কোনো বিজ্ঞাপন নেই।</p>
-            ) : myListings.map((listing) => (
+            ) : currentListings.length === 0 ? (
+              <p className="text-slate-500">
+                {activeSection === "my-listings"
+                  ? "আপনার কোনো বিজ্ঞাপন নেই।"
+                  : "আপনি এখনো কোনো বিজ্ঞাপন সংরক্ষণ করেননি।"}
+              </p>
+            ) : currentListings.map((listing) => (
               <div
                 key={listing.id}
                 className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
@@ -282,42 +315,57 @@ export default function ProfilePage() {
 
                 {/* Status & Actions */}
                 <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                  <span className={`px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700`}>
+                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
                     সক্রিয়
                   </span>
 
-                  <div className="flex gap-2 ml-auto sm:ml-0">
-                    <Link
-                      href={`/listings/${listing.id}?from=profile`}
-                      className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
-                      title="View"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                    </Link>
-                    <button
-                      type="button"
-                      onClick={() => router.push(`/post?listingId=${listing.id}`)}
-                      className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
-                      title="Edit"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                      </svg>
-                    </button>
-                    <button
-                      type="button"
-                      onClick={() => openDeleteDialog(listing)}
-                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors"
-                      title="Delete"
-                    >
-                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                      </svg>
-                    </button>
-                  </div>
+                  {activeSection === "my-listings" ? (
+                    <div className="flex gap-2 ml-auto sm:ml-0">
+                      <Link
+                        href={`/listings/${listing.id}?from=profile`}
+                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
+                        title="View"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => router.push(`/post?listingId=${listing.id}`)}
+                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
+                        title="Edit"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                        </svg>
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => openDeleteDialog(listing)}
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors"
+                        title="Delete"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 ml-auto sm:ml-0">
+                      <Link
+                        href={`/listings/${listing.id}`}
+                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
+                        title="View"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
+                        </svg>
+                      </Link>
+                    </div>
+                  )}
                 </div>
               </div>
             ))}
