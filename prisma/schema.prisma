@@ -4,9 +4,10 @@ generator client {
 
 datasource db {
   provider = "postgresql"
+
 }
 
-// 2. The User Model 
+// 1. The User Model 
 model User {
   id        String   @id @default(cuid())
   clerkId   String   @unique
@@ -17,10 +18,11 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  listings  Listing[] // A user can have many To-Let posts
+  listings      Listing[]      // A user can CREATE many To-Let posts
+  savedListings SavedListing[] // A user can SAVE many To-Let posts
 }
 
-// 3. The To-Let Listing Model
+// 2. The To-Let Listing Model
 model Listing {
   id           String   @id @default(cuid())
   title        String
@@ -40,4 +42,24 @@ model Listing {
   // Relationship to the User who posted it
   userId       String
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  // Relationship to the Users who saved it
+  savedBy      SavedListing[] 
+}
+
+// 3. The Explicit Join Table for Saved Posts
+model SavedListing {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now()) // Tracks exactly when the user saved it
+
+  // Link to the User
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // Link to the Listing
+  listingId String
+  listing   Listing  @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  // This prevents a user from saving the exact same post multiple times
+  @@unique([userId, listingId]) 
 }
