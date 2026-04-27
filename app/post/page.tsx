@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -26,7 +26,7 @@ const formSchema = z.object({
 
 type PostFormValues = z.infer<typeof formSchema>;
 
-export default function PostToLet() {
+function PostToLetForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const { user, isLoaded } = useUser();
@@ -420,5 +420,13 @@ export default function PostToLet() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function PostToLet() {
+  return (
+    <Suspense fallback={<div className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12 relative">Loading...</div>}>
+      <PostToLetForm />
+    </Suspense>
   );
 }
