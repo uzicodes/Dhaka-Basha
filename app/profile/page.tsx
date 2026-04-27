@@ -5,9 +5,30 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
-import { deleteUserListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
+import { deleteUserListing, deleteSavedListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
 
 type DashboardSection = "my-listings" | "saved-listings";
+
+function formatRentFromDate(rentFrom?: string) {
+  if (!rentFrom) {
+    return "ভাড়া শুরুর তারিখ নেই";
+  }
+
+  const [monthPart, yearPart] = rentFrom.split("/");
+  const month = Number(monthPart);
+  const year = Number(yearPart);
+
+  if (!month || !year || month < 1 || month > 12) {
+    return rentFrom;
+  }
+
+  const parsedDate = new Date(year, month - 1, 1);
+
+  return parsedDate.toLocaleDateString("bn-BD", {
+    month: "long",
+    year: "numeric",
+  });
+}
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -24,6 +45,8 @@ export default function ProfilePage() {
   const [activeSection, setActiveSection] = useState<DashboardSection>("my-listings");
   const [listingToDelete, setListingToDelete] = useState<any | null>(null);
   const [isDeletingListing, setIsDeletingListing] = useState(false);
+  const [savedListingToDelete, setSavedListingToDelete] = useState<any | null>(null);
+  const [isDeletingSavedListing, setIsDeletingSavedListing] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -122,6 +145,38 @@ export default function ProfilePage() {
       console.error("Failed to delete listing:", error);
     } finally {
       setIsDeletingListing(false);
+    }
+  };
+
+  const openDeleteSavedListingDialog = (listing: any) => {
+    setSavedListingToDelete(listing);
+  };
+
+  const closeDeleteSavedListingDialog = () => {
+    if (isDeletingSavedListing) {
+      return;
+    }
+
+    setSavedListingToDelete(null);
+  };
+
+  const confirmDeleteSavedListing = async () => {
+    if (!savedListingToDelete) {
+      return;
+    }
+
+    setIsDeletingSavedListing(true);
+
+    try {
+      await deleteSavedListing(savedListingToDelete.id);
+      setSavedListings((currentListings) =>
+        currentListings.filter((listing) => listing.id !== savedListingToDelete.id),
+      );
+      setSavedListingToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete saved listing:", error);
+    } finally {
+      setIsDeletingSavedListing(false);
     }
   };
 
@@ -291,35 +346,100 @@ export default function ProfilePage() {
                   ? "আপনার কোনো বিজ্ঞাপন নেই।"
                   : "আপনি এখনো কোনো বিজ্ঞাপন সংরক্ষণ করেননি।"}
               </p>
-            ) : currentListings.map((listing) => (
-              <div
-                key={listing.id}
-                className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
-              >
-                <div>
-                  <h3 className="text-lg font-semibold text-[#151717]">{listing.title}</h3>
-                  <div className="flex items-center gap-3 text-sm text-slate-500 mt-1.5">
-                    <span className="flex items-center gap-1">
-                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      {listing.location}
+            ) : currentListings.map((listing) => {
+              const authorName = listing.user?.name || "অজানা লেখক";
+              const rentFromText = formatRentFromDate(listing.rentFrom);
+
+              if (activeSection === "saved-listings") {
+                return (
+                  <div
+                    key={listing.id}
+                    className="group rounded-[18px] border border-[#d7e6ff] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2d79f3] hover:shadow-md"
+                  >
+                    <div className="flex items-start gap-4">
+
+
+                      <div className="min-w-0 flex-1">
+                        <h3 className="mt-2 truncate text-lg font-semibold text-[#151717]">
+                          {listing.title}
+                        </h3>
+
+                        <div className="mt-3 space-y-2 text-sm text-slate-600">
+                          <div className="flex items-center gap-2">
+                            <span className="text-purple-500">লেখক:</span>
+                            <span className="font-medium text-slate-800">{authorName}</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
+                            <span className="flex items-center gap-1.5 text-slate-700">
+                              <span className="text-purple-500">ভাড়া শুরু:</span>
+                              <span className="font-medium text-slate-800">{rentFromText}</span>
+                            </span>
+                            <span className="flex items-center gap-1.5 text-slate-700">
+                              <span className="text-purple-500">ভাড়া:</span>
+                              <span className="font-medium text-slate-800">৳ {listing.rentPrice} / মাস</span>
+                            </span>
+                            <span className="flex items-center gap-1.5 text-slate-700">
+                              <svg className="h-4 w-4 text-[#2d79f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                              </svg>
+                              <span className="text-purple-500">স্থান:</span>
+                              <span className="font-medium text-slate-800">{listing.location}</span>
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+
+                      <Link
+                        href={`/listings/${listing.id}`}
+                        className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#d7e6ff] px-3 py-2 text-sm font-medium text-[#043307] transition-colors hover:bg-red-100"
+                        title="View"
+                      >
+                        দেখুন
+                      </Link>
+                      <button
+                        type="button"
+                        onClick={() => openDeleteSavedListingDialog(listing)}
+                        className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors shrink-0"
+                        title="Delete from saved"
+                      >
+                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  </div>
+                );
+              }
+
+              return (
+                <div
+                  key={listing.id}
+                  className="bg-white p-4 rounded-[15px] shadow-sm border-[1.5px] border-[#ecedec] flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 hover:border-[#2d79f3] transition-colors"
+                >
+                  <div>
+                    <h3 className="text-lg font-semibold text-[#151717]">{listing.title}</h3>
+                    <div className="flex items-center gap-3 text-sm text-slate-500 mt-1.5">
+                      <span className="flex items-center gap-1">
+                        <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        {listing.location}
+                      </span>
+                      <span>• {new Date(listing.createdAt).toLocaleDateString()}</span>
+                    </div>
+                    <div className="text-[#2d79f3] font-bold mt-2">
+                      ৳ {listing.rentPrice} / মাস
+                    </div>
+                  </div>
+
+                  {/* Status & Actions */}
+                  <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
+                    <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
+                      সক্রিয়
                     </span>
-                    <span>• {new Date(listing.createdAt).toLocaleDateString()}</span>
-                  </div>
-                  <div className="text-[#2d79f3] font-bold mt-2">
-                    ৳ {listing.rentPrice} / মাস
-                  </div>
-                </div>
 
-                {/* Status & Actions */}
-                <div className="flex sm:flex-col items-center sm:items-end gap-3 w-full sm:w-auto">
-                  <span className="px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-700">
-                    সক্রিয়
-                  </span>
-
-                  {activeSection === "my-listings" ? (
                     <div className="flex gap-2 ml-auto sm:ml-0">
                       <Link
                         href={`/listings/${listing.id}?from=profile`}
@@ -352,23 +472,10 @@ export default function ProfilePage() {
                         </svg>
                       </button>
                     </div>
-                  ) : (
-                    <div className="flex gap-2 ml-auto sm:ml-0">
-                      <Link
-                        href={`/listings/${listing.id}`}
-                        className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors"
-                        title="View"
-                      >
-                        <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                        </svg>
-                      </Link>
-                    </div>
-                  )}
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
 
           </div>
         </div>
@@ -398,6 +505,36 @@ export default function ProfilePage() {
                 className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
               >
                 {isDeletingListing ? "ডিলিট হচ্ছে..." : "হ্যাঁ, ডিলিট করুন"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {savedListingToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-[20px] bg-white p-6 shadow-xl border border-slate-200">
+            <h3 className="text-lg font-bold text-[#151717]">এই সংরক্ষিত পোস্টটি সরাতে চান?</h3>
+            <p className="mt-2 text-sm text-slate-600">
+              <span className="font-medium text-slate-900">{savedListingToDelete.title}</span> আপনার সংরক্ষিত তালিকা থেকে সরিয়ে ফেলা হবে।
+            </p>
+
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeDeleteSavedListingDialog}
+                disabled={isDeletingSavedListing}
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                না
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteSavedListing}
+                disabled={isDeletingSavedListing}
+                className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isDeletingSavedListing ? "সরাচ্ছে..." : "হ্যাঁ, সরান"}
               </button>
             </div>
           </div>

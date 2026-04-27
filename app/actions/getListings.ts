@@ -141,6 +141,45 @@ export async function deleteUserListing(listingId: string) {
   }
 }
 
+export async function deleteSavedListing(listingId: string) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const result = await prisma.savedListing.deleteMany({
+      where: {
+        listingId: listingId,
+        userId: user.id,
+      },
+    });
+
+    if (result.count === 0) {
+      throw new Error("Saved listing not found or not owned by user");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting saved listing:", error);
+    throw error;
+  }
+}
+
 export async function getUserListingById(listingId: string) {
   try {
     const { userId } = await auth();
