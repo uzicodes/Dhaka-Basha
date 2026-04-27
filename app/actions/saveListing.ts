@@ -4,26 +4,39 @@ import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import prisma from "@/src/lib/db";
 
-export async function toggleSaveListing(listingId: string, pathname: string) {
+export async function toggleSaveListing(
+  listingId: string,
+  pathname: string,
+  _formData?: FormData,
+) {
   const { userId } = await auth();
 
   if (!userId) {
     throw new Error("Unauthorized");
   }
 
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
+    select: { id: true },
+  });
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
   const savedListing = await prisma.savedListing.findUnique({
-    where: { userId_listingId: { userId, listingId } },
+    where: { userId_listingId: { userId: user.id, listingId } },
   });
 
   const isSaved = !savedListing;
 
   if (savedListing) {
     await prisma.savedListing.delete({
-      where: { userId_listingId: { userId, listingId } },
+      where: { userId_listingId: { userId: user.id, listingId } },
     });
   } else {
     await prisma.savedListing.create({
-      data: { userId, listingId },
+      data: { userId: user.id, listingId },
     });
   }
 
@@ -39,8 +52,17 @@ export async function checkIfSaved(listingId: string) {
     return false;
   }
 
+  const user = await prisma.user.findUnique({
+    where: { clerkId: userId },
+    select: { id: true },
+  });
+
+  if (!user) {
+    return false;
+  }
+
   const savedListing = await prisma.savedListing.findUnique({
-    where: { userId_listingId: { userId, listingId } },
+    where: { userId_listingId: { userId: user.id, listingId } },
   });
 
   return Boolean(savedListing);

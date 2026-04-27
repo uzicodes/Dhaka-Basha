@@ -1,6 +1,7 @@
 import prisma from "@/src/lib/db";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
+import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
 
 export default async function ListingDetails({
   params,
@@ -18,6 +19,14 @@ export default async function ListingDetails({
 
   if (!listing) {
     return <div className="text-center pt-32 text-xl text-slate-700">পোস্টটি পাওয়া যায়নি (Post not found)</div>;
+  }
+
+  const listingId = listing.id;
+  const isSaved = await checkIfSaved(id);
+  async function handleToggleSaveAction() {
+    "use server";
+
+    await toggleSaveListing(listingId, `/listings/${listingId}`);
   }
 
   const propTypeLabel = propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType;
@@ -48,6 +57,23 @@ export default async function ListingDetails({
             <p className="text-sm text-slate-500 mb-1">ভাড়া</p>
             <p className="text-2xl font-bold text-[#2d79f3]">৳ {listing.rentPrice.toLocaleString('en-IN')} / মাস</p>
             <p className="text-sm text-slate-600 font-medium mt-1">শুরু: {listing.rentFrom}</p>
+            <div className="mt-4 flex justify-start md:justify-end">
+              <form action={handleToggleSaveAction}>
+                <button
+                  type="submit"
+                  className={`inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold transition-colors ${
+                    isSaved
+                      ? "border-[#2d79f3] bg-[#2d79f3] text-white hover:bg-blue-700"
+                      : "border-[#2d79f3] bg-white text-[#2d79f3] hover:bg-blue-50"
+                  }`}
+                >
+                  <svg className="h-4 w-4" fill={isSaved ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  {isSaved ? "সংরক্ষিত" : "সংরক্ষণ করুন"}
+                </button>
+              </form>
+            </div>
           </div>
         </div>
 
