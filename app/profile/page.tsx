@@ -38,6 +38,7 @@ export default function ProfilePage() {
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [memberSince, setMemberSince] = useState<string>("");
   const [myListings, setMyListings] = useState<any[]>([]);
   const [savedListings, setSavedListings] = useState<any[]>([]);
   const [isLoadingListings, setIsLoadingListings] = useState(true);
@@ -62,6 +63,14 @@ export default function ProfilePage() {
           if (dbUser) {
             setPhone(dbUser.phone || user.phoneNumbers?.[0]?.phoneNumber || "");
             setAddress(dbUser.address || "");
+            if (dbUser.createdAt) {
+              const date = new Date(dbUser.createdAt);
+              const monthYear = date.toLocaleDateString("bn-BD", {
+                month: "long",
+                year: "numeric",
+              });
+              setMemberSince(monthYear);
+            }
           } else {
             setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
           }
@@ -260,7 +269,7 @@ export default function ProfilePage() {
               </div>
             </div>
 
-            <div className="mt-4 flex flex-wrap gap-3 justify-center md:justify-start">
+            <div className="mt-4 flex flex-wrap gap-3 items-center justify-center md:justify-start">
               <button
                 type="button"
                 onClick={handleSave}
@@ -269,6 +278,11 @@ export default function ProfilePage() {
               >
                 {isSaving ? "সেভিং..." : (isEditing ? "সেভ" : "প্রোফাইল এডিট")}
               </button>
+              {memberSince && (
+                <span className="inline-flex items-center rounded-full bg-green-100 px-4 py-1.5 text-sm font-medium text-purple-700">
+                  সদস্য: {memberSince}
+                </span>
+              )}
             </div>
           </div>
         </div>
@@ -370,7 +384,7 @@ export default function ProfilePage() {
                             <span className="font-medium text-slate-800">{authorName}</span>
                             {listing.propertyType && (
                               <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
-                                {listing.propertyType}
+                                {listing.propertyType.charAt(0).toUpperCase() + listing.propertyType.slice(1)}
                               </span>
                             )}
                           </div>
@@ -431,7 +445,7 @@ export default function ProfilePage() {
                         </h3>
                         {listing.propertyType && (
                           <span className="inline-flex shrink-0 items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
-                            {listing.propertyType}
+                            {listing.propertyType.charAt(0).toUpperCase() + listing.propertyType.slice(1)}
                           </span>
                         )}
                       </div>

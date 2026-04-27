@@ -17,6 +17,7 @@ export async function getUserProfile() {
     select: {
       phone: true,
       address: true,
+      createdAt: true,
     },
   });
 
