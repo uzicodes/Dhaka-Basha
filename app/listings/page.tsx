@@ -231,7 +231,7 @@ export default function Listings() {
                   className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group"
                 >
                   {/* Card Top Accent */}
-                  <div className="h-1.5 w-full bg-gradient-to-r from-[#2d79f3] to-[#60a5fa]" />
+                  <div className="h-1.5 w-full bg-linear-to-r from-[#2d79f3] to-[#60a5fa]" />
 
                   <div className="p-5 flex flex-col flex-1">
                     {/* Badge + Price */}

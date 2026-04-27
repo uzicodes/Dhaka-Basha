@@ -50,3 +50,42 @@ export async function getRecentListings() {
     return [];
   }
 }
+
+export async function deleteUserListing(listingId: string) {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await prisma.user.findUnique({
+      where: {
+        clerkId: userId,
+      },
+      select: {
+        id: true,
+      },
+    });
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const result = await prisma.listing.deleteMany({
+      where: {
+        id: listingId,
+        userId: user.id,
+      },
+    });
+
+    if (result.count === 0) {
+      throw new Error("Listing not found or not owned by user");
+    }
+
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting user listing:", error);
+    throw error;
+  }
+}

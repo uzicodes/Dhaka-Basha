@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
-import { getUserListings } from "@/app/actions/getListings";
+import { deleteUserListing, getUserListings } from "@/app/actions/getListings";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -17,6 +17,8 @@ export default function ProfilePage() {
   const [isSaving, setIsSaving] = useState(false);
   const [myListings, setMyListings] = useState<any[]>([]);
   const [isLoadingListings, setIsLoadingListings] = useState(true);
+  const [listingToDelete, setListingToDelete] = useState<any | null>(null);
+  const [isDeletingListing, setIsDeletingListing] = useState(false);
 
   useEffect(() => {
     if (isLoaded && !user) {
@@ -76,6 +78,38 @@ export default function ProfilePage() {
   const handlePhoneChange = (value: string) => {
     const digitsOnly = value.replace(/\D/g, "").slice(0, 11);
     setPhone(digitsOnly);
+  };
+
+  const openDeleteDialog = (listing: any) => {
+    setListingToDelete(listing);
+  };
+
+  const closeDeleteDialog = () => {
+    if (isDeletingListing) {
+      return;
+    }
+
+    setListingToDelete(null);
+  };
+
+  const confirmDeleteListing = async () => {
+    if (!listingToDelete) {
+      return;
+    }
+
+    setIsDeletingListing(true);
+
+    try {
+      await deleteUserListing(listingToDelete.id);
+      setMyListings((currentListings) =>
+        currentListings.filter((listing) => listing.id !== listingToDelete.id),
+      );
+      setListingToDelete(null);
+    } catch (error) {
+      console.error("Failed to delete listing:", error);
+    } finally {
+      setIsDeletingListing(false);
+    }
   };
 
 
@@ -258,7 +292,12 @@ export default function ProfilePage() {
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
                       </svg>
                     </button>
-                    <button className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors" title="Delete">
+                    <button
+                      type="button"
+                      onClick={() => openDeleteDialog(listing)}
+                      className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors"
+                      title="Delete"
+                    >
                       <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                       </svg>
@@ -271,6 +310,36 @@ export default function ProfilePage() {
           </div>
         </div>
       </div>
+
+      {listingToDelete && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
+          <div className="w-full max-w-md rounded-[20px] bg-white p-6 shadow-xl border border-slate-200">
+            <h3 className="text-lg font-bold text-[#151717]">এই পোস্টটি মুছতে চান?</h3>
+            <p className="mt-2 text-sm text-slate-600">
+              <span className="font-medium text-slate-900">{listingToDelete.title}</span> স্থায়ীভাবে মুছে যাবে এবং আর কোথাও দেখা যাবে না।
+            </p>
+
+            <div className="mt-6 flex items-center justify-end gap-3">
+              <button
+                type="button"
+                onClick={closeDeleteDialog}
+                disabled={isDeletingListing}
+                className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                না
+              </button>
+              <button
+                type="button"
+                onClick={confirmDeleteListing}
+                disabled={isDeletingListing}
+                className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+              >
+                {isDeletingListing ? "ডিলিট হচ্ছে..." : "হ্যাঁ, ডিলিট করুন"}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </main>
   );
 }
