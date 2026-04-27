@@ -210,13 +210,9 @@ export default function Listings() {
         {/* Recent Listings Section */}
         <div className="w-full mt-36 pb-8">
           <div className="flex flex-col items-center mb-10 gap-2">
-            <span className="text-xs font-semibold uppercase tracking-widest text-[#2d79f3] mb-1">
-              সর্বশেষ প্রকাশিত
-            </span>
             <h2 className="text-3xl font-bold text-slate-900">
               সাম্প্রতিক টু-লেট
             </h2>
-            <div className="w-12 h-1 bg-[#2d79f3] rounded-full mt-1" />
           </div>
 
           {isLoading ? (
@@ -236,11 +232,11 @@ export default function Listings() {
                   <div className="p-5 flex flex-col flex-1">
                     {/* Badge + Price */}
                     <div className="flex justify-between items-center mb-4">
-                      <span className="bg-blue-50 text-[#2d79f3] text-xs font-semibold px-3 py-1 rounded-full border border-blue-100">
+                      <span className="bg-purple-50 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full border border-purple-100">
                         {propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType}
                       </span>
                       <div className="text-right">
-                        <span className="text-[#2d79f3] font-bold text-lg leading-none">
+                        <span className="text-red-600 font-bold text-lg leading-none">
                           ৳{listing.rentPrice.toLocaleString('en-IN')}
                         </span>
                         <span className="text-slate-400 text-xs block">/মাস</span>
@@ -276,7 +272,7 @@ export default function Listings() {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                           </svg>
                         </span>
-                        <span>শুরু: {listing.rentFrom}</span>
+                        <span>ভাড়া শুরু: {listing.rentFrom}</span>
                       </div>
 
                       <div className="flex items-center gap-2.5">
@@ -292,7 +288,7 @@ export default function Listings() {
                     {/* CTA Button */}
                     <Link
                       href={`/listings/${listing.id}`}
-                      className="w-full mt-5 bg-[#2d79f3] text-white font-semibold py-2.5 rounded-xl hover:bg-blue-700 transition-colors block text-center text-sm shadow-sm shadow-blue-200"
+                      className="w-full mt-5 bg-[#2d79f3] text-white font-semibold py-2.5 hover:bg-green-700 transition-colors block text-center text-sm shadow-sm shadow-blue-200"
                     >
                       বিস্তারিত দেখুন →
                     </Link>
