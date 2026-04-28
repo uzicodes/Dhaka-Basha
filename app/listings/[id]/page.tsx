@@ -3,7 +3,7 @@ import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
 import { auth } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
-import ImageGallery from "./ImageGallery";
+import ImageGallery from "@/app/components/ImageGallery";
 
 export default async function ListingDetails({
   params,
