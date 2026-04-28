@@ -15,6 +15,7 @@ export async function getUserProfile() {
       clerkId: userId,
     },
     select: {
+      name: true,
       phone: true,
       address: true,
       createdAt: true,
@@ -24,7 +25,7 @@ export async function getUserProfile() {
   return user;
 }
 
-export async function updateUserProfile(data: { phone: string; address: string }) {
+export async function updateUserProfile(data: { name: string; phone: string; address: string }) {
   const { userId } = await auth();
 
   if (!userId) {
@@ -36,6 +37,7 @@ export async function updateUserProfile(data: { phone: string; address: string }
       clerkId: userId,
     },
     data: {
+      name: data.name,
       phone: data.phone,
       address: data.address,
     },

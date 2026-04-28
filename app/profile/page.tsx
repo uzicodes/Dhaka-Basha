@@ -35,6 +35,7 @@ export default function ProfilePage() {
   const { signOut } = useClerk();
   const { isLoaded, user } = useUser();
   const [isEditing, setIsEditing] = useState(false);
+  const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [isSaving, setIsSaving] = useState(false);
@@ -61,6 +62,7 @@ export default function ProfilePage() {
         try {
           const dbUser = await getUserProfile();
           if (dbUser) {
+            setName(dbUser.name || `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim());
             setPhone(dbUser.phone || user.phoneNumbers?.[0]?.phoneNumber || "");
             setAddress(dbUser.address || "");
             if (dbUser.createdAt) {
@@ -72,6 +74,7 @@ export default function ProfilePage() {
               setMemberSince(monthYear);
             }
           } else {
+            setName(`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim());
             setPhone(user.phoneNumbers?.[0]?.phoneNumber || "");
           }
 
@@ -96,7 +99,7 @@ export default function ProfilePage() {
     if (isEditing) {
       setIsSaving(true);
       try {
-        await updateUserProfile({ phone, address });
+        await updateUserProfile({ name, phone, address });
         setIsEditing(false);
       } catch (error) {
         console.error("Failed to update profile", error);
@@ -220,9 +223,21 @@ export default function ProfilePage() {
           </div>
 
           <div className="flex flex-col items-center md:items-start grow text-center md:text-left">
-            <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
-              {`${user.firstName ?? ""} ${user.lastName ?? ""}`.trim() || "N/A"}
-            </h1>
+            {isEditing ? (
+              <div className="mb-2 w-full max-w-sm">
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="আপনার নাম"
+                  className="w-full text-2xl md:text-3xl font-bold text-[#151717] border-b-2 border-[#2d79f3] focus:outline-none bg-transparent"
+                />
+              </div>
+            ) : (
+              <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
+                {name || "N/A"}
+              </h1>
+            )}
             <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress ?? "N/A"}</p>
 
             <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
