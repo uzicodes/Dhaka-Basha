@@ -39,6 +39,8 @@ function PostToLetForm() {
   const [isLoadingListing, setIsLoadingListing] = useState(isEditMode);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
+  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [isDeletingImage, setIsDeletingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize React Hook Form 
@@ -118,6 +120,7 @@ function PostToLetForm() {
           images: listing.images ?? [],
           subLocation: listing.subLocation ?? "",
         });
+        setExistingImages(listing.images ?? []);
       } catch (error) {
         console.error("Failed to load listing for edit:", error);
         alert("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
@@ -136,21 +139,65 @@ function PostToLetForm() {
     };
   }, [isEditMode, listingId, reset, router]);
 
-  // --- File selection handler (max 5 images) ---
+  // --- File selection handler (max 5 images total: existing + new) ---
+  const totalImageCount = existingImages.length + selectedFiles.length;
+
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const incoming = Array.from(e.target.files);
-    const combined = [...selectedFiles, ...incoming].slice(0, 5);
+    const slotsAvailable = 5 - existingImages.length;
+    const combined = [...selectedFiles, ...incoming].slice(0, slotsAvailable);
     setSelectedFiles(combined);
     // Reset the input so re-selecting the same file works
     e.target.value = "";
-    if (selectedFiles.length + incoming.length > 5) {
+    if (existingImages.length + selectedFiles.length + incoming.length > 5) {
       alert("সর্বোচ্চ ৫টি ছবি আপলোড করা যাবে।");
     }
   };
 
   const removeFile = (index: number) => {
     setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  // --- Delete an existing (already-uploaded) image from R2 and the form ---
+  const removeExistingImage = async (url: string) => {
+    if (!confirm("এই ছবিটি স্থায়ীভাবে মুছে ফেলতে চান? এটি পুনরুদ্ধার করা যাবে না।")) return;
+    setIsDeletingImage(true);
+    try {
+      // Delete from R2
+      const res = await fetch("/api/upload/delete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ url }),
+      });
+      if (!res.ok) throw new Error("ছবি মুছতে সমস্যা হয়েছে।");
+
+      // Update local state
+      const updated = existingImages.filter((img) => img !== url);
+      setExistingImages(updated);
+      setValue("images", updated);
+
+      // Persist to DB immediately so the deletion is saved even if the user doesn't submit
+      if (isEditMode && listingId) {
+        await updateUserListing(listingId, {
+          title: watch("title"),
+          rentPrice: Number(watch("rentPrice")),
+          propertyType: watch("propertyType"),
+          location: watch("location"),
+          rentFrom: watch("rentFrom"),
+          address: watch("address"),
+          contactInfo: watch("contactInfo"),
+          mapLink: watch("mapLink"),
+          images: updated,
+          subLocation: watch("subLocation"),
+        });
+      }
+    } catch (error) {
+      console.error(error);
+      alert(error instanceof Error ? error.message : "ছবি মুছতে সমস্যা হয়েছে।");
+    } finally {
+      setIsDeletingImage(false);
+    }
   };
 
   const onSubmit = async (data: PostFormValues) => {
@@ -167,7 +214,7 @@ function PostToLetForm() {
     setIsUploading(true);
 
     try {
-      let uploadedImageUrls: string[] = data.images ?? [];
+      let uploadedImageUrls: string[] = [...existingImages];
 
       // --- Phase 1 & 2: Upload images to Cloudflare R2 ---
       if (selectedFiles.length > 0) {
@@ -465,6 +512,36 @@ function PostToLetForm() {
           <div className="flex flex-col gap-1.5 mt-2">
             <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি)</label>
 
+            {/* Existing uploaded images (edit mode) */}
+            {existingImages.length > 0 && (
+              <div className="mb-2">
+                <p className="text-xs text-slate-500 font-medium mb-1.5">বর্তমান ছবিসমূহ</p>
+                <div className="flex flex-wrap gap-3">
+                  {existingImages.map((url, idx) => (
+                    <div key={url} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={url}
+                        alt={`ছবি ${idx + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        disabled={isDeletingImage}
+                        onClick={() => removeExistingImage(url)}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow disabled:opacity-50"
+                        title="স্থায়ীভাবে মুছুন"
+                      >
+                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        </svg>
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
             {/* Hidden file input */}
             <input
               ref={fileInputRef}
@@ -476,41 +553,46 @@ function PostToLetForm() {
             />
 
             {/* Dropzone / click area */}
-            <div
-              onClick={() => fileInputRef.current?.click()}
-              className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
-            >
-              <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-              </svg>
-              <span className="text-sm">ছবি যোগ করতে এখানে ক্লিক করুন</span>
-              <span className="text-xs mt-1">{selectedFiles.length}/৫ টি ছবি নির্বাচিত</span>
-            </div>
+            {totalImageCount < 5 && (
+              <div
+                onClick={() => fileInputRef.current?.click()}
+                className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
+              >
+                <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span className="text-sm">ছবি যোগ করতে এখানে ক্লিক করুন</span>
+                <span className="text-xs mt-1">{totalImageCount}/৫ টি ছবি</span>
+              </div>
+            )}
 
-            {/* Thumbnail previews */}
+            {/* New file thumbnail previews */}
             {selectedFiles.length > 0 && (
-              <div className="flex flex-wrap gap-3 mt-2">
-                {selectedFiles.map((file, idx) => (
-                  <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={URL.createObjectURL(file)}
-                      alt={file.name}
-                      className="w-full h-full object-cover"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => removeFile(idx)}
-                      className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
-                      title="সরান"
-                    >
-                      ✕
-                    </button>
-                    <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] text-center truncate px-1 py-0.5">
-                      {file.name}
-                    </span>
-                  </div>
-                ))}
+              <div>
+                <p className="text-xs text-slate-500 font-medium mb-1.5">নতুন ছবি</p>
+                <div className="flex flex-wrap gap-3">
+                  {selectedFiles.map((file, idx) => (
+                    <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-green-300 shadow-sm">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={file.name}
+                        className="w-full h-full object-cover"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => removeFile(idx)}
+                        className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                        title="সরান"
+                      >
+                        ✕
+                      </button>
+                      <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] text-center truncate px-1 py-0.5">
+                        {file.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
               </div>
             )}
           </div>
