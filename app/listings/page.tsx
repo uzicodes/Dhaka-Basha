@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react';
 import { locations, propertyTypes } from "@/src/lib/constants";
-import { getRecentListings } from "@/app/actions/getListings";
+import { getRecentListings, searchListings } from "@/app/actions/getListings";
 import Link from 'next/link';
 import { Loader } from "@/app/components/GlobalLoader";
 
@@ -18,6 +18,8 @@ export default function Listings() {
 
   const [recentListings, setRecentListings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [searchResults, setSearchResults] = useState<any[] | null>(null);
+  const [isSearching, setIsSearching] = useState<boolean>(false);
 
   useEffect(() => {
     const fetchListings = async () => {
@@ -200,15 +202,115 @@ export default function Listings() {
             </div>
 
             {/* Search Button */}
-            <button className="w-full md:w-auto px-8 py-3.5 bg-[#2d79f3] text-white font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shrink-0 z-20 rounded-b-[10px] md:rounded-none md:rounded-r-[10px]">
-              খুঁজুন
+            <button
+              type="button"
+              disabled={isSearching}
+              onClick={async () => {
+                if (!selectedLocation && !selectedType) {
+                  alert("অনুগ্রহ করে এলাকা অথবা প্রপার্টির ধরন নির্বাচন করুন।");
+                  return;
+                }
+                setIsSearching(true);
+                try {
+                  const results = await searchListings({
+                    location: selectedLocation || undefined,
+                    subLocation: selectedSubLocation || undefined,
+                    propertyType: selectedType || undefined,
+                  });
+                  setSearchResults(results);
+                } catch (error) {
+                  console.error("Search failed:", error);
+                  alert("অনুসন্ধানে সমস্যা হয়েছে।");
+                } finally {
+                  setIsSearching(false);
+                }
+              }}
+              className="w-full md:w-auto px-8 py-3.5 bg-[#2d79f3] text-white font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center gap-2 shrink-0 z-20 rounded-b-[10px] md:rounded-none md:rounded-r-[10px] disabled:opacity-60"
+            >
+              {isSearching ? "খুঁজছে..." : "খুঁজুন"}
             </button>
 
           </div>
         </div>
 
+        {/* Search Results Section */}
+        {searchResults !== null && (
+          <div className="w-full mt-12 pb-8">
+            <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-3">
+              <h2 className="text-2xl font-bold text-slate-900">
+                অনুসন্ধানের ফলাফল ({searchResults.length}টি)
+              </h2>
+              <button
+                type="button"
+                onClick={() => {
+                  setSearchResults(null);
+                  setSelectedLocation("");
+                  setSelectedSubLocation("");
+                  setSelectedType("");
+                }}
+                className="text-sm text-red-500 hover:text-red-700 font-medium flex items-center gap-1 transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                ফিল্টার মুছুন
+              </button>
+            </div>
+
+            {searchResults.length > 0 ? (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {searchResults.map((listing) => (
+                  <div key={listing.id} className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-1 transition-all duration-300 flex flex-col overflow-hidden group">
+                    <div className="h-1.5 w-full bg-linear-to-r from-[#2d79f3] to-[#60a5fa]" />
+                    <div className="p-5 flex flex-col flex-1">
+                      <div className="flex justify-between items-center mb-4">
+                        <span className="bg-purple-50 text-purple-700 text-xs font-semibold px-3 py-1 rounded-full border border-purple-100">
+                          {propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType}
+                        </span>
+                        <div className="text-right">
+                          <span className="text-red-600 font-bold text-lg leading-none">৳{listing.rentPrice.toLocaleString('en-IN')}</span>
+                          <span className="text-slate-400 text-xs block">/মাস</span>
+                        </div>
+                      </div>
+                      <h3 className="font-bold text-base text-slate-900 mb-4 line-clamp-2 group-hover:text-[#2d79f3] transition-colors leading-snug">{listing.title}</h3>
+                      <div className="border-t border-gray-100 my-3" />
+                      <div className="space-y-2.5 mt-auto text-sm text-slate-500">
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-red-50 shrink-0">
+                            <svg className="w-3.5 h-3.5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+                          </span>
+                          <span className="line-clamp-1">{locations.find(l => l.value === listing.location)?.label || listing.location}{listing.subLocation && ` — ${listing.subLocation}`}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-blue-50 shrink-0">
+                            <svg className="w-3.5 h-3.5 text-[#2d79f3]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                          </span>
+                          <span>ভাড়া শুরু: {listing.rentFrom}</span>
+                        </div>
+                        <div className="flex items-center gap-2.5">
+                          <span className="flex items-center justify-center w-7 h-7 rounded-full bg-green-50 shrink-0">
+                            <svg className="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                          </span>
+                          <span className="line-clamp-1">পোস্ট করেছেন: {listing.user?.name || "ব্যবহারকারী"}</span>
+                        </div>
+                      </div>
+                      <Link href={`/listings/${listing.id}`} className="w-full mt-5 bg-[#2d79f3] text-white font-semibold py-2.5 hover:bg-green-700 transition-colors block text-center text-sm shadow-sm shadow-blue-200">বিস্তারিত দেখুন →</Link>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-center py-16 bg-white rounded-2xl border border-gray-100 shadow-sm">
+                <div className="w-16 h-16 bg-slate-50 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>
+                </div>
+                <p className="text-slate-500 font-medium">আপনার অনুসন্ধানে কোনো ফলাফল পাওয়া যায়নি</p>
+                <p className="text-slate-400 text-sm mt-1">অন্য ফিল্টার দিয়ে আবার চেষ্টা করুন</p>
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Recent Listings Section */}
-        <div className="w-full mt-36 pb-8">
+        <div className={`w-full ${searchResults !== null ? 'mt-12' : 'mt-36'} pb-8`}>
           <div className="flex flex-col items-center mb-10 gap-2">
             <h2 className="text-3xl font-bold text-slate-900">
               সাম্প্রতিক টু-লেট

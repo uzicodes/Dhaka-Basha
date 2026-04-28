@@ -204,6 +204,45 @@ export async function getUserListingById(listingId: string) {
   }
 }
 
+export async function searchListings(filters: {
+  location?: string;
+  subLocation?: string;
+  propertyType?: string;
+}) {
+  try {
+    const where: any = {};
+
+    if (filters.location) {
+      where.location = filters.location;
+    }
+    if (filters.subLocation) {
+      where.subLocation = filters.subLocation;
+    }
+    if (filters.propertyType) {
+      where.propertyType = filters.propertyType;
+    }
+
+    const listings = await prisma.listing.findMany({
+      where,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        user: {
+          select: {
+            name: true,
+          },
+        },
+      },
+    });
+
+    return listings;
+  } catch (error) {
+    console.error("Error searching listings:", error);
+    return [];
+  }
+}
+
 export async function updateUserListing(
   listingId: string,
   data: {
