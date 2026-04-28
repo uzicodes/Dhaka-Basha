@@ -9,6 +9,9 @@ import { useUser } from "@clerk/nextjs";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
 import { getUserListingById, updateUserListing } from "@/app/actions/getListings";
+import imageCompression from "browser-image-compression";
+
+const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
@@ -145,12 +148,22 @@ function PostToLetForm() {
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     const incoming = Array.from(e.target.files);
+
+    // Filter out files exceeding 5MB
+    const oversized = incoming.filter((f) => f.size > MAX_FILE_SIZE_BYTES);
+    const validFiles = incoming.filter((f) => f.size <= MAX_FILE_SIZE_BYTES);
+    if (oversized.length > 0) {
+      alert(
+        `${oversized.length}টি ছবি ৫MB এর বেশি হওয়ায় বাদ দেওয়া হয়েছে। প্রতিটি ছবি সর্বোচ্চ ৫MB হতে হবে।`
+      );
+    }
+
     const slotsAvailable = 5 - existingImages.length;
-    const combined = [...selectedFiles, ...incoming].slice(0, slotsAvailable);
+    const combined = [...selectedFiles, ...validFiles].slice(0, slotsAvailable);
     setSelectedFiles(combined);
     // Reset the input so re-selecting the same file works
     e.target.value = "";
-    if (existingImages.length + selectedFiles.length + incoming.length > 5) {
+    if (existingImages.length + selectedFiles.length + validFiles.length > 5) {
       alert("সর্বোচ্চ ৫টি ছবি আপলোড করা যাবে।");
     }
   };
@@ -216,14 +229,38 @@ function PostToLetForm() {
     try {
       let uploadedImageUrls: string[] = [...existingImages];
 
-      // --- Phase 1 & 2: Upload images to Cloudflare R2 ---
+      // --- Phase 1: Compress images client-side ---
       if (selectedFiles.length > 0) {
-        // Phase 1: Get presigned URLs
+        const compressionOptions = {
+          maxSizeMB: 0.5,
+          maxWidthOrHeight: 1920,
+          useWebWorker: true,
+          fileType: "image/jpeg" as const,
+        };
+
+        const compressedFiles = await Promise.all(
+          selectedFiles.map(async (file) => {
+            try {
+              const compressed = await imageCompression(file, compressionOptions);
+              // Preserve the original name but change extension to .jpg
+              const baseName = file.name.replace(/\.[^.]+$/, "");
+              return new File([compressed], `${baseName}.jpg`, {
+                type: "image/jpeg",
+              });
+            } catch {
+              // If compression fails, fall back to original file
+              console.warn(`কম্প্রেশন ব্যর্থ: ${file.name}, মূল ফাইল ব্যবহার করা হচ্ছে`);
+              return file;
+            }
+          })
+        );
+
+        // --- Phase 2: Get presigned URLs ---
         const presignRes = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            files: selectedFiles.map((f) => ({ name: f.name, type: f.type })),
+            files: compressedFiles.map((f) => ({ name: f.name, type: f.type })),
           }),
         });
 
@@ -233,9 +270,9 @@ function PostToLetForm() {
 
         const { results } = await presignRes.json();
 
-        // Phase 2: Upload each file to R2 in parallel
+        // --- Phase 3: Upload compressed files to R2 in parallel ---
         await Promise.all(
-          selectedFiles.map((file, idx) =>
+          compressedFiles.map((file, idx) =>
             fetch(results[idx].signedUrl, {
               method: "PUT",
               headers: { "Content-Type": file.type },
@@ -252,7 +289,7 @@ function PostToLetForm() {
         ];
       }
 
-      // --- Phase 3: Save to database ---
+      // --- Phase 4: Save to database ---
       const finalDataForDatabase = {
         ...data,
         rentPrice: Number(data.rentPrice),
@@ -263,7 +300,7 @@ function PostToLetForm() {
         ? await updateUserListing(listingId, finalDataForDatabase)
         : await createListing(finalDataForDatabase);
 
-      // --- Phase 4: Cleanup ---
+      // --- Phase 5: Cleanup ---
       if (result.success) {
         localStorage.removeItem('savedPostData');
         setSelectedFiles([]);
@@ -510,7 +547,7 @@ function PostToLetForm() {
 
           {/* Image Upload */}
           <div className="flex flex-col gap-1.5 mt-2">
-            <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি)</label>
+            <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
 
             {/* Existing uploaded images (edit mode) */}
             {existingImages.length > 0 && (
