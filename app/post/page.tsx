@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -37,6 +37,9 @@ function PostToLetForm() {
   const [expandedLoc, setExpandedLoc] = useState("");
   const [showToast, setShowToast] = useState(false);
   const [isLoadingListing, setIsLoadingListing] = useState(isEditMode);
+  const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Initialize React Hook Form 
   const {
@@ -133,6 +136,23 @@ function PostToLetForm() {
     };
   }, [isEditMode, listingId, reset, router]);
 
+  // --- File selection handler (max 5 images) ---
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (!e.target.files) return;
+    const incoming = Array.from(e.target.files);
+    const combined = [...selectedFiles, ...incoming].slice(0, 5);
+    setSelectedFiles(combined);
+    // Reset the input so re-selecting the same file works
+    e.target.value = "";
+    if (selectedFiles.length + incoming.length > 5) {
+      alert("সর্বোচ্চ ৫টি ছবি আপলোড করা যাবে।");
+    }
+  };
+
+  const removeFile = (index: number) => {
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
+  };
+
   const onSubmit = async (data: PostFormValues) => {
     if (isLoaded && !user) {
       localStorage.setItem('savedPostData', JSON.stringify(data));
@@ -144,18 +164,62 @@ function PostToLetForm() {
     }
 
     setIsSubmitting(true);
+    setIsUploading(true);
+
     try {
+      let uploadedImageUrls: string[] = data.images ?? [];
+
+      // --- Phase 1 & 2: Upload images to Cloudflare R2 ---
+      if (selectedFiles.length > 0) {
+        // Phase 1: Get presigned URLs
+        const presignRes = await fetch("/api/upload", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            files: selectedFiles.map((f) => ({ name: f.name, type: f.type })),
+          }),
+        });
+
+        if (!presignRes.ok) {
+          throw new Error("প্রি-সাইনড URL তৈরি করতে সমস্যা হয়েছে।");
+        }
+
+        const { results } = await presignRes.json();
+
+        // Phase 2: Upload each file to R2 in parallel
+        await Promise.all(
+          selectedFiles.map((file, idx) =>
+            fetch(results[idx].signedUrl, {
+              method: "PUT",
+              headers: { "Content-Type": file.type },
+              body: file,
+            }).then((res) => {
+              if (!res.ok) throw new Error(`"${file.name}" আপলোড ব্যর্থ হয়েছে।`);
+            })
+          )
+        );
+
+        uploadedImageUrls = [
+          ...uploadedImageUrls,
+          ...results.map((r: { publicUrl: string }) => r.publicUrl),
+        ];
+      }
+
+      // --- Phase 3: Save to database ---
       const finalDataForDatabase = {
         ...data,
         rentPrice: Number(data.rentPrice),
+        images: uploadedImageUrls,
       };
 
       const result = isEditMode && listingId
         ? await updateUserListing(listingId, finalDataForDatabase)
         : await createListing(finalDataForDatabase);
 
+      // --- Phase 4: Cleanup ---
       if (result.success) {
         localStorage.removeItem('savedPostData');
+        setSelectedFiles([]);
         alert(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
         router.push(isEditMode ? "/profile" : "/");
       } else {
@@ -163,9 +227,10 @@ function PostToLetForm() {
       }
     } catch (error) {
       console.error(error);
-      alert(isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।");
+      alert(error instanceof Error ? error.message : (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
     } finally {
       setIsSubmitting(false);
+      setIsUploading(false);
     }
   };
 
@@ -396,25 +461,67 @@ function PostToLetForm() {
 
           </div>
 
-          {/* Image Upload Mockup */}
+          {/* Image Upload */}
           <div className="flex flex-col gap-1.5 mt-2">
-            <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড</label>
-            <div className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] transition-colors cursor-pointer">
+            <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি)</label>
+
+            {/* Hidden file input */}
+            <input
+              ref={fileInputRef}
+              type="file"
+              multiple
+              accept="image/*"
+              className="hidden"
+              onChange={handleFileSelect}
+            />
+
+            {/* Dropzone / click area */}
+            <div
+              onClick={() => fileInputRef.current?.click()}
+              className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
+            >
               <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
               <span className="text-sm">ছবি যোগ করতে এখানে ক্লিক করুন</span>
+              <span className="text-xs mt-1">{selectedFiles.length}/৫ টি ছবি নির্বাচিত</span>
             </div>
-            <span className="text-xs text-slate-400 mt-1">* ছবি আপলোডের লজিক পরবর্তীতে যোগ করা হবে</span>
+
+            {/* Thumbnail previews */}
+            {selectedFiles.length > 0 && (
+              <div className="flex flex-wrap gap-3 mt-2">
+                {selectedFiles.map((file, idx) => (
+                  <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={URL.createObjectURL(file)}
+                      alt={file.name}
+                      className="w-full h-full object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeFile(idx)}
+                      className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                      title="সরান"
+                    >
+                      ✕
+                    </button>
+                    <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] text-center truncate px-1 py-0.5">
+                      {file.name}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
 
           {/* Submit Button */}
           <button
             type="submit"
-            disabled={isSubmitting}
-            className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50"
+            disabled={isSubmitting || isUploading}
+            className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            {isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
+            {isUploading ? "আপলোড হচ্ছে..." : isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
           </button>
         </form>
         )}
