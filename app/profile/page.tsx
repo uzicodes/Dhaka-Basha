@@ -52,7 +52,7 @@ export default function ProfilePage() {
 
   useEffect(() => {
     if (isLoaded && !user) {
-      router.push("/login");
+      router.push("/login?redirectUrl=/profile");
     }
   }, [isLoaded, user, router]);
 

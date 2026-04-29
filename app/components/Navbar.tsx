@@ -106,7 +106,7 @@ export default function Navbar() {
             <>
               {/* Login Button */}
               <Link
-                href="/login"
+                href={pathname === "/" ? "/login" : `/login?redirectUrl=${encodeURIComponent(pathname)}`}
                 onClick={() => {
                   setIsMenuOpen(false);
                 }}
