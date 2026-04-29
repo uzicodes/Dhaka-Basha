@@ -279,7 +279,7 @@ export default function ProfilePage() {
                     </svg>
                   </div>
                 ) : (
-                  <p>{address || "N/A"}</p>
+                  <p>{address ? address.charAt(0).toUpperCase() + address.slice(1) : "N/A"}</p>
                 )}
               </div>
             </div>
@@ -418,7 +418,9 @@ export default function ProfilePage() {
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                               </svg>
                               <span className="text-purple-500">স্থান:</span>
-                              <span className="font-medium text-slate-800">{listing.location}</span>
+                              <span className="font-medium text-slate-800">
+                                {listing.location && listing.location.charAt(0).toUpperCase() + listing.location.slice(1)}
+                              </span>
                             </span>
                           </div>
                         </div>
@@ -481,7 +483,9 @@ export default function ProfilePage() {
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                             </svg>
                             <span className="text-purple-500">স্থান:</span>
-                            <span className="font-medium text-slate-800">{listing.location}</span>
+                            <span className="font-medium text-slate-800">
+                              {listing.location && listing.location.charAt(0).toUpperCase() + listing.location.slice(1)}
+                            </span>
                           </span>
                         </div>
                       </div>
