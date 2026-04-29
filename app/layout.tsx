@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import GlobalLoader from "./components/GlobalLoader";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "sonner";
 
 const ekush = localFont({
   src: "../public/fonts/Ekush-Regular.ttf",
@@ -70,6 +71,7 @@ export default function RootLayout({
         <body className={`min-h-full flex flex-col font-sans`}>
           <GlobalLoader />
           <Navbar />
+          <Toaster position="bottom-right" richColors />
           {children}
         </body>
       </html>
