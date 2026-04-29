@@ -241,7 +241,7 @@ export default function ProfilePage() {
             <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress ?? "N/A"}</p>
 
             <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
-              <div className="w-full rounded-none border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+              <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
                 <p className="text-xs text-slate-400 mb-1">ফোন নম্বর</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
@@ -263,7 +263,7 @@ export default function ProfilePage() {
                 )}
               </div>
 
-              <div className="w-full rounded-none border-[1.5px] border-[#ecedec] px-3 py-1 text-sm text-[#151717] bg-white">
+              <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
                 <p className="text-xs text-slate-400 mb-1">ঠিকানা</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
