@@ -305,7 +305,16 @@ function PostToLetForm() {
         localStorage.removeItem('savedPostData');
         setSelectedFiles([]);
         toast.success(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার টু-লেট সফলভাবে পোস্ট করা হয়েছে!");
-        router.push(isEditMode ? "/profile" : "/");
+        
+        // Update local state to reflect successful submission
+        if (!isEditMode) {
+          reset();
+          setExistingImages([]);
+        } else {
+          setExistingImages(uploadedImageUrls);
+          // Also update the form's images field to match the new set
+          setValue("images", uploadedImageUrls);
+        }
       } else {
         toast.error(result.error || (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
       }
