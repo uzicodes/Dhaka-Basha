@@ -10,6 +10,7 @@ import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
 import { getUserListingById, updateUserListing } from "@/app/actions/getListings";
 import imageCompression from "browser-image-compression";
+import { toast } from "sonner";
 
 const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 
@@ -38,7 +39,6 @@ function PostToLetForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
   const [expandedLoc, setExpandedLoc] = useState("");
-  const [showToast, setShowToast] = useState(false);
   const [isLoadingListing, setIsLoadingListing] = useState(isEditMode);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
   const [isUploading, setIsUploading] = useState(false);
@@ -106,7 +106,7 @@ function PostToLetForm() {
         const listing = await getUserListingById(listingId);
 
         if (!listing) {
-          alert("এই পোস্টটি খুঁজে পাওয়া যায়নি বা আপনার নয়।");
+          toast.error("এই পোস্টটি খুঁজে পাওয়া যায়নি বা আপনার নয়।");
           router.replace("/profile");
           return;
         }
@@ -126,7 +126,7 @@ function PostToLetForm() {
         setExistingImages(listing.images ?? []);
       } catch (error) {
         console.error("Failed to load listing for edit:", error);
-        alert("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
+        toast.error("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
         router.replace("/profile");
       } finally {
         if (isMounted) {
@@ -153,7 +153,7 @@ function PostToLetForm() {
     const oversized = incoming.filter((f) => f.size > MAX_FILE_SIZE_BYTES);
     const validFiles = incoming.filter((f) => f.size <= MAX_FILE_SIZE_BYTES);
     if (oversized.length > 0) {
-      alert(
+      toast.error(
         `${oversized.length}টি ছবি ৫MB এর বেশি হওয়ায় বাদ দেওয়া হয়েছে। প্রতিটি ছবি সর্বোচ্চ ৫MB হতে হবে।`
       );
     }
@@ -164,7 +164,7 @@ function PostToLetForm() {
     // Reset the input so re-selecting the same file works
     e.target.value = "";
     if (existingImages.length + selectedFiles.length + validFiles.length > 5) {
-      alert("সর্বোচ্চ ৫টি ছবি আপলোড করা যাবে।");
+      toast.error("সর্বোচ্চ ৫টি ছবি আপলোড করা যাবে।");
     }
   };
 
@@ -207,7 +207,7 @@ function PostToLetForm() {
       }
     } catch (error) {
       console.error(error);
-      alert(error instanceof Error ? error.message : "ছবি মুছতে সমস্যা হয়েছে।");
+      toast.error(error instanceof Error ? error.message : "ছবি মুছতে সমস্যা হয়েছে।");
     } finally {
       setIsDeletingImage(false);
     }
@@ -216,7 +216,7 @@ function PostToLetForm() {
   const onSubmit = async (data: PostFormValues) => {
     if (isLoaded && !user) {
       localStorage.setItem('savedPostData', JSON.stringify(data));
-      setShowToast(true);
+      toast.error("দয়া করে আগে লগইন করুন। রিডাইরেক্ট করা হচ্ছে...");
       setTimeout(() => {
         router.push("/login?redirectUrl=/post");
       }, 2000);
@@ -304,14 +304,14 @@ function PostToLetForm() {
       if (result.success) {
         localStorage.removeItem('savedPostData');
         setSelectedFiles([]);
-        alert(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার পোস্ট সফলভাবে তৈরি হয়েছে!");
+        toast.success(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার টু-লেট সফলভাবে পোস্ট করা হয়েছে!");
         router.push(isEditMode ? "/profile" : "/");
       } else {
-        alert(result.error || (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
+        toast.error(result.error || (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
       }
     } catch (error) {
       console.error(error);
-      alert(error instanceof Error ? error.message : (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
+      toast.error(error instanceof Error ? error.message : (isEditMode ? "পোস্ট আপডেট করতে সমস্যা হয়েছে।" : "পোস্ট করতে সমস্যা হয়েছে।"));
     } finally {
       setIsSubmitting(false);
       setIsUploading(false);
@@ -327,15 +327,6 @@ function PostToLetForm() {
 
   return (
     <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12 relative">
-      {/* Toast Notification */}
-      {showToast && (
-        <div className="fixed top-24 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3 rounded-lg shadow-lg z-50 flex items-center gap-3 animate-fade-in-down">
-          <svg className="w-5 h-5 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
-          </svg>
-          <span className="font-medium text-sm">দয়া করে আগে লগইন করুন। রিডাইরেক্ট করা হচ্ছে...</span>
-        </div>
-      )}
 
       <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">
