@@ -14,7 +14,7 @@ export default async function ListingDetails({
 }) {
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
-  const listing = await prisma.listing.findUnique({ 
+  const listing = await prisma.listing.findUnique({
     where: { id },
     include: {
       user: true
@@ -30,7 +30,7 @@ export default async function ListingDetails({
   const isFromProfile = resolvedSearchParams?.from === "profile";
   const backHref = isFromProfile ? "/profile" : "/listings";
   const backLabel = isFromProfile ? "← প্রোফাইল পেজে ফিরে যান" : "← সব টু-লেট এ ফিরে যান";
-  
+
   // Fetch author's Clerk data for the image fallback
   let authorClerkImage = null;
   if (listing?.user?.clerkId) {
@@ -147,8 +147,8 @@ export default async function ListingDetails({
 
               {/* Pricing Section */}
               <div className="text-center md:text-left mb-6">
-                <p className="text-sm text-slate-500 font-medium mb-1 uppercase tracking-wider">মাসিক ভাড়া</p>
-                <p className="text-3xl md:text-4xl font-extrabold text-[#2d79f3]">
+                <p className="text-sm text-purple-700 font-medium mb-1 uppercase tracking-wider">মাসিক ভাড়া</p>
+                <p className="text-3xl md:text-4xl font-extrabold text-red-700">
                   ৳ {listing.rentPrice.toLocaleString('en-IN')}
                 </p>
               </div>
@@ -164,7 +164,7 @@ export default async function ListingDetails({
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                     <span className="text-2xl font-bold text-[#151717] tracking-wider">{listing.contactInfo}</span>
                   </div>
-                  <a href={`tel:${listing.contactInfo}`} className="w-full bg-[#2d79f3] text-white flex items-center justify-center gap-2 font-bold py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 hover:shadow-md transition-all active:scale-[0.98]">
+                  <a href={`tel:${listing.contactInfo}`} className="w-full bg-[#2d79f3] text-white flex items-center justify-center gap-2 font-bold py-3 shadow-sm hover:bg-blue-700 hover:shadow-md transition-all active:scale-[0.98]">
                     কল করুন (Call Now)
                   </a>
                 </div>
@@ -188,7 +188,7 @@ export default async function ListingDetails({
                 )}
               </div>
             </div>
-            
+
             {/* CARD 2: Location Section (Separate Card) */}
             <div className="bg-white p-6 rounded-[20px] shadow-sm border border-[#ecedec]">
               <h3 className="text-lg font-bold text-[#151717] mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
@@ -198,14 +198,14 @@ export default async function ListingDetails({
 
               <div className="space-y-4">
                 <div>
-                  <p className="text-xs text-slate-400 font-medium mb-1">এলাকা</p>
+                  <p className="text-xs text-purple-700 font-medium mb-1">এলাকা</p>
                   <p className="text-[#151717] font-semibold text-base">
                     {locLabel} {subLocLabel && <span className="text-slate-500 font-normal">({subLocLabel})</span>}
                   </p>
                 </div>
 
                 <div className="bg-slate-50 p-3.5 rounded-[10px] border border-slate-100">
-                  <p className="text-xs text-slate-400 font-medium mb-1">সম্পূর্ণ ঠিকানা</p>
+                  <p className="text-xs text-purple-700 font-medium mb-1">সম্পূর্ণ ঠিকানা</p>
                   <p className="text-[#151717] font-medium text-sm leading-relaxed">{listing.address}</p>
                 </div>
 
