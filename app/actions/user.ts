@@ -18,6 +18,7 @@ export async function getUserProfile() {
       name: true,
       phone: true,
       address: true,
+      profileImage: true,
       createdAt: true,
     },
   });

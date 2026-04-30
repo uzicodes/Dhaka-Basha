@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
+import { updateProfileImage as updateDbProfileImage } from "@/app/actions/updateProfilePicture";
 import { deleteUserListing, deleteSavedListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
 
 type DashboardSection = "my-listings" | "saved-listings";
@@ -38,7 +39,9 @@ export default function ProfilePage() {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
+  const [profileImage, setProfileImage] = useState<string | null>(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
   const [memberSince, setMemberSince] = useState<string>("");
   const [myListings, setMyListings] = useState<any[]>([]);
   const [savedListings, setSavedListings] = useState<any[]>([]);
@@ -65,6 +68,7 @@ export default function ProfilePage() {
             setName(dbUser.name || `${user.firstName ?? ""} ${user.lastName ?? ""}`.trim());
             setPhone(dbUser.phone || user.phoneNumbers?.[0]?.phoneNumber || "");
             setAddress(dbUser.address || "");
+            setProfileImage(dbUser.profileImage || null);
             if (dbUser.createdAt) {
               const date = new Date(dbUser.createdAt);
               const monthYear = date.toLocaleDateString("bn-BD", {
@@ -108,6 +112,53 @@ export default function ProfilePage() {
       }
     } else {
       setIsEditing(true);
+    }
+  };
+
+  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Check file size (e.g., 2MB limit)
+    if (file.size > 2 * 1024 * 1024) {
+      alert("ছবি ২ মেগাবাইটের কম হতে হবে");
+      return;
+    }
+
+    setIsUploading(true);
+    try {
+      // 1. Get presigned URL
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: JSON.stringify({
+          files: [{ name: file.name, type: file.type }],
+        }),
+      });
+
+      if (!response.ok) throw new Error("Failed to get upload URL");
+
+      const { results } = await response.json();
+      const { signedUrl, publicUrl } = results[0];
+
+      // 2. Upload to R2
+      const uploadResponse = await fetch(signedUrl, {
+        method: "PUT",
+        body: file,
+        headers: {
+          "Content-Type": file.type,
+        },
+      });
+
+      if (!uploadResponse.ok) throw new Error("Failed to upload to R2");
+
+      // 3. Update database
+      await updateDbProfileImage(publicUrl);
+      setProfileImage(publicUrl);
+    } catch (error) {
+      console.error("Image upload failed:", error);
+      alert("ছবি আপলোড করতে সমস্যা হয়েছে");
+    } finally {
+      setIsUploading(false);
     }
   };
 
@@ -200,26 +251,69 @@ export default function ProfilePage() {
 
         {/* --- PROFILE HEADER CARD --- */}
         <div className="bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3] flex flex-col md:flex-row items-center md:items-start gap-6">
-          {/* Profile Picture (From Clerk) */}
-          <div className="shrink-0">
-            {isGoogleUser && user.imageUrl ? (
-              <img
-                src={user.imageUrl}
-                alt="Profile"
-                className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
-              />
-            ) : (
-              <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 bg-slate-100 shadow-sm flex items-center justify-center text-slate-500">
-                <svg
-                  className="w-12 h-12 md:w-16 md:h-16"
-                  fill="currentColor"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+          {/* Profile Picture Logic */}
+          <div className="shrink-0 relative group">
+            <div className="relative">
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt="Profile"
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
+                />
+              ) : isGoogleUser && user.imageUrl ? (
+                <img
+                  src={user.imageUrl}
+                  alt="Profile"
+                  className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
+                />
+              ) : (
+                <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 bg-slate-100 shadow-sm flex items-center justify-center text-slate-500">
+                  <svg
+                    className="w-12 h-12 md:w-16 md:h-16"
+                    fill="currentColor"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                  </svg>
+                </div>
+              )}
+
+              {/* Upload Button Icon (Bottom-right) */}
+              {isEditing && (
+                <label
+                  htmlFor="profile-upload"
+                  className="absolute bottom-0 right-0 w-8 h-8 md:w-10 md:h-10 bg-[#2d79f3] rounded-full border-2 border-white flex items-center justify-center text-white cursor-pointer shadow-md hover:bg-blue-600 transition-colors z-10"
                 >
-                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-                </svg>
-              </div>
-            )}
+                  {isUploading ? (
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  )}
+                  <input
+                    id="profile-upload"
+                    type="file"
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleImageChange}
+                    disabled={isUploading}
+                  />
+                </label>
+              )}
+
+              {/* Full Overlay on Hover */}
+              {isEditing && (
+                <label
+                  htmlFor="profile-upload"
+                  className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
+                >
+                  {!isUploading && <span className="text-white text-[10px] font-bold mt-8">পরিবর্তন করুন</span>}
+                </label>
+              )}
+            </div>
           </div>
 
           <div className="flex flex-col items-center md:items-start grow text-center md:text-left">
@@ -242,7 +336,7 @@ export default function ProfilePage() {
 
             <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
               <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
-                <p className="text-xs text-slate-400 mb-1">ফোন নম্বর</p>
+                <p className="text-xs text-purple-700 mb-1">ফোন নম্বর</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
                     <input
@@ -264,7 +358,7 @@ export default function ProfilePage() {
               </div>
 
               <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
-                <p className="text-xs text-slate-400 mb-1">ঠিকানা</p>
+                <p className="text-xs text-purple-700 mb-1">ঠিকানা</p>
                 {isEditing ? (
                   <div className="flex items-center gap-2">
                     <input
@@ -314,11 +408,10 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setActiveSection("my-listings")}
-                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${
-                      activeSection === "my-listings"
-                        ? "bg-[#2d79f3] text-white"
-                        : "text-slate-600 hover:bg-slate-50 cursor-pointer"
-                    }`}
+                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${activeSection === "my-listings"
+                      ? "bg-[#2d79f3] text-white"
+                      : "text-slate-600 hover:bg-slate-50 cursor-pointer"
+                      }`}
                   >
                     আমার বিজ্ঞাপন সমূহ
                   </button>
@@ -327,11 +420,10 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setActiveSection("saved-listings")}
-                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${
-                      activeSection === "saved-listings"
-                        ? "bg-[#2d79f3] text-white"
-                        : "text-slate-600 hover:bg-slate-50 cursor-pointer"
-                    }`}
+                    className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${activeSection === "saved-listings"
+                      ? "bg-[#2d79f3] text-white"
+                      : "text-slate-600 hover:bg-slate-50 cursor-pointer"
+                      }`}
                   >
                     সংরক্ষিত বিজ্ঞাপন (Saved)
                   </button>
