@@ -429,9 +429,12 @@ export default function ProfilePage() {
                   </button>
                 </li>
                 <li>
-                  <button className="w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer">
+                  <Link
+                    href="/inbox"
+                    className="block w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer"
+                  >
                     ম্যাসেজ সমূহ
-                  </button>
+                  </Link>
                 </li>
                 <li>
                   <button
