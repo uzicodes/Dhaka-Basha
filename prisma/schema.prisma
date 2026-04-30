@@ -21,6 +21,41 @@ model User {
 
   listings      Listing[]      // A user can CREATE many To-Let posts
   savedListings SavedListing[] // A user can SAVE many To-Let posts
+
+  // Messaging Relations
+  conversationsStarted Conversation[] @relation("ConversationUser1")
+  conversationsReceived Conversation[] @relation("ConversationUser2")
+  messagesSent          Message[]
+}
+
+// 4. The Conversation Model (1-on-1 between two users)
+model Conversation {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user1Id   String
+  user1     User     @relation("ConversationUser1", fields: [user1Id], references: [id], onDelete: Cascade)
+
+  user2Id   String
+  user2     User     @relation("ConversationUser2", fields: [user2Id], references: [id], onDelete: Cascade)
+
+  messages  Message[]
+
+  @@unique([user1Id, user2Id])
+}
+
+// 5. The Message Model
+model Message {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+
+  senderId       String
+  sender         User         @relation(fields: [senderId], references: [id], onDelete: Cascade)
+
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 }
 
 // 2. The To-Let Listing Model

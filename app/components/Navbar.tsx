@@ -102,6 +102,21 @@ export default function Navbar() {
           <div className="hidden md:block h-6 w-px bg-slate-200 mx-1"></div>
           <div className="md:hidden w-full h-px bg-slate-100 my-2"></div>
 
+          {/* Inbox Link (only when signed in) */}
+          {isSignedIn && (
+            <Link
+              href="/inbox"
+              onClick={() => setIsMenuOpen(false)}
+              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center w-full md:w-auto ${
+                pathname.startsWith("/inbox")
+                  ? "ring-2 ring-blue-600 text-blue-600"
+                  : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
+              }`}
+            >
+              ম্যাসেজ
+            </Link>
+          )}
+
           {!isSignedIn && (
             <>
               {/* Login Button */}

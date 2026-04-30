@@ -3,7 +3,9 @@ import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
+import { getOrCreateConversation } from "@/app/actions/chat";
 import ImageGallery from "@/app/components/ImageGallery";
+import { redirect } from "next/navigation";
 
 export default async function ListingDetails({
   params,
@@ -64,6 +66,13 @@ export default async function ListingDetails({
   async function handleToggleSaveAction() {
     "use server";
     await toggleSaveListing(listingId, `/listings/${listingId}`);
+  }
+
+  const posterId = listing.userId;
+  async function handleStartConversation() {
+    "use server";
+    const conversation = await getOrCreateConversation(posterId);
+    redirect(`/inbox/${conversation.id}`);
   }
 
   const propTypeLabel = propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType;
@@ -168,6 +177,21 @@ export default async function ListingDetails({
                     কল করুন (Call Now)
                   </a>
                 </div>
+
+                {/* Message Button */}
+                {canSaveListing && (
+                  <form action={handleStartConversation}>
+                    <button
+                      type="submit"
+                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[10px] font-bold border-2 border-green-200 bg-white text-green-700 hover:border-green-500 hover:bg-green-50 transition-all active:scale-[0.98]"
+                    >
+                      <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                      </svg>
+                      ম্যাসেজ পাঠান (Message)
+                    </button>
+                  </form>
+                )}
 
                 {/* Save Button */}
                 {canSaveListing && (

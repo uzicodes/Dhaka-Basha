@@ -19,6 +19,8 @@
     "@prisma/client": "^7.8.0",
     "browser-image-compression": "^2.0.2",
     "next": "16.2.3",
+    "pusher": "^5.3.3",
+    "pusher-js": "^8.5.0",
     "react": "19.2.4",
     "react-dom": "19.2.4",
     "react-hook-form": "^7.73.1",
