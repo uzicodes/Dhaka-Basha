@@ -131,6 +131,15 @@ export default function Login() {
           </button>
         </div>
 
+        <div className="flex justify-end mt-1.5">
+          <Link
+            href="/forgot-password"
+            className="text-xs text-[#2d79f3] font-medium hover:underline"
+          >
+            পাসওয়ার্ড ভুলে গেছেন?
+          </Link>
+        </div>
+
         <button
           disabled={!isLoaded}
           type="submit"
