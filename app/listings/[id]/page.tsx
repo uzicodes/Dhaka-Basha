@@ -1,7 +1,7 @@
 import prisma from "@/src/lib/db";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
-import { auth } from "@clerk/nextjs/server";
+import { auth, clerkClient } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
 import ImageGallery from "@/app/components/ImageGallery";
 
@@ -14,7 +14,12 @@ export default async function ListingDetails({
 }) {
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
-  const listing = await prisma.listing.findUnique({ where: { id } });
+  const listing = await prisma.listing.findUnique({ 
+    where: { id },
+    include: {
+      user: true
+    }
+  });
   const { userId: clerkUserId } = await auth();
   const currentUser = clerkUserId
     ? await prisma.user.findUnique({
@@ -25,6 +30,18 @@ export default async function ListingDetails({
   const isFromProfile = resolvedSearchParams?.from === "profile";
   const backHref = isFromProfile ? "/profile" : "/listings";
   const backLabel = isFromProfile ? "← প্রোফাইল পেজে ফিরে যান" : "← সব টু-লেট এ ফিরে যান";
+  
+  // Fetch author's Clerk data for the image fallback
+  let authorClerkImage = null;
+  if (listing?.user?.clerkId) {
+    try {
+      const client = await clerkClient();
+      const authorClerkUser = await client.users.getUser(listing.user.clerkId);
+      authorClerkImage = authorClerkUser.imageUrl;
+    } catch (error) {
+      console.error("Error fetching author Clerk data:", error);
+    }
+  }
 
   if (!listing) {
     return (
@@ -96,10 +113,27 @@ export default async function ListingDetails({
                 <h1 className="text-2xl md:text-4xl font-extrabold text-[#151717] leading-tight">
                   {listing.title}
                 </h1>
-                <p className="text-slate-500 mt-2 flex items-center gap-1.5">
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                  পোস্ট করা হয়েছে: {new Date(listing.createdAt).toLocaleDateString('en-GB')}
-                </p>
+                <div className="text-slate-500 mt-3 flex flex-wrap items-center gap-y-2 gap-x-4">
+                  <p className="flex items-center gap-1.5 text-sm">
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    পোস্ট করা হয়েছে: {new Date(listing.createdAt).toLocaleDateString('en-GB')}
+                  </p>
+                  <div className="flex items-center gap-2 text-sm bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100">
+                    <span className="text-slate-400">লেখক:</span>
+                    <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-200 shrink-0">
+                      {listing.user.profileImage ? (
+                        <img src={listing.user.profileImage} alt={listing.user.name || ""} className="w-full h-full object-cover" />
+                      ) : authorClerkImage ? (
+                        <img src={authorClerkImage} alt={listing.user.name || ""} className="w-full h-full object-cover" />
+                      ) : (
+                        <div className="w-full h-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-400">
+                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
+                        </div>
+                      )}
+                    </div>
+                    <span className="font-bold text-slate-700">{listing.user.name || "নাম পাওয়া যায়নি"}</span>
+                  </div>
+                </div>
               </div>
             </div>
 
@@ -154,7 +188,7 @@ export default async function ListingDetails({
                 )}
               </div>
             </div>
-
+            
             {/* CARD 2: Location Section (Separate Card) */}
             <div className="bg-white p-6 rounded-[20px] shadow-sm border border-[#ecedec]">
               <h3 className="text-lg font-bold text-[#151717] mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
