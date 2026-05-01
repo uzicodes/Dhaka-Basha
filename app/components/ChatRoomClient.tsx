@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import Pusher from "pusher-js";
-import { sendMessage } from "@/app/actions/chat";
+import { sendMessage, deleteConversation } from "@/app/actions/chat";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 type MessageType = {
   id: string;
@@ -23,6 +25,7 @@ type OtherUser = {
   name: string | null;
   profileImage: string | null;
   clerkId: string;
+  phone?: string | null;
 };
 
 export default function ChatRoomClient({
@@ -39,8 +42,12 @@ export default function ChatRoomClient({
   const [messages, setMessages] = useState<MessageType[]>(initialMessages);
   const [input, setInput] = useState("");
   const [isSending, setIsSending] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const menuRef = useRef<HTMLDivElement>(null);
+  const router = useRouter();
 
   // Auto-scroll to bottom
   const scrollToBottom = () => {
@@ -50,6 +57,17 @@ export default function ChatRoomClient({
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
+
+  // Handle clicks outside of menu to close it
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Pusher subscription for real-time updates
   useEffect(() => {
@@ -91,6 +109,31 @@ export default function ChatRoomClient({
     } finally {
       setIsSending(false);
     }
+  };
+
+  const handleDelete = () => {
+    setIsMenuOpen(false);
+    toast("এই কথোপকথনটি মুছে ফেলবেন?", {
+      description: "এটি আর ফিরে পাওয়া যাবে না।",
+      action: {
+        label: "মুছুন",
+        onClick: () => {
+          startTransition(async () => {
+            try {
+              await deleteConversation(conversationId);
+              toast.success("কথোপকথনটি মুছে ফেলা হয়েছে");
+              router.push("/inbox");
+            } catch (error) {
+              toast.error("মুছে ফেলতে সমস্যা হয়েছে");
+            }
+          });
+        },
+      },
+      cancel: {
+        label: "বাতিল",
+        onClick: () => {},
+      },
+    });
   };
 
   const formatTime = (dateStr: string) => {
@@ -148,26 +191,49 @@ export default function ChatRoomClient({
               </svg>
             </div>
           )}
-          <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-white rounded-full shadow-sm" title="Online"></div>
         </div>
         <div className="flex-1 min-w-0">
           <h2 className="text-[#151717] font-bold text-base truncate">
             {otherUser.name || "ব্যবহারকারী"}
           </h2>
-          <p className="text-[11px] text-green-600 font-medium leading-tight">অনলাইন</p>
         </div>
         
-        <div className="flex items-center gap-1">
-          <button className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-            </svg>
-          </button>
-          <button className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all">
+        <div className="flex items-center gap-1 relative" ref={menuRef}>
+          {otherUser.phone && (
+            <a 
+              href={`tel:${otherUser.phone}`}
+              className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all"
+              title="Call User"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+            </a>
+          )}
+          
+          <button 
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all"
+          >
             <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
             </svg>
           </button>
+
+          {isMenuOpen && (
+            <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-[12px] shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
+              <button
+                onClick={handleDelete}
+                disabled={isPending}
+                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
+              >
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+                কথোপকথন মুছে ফেলুন
+              </button>
+            </div>
+          )}
         </div>
       </div>
 

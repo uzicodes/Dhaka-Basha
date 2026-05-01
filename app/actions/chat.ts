@@ -140,8 +140,8 @@ export async function getMessages(conversationId: string) {
       ],
     },
     include: {
-      user1: { select: { id: true, name: true, profileImage: true, clerkId: true } },
-      user2: { select: { id: true, name: true, profileImage: true, clerkId: true } },
+      user1: { select: { id: true, name: true, profileImage: true, clerkId: true, phone: true } },
+      user2: { select: { id: true, name: true, profileImage: true, clerkId: true, phone: true } },
     },
   });
 
