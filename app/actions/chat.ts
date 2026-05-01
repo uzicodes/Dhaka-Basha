@@ -87,7 +87,7 @@ export async function getConversations() {
   });
   if (!currentUser) throw new Error("User not found");
 
-  const conversations = await prisma.conversation.findMany({
+  const conversationsData = await prisma.conversation.findMany({
     where: {
       OR: [
         { user1Id: currentUser.id },
@@ -102,11 +102,21 @@ export async function getConversations() {
         take: 1,
         select: { content: true, createdAt: true },
       },
+      _count: {
+        select: {
+          messages: {
+            where: {
+              isRead: false,
+              senderId: { not: currentUser.id },
+            },
+          },
+        },
+      },
     },
     orderBy: { updatedAt: "desc" },
   });
 
-  return { conversations, currentUserId: currentUser.id };
+  return { conversations: conversationsData, currentUserId: currentUser.id };
 }
 
 // Get messages for a specific conversation

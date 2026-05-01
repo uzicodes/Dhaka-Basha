@@ -150,9 +150,16 @@ export default function InboxPage() {
                             </button>
                           </div>
                         </div>
-                        <p className="text-sm text-slate-500 truncate mt-0.5">
-                          {lastMessage?.content || "কোনো ম্যাসেজ নেই"}
-                        </p>
+                        <div className="flex items-center justify-between mt-0.5">
+                          <p className="text-sm text-slate-500 truncate flex-1 pr-4">
+                            {lastMessage?.content || "কোনো ম্যাসেজ নেই"}
+                          </p>
+                          {convo._count?.messages > 0 && (
+                            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-white bg-red-500 rounded-full shrink-0">
+                              {convo._count.messages}
+                            </span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </Link>
