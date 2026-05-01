@@ -78,9 +78,22 @@ export default function InboxPage() {
   return (
     <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12 min-h-screen">
       <div className="w-full max-w-2xl space-y-4">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
-          ম্যাসেজ সমূহ
-        </h1>
+        <div className="flex flex-col gap-2">
+          <Link
+            href="/profile"
+            className="inline-flex items-center gap-2 text-slate-500 hover:text-[#2d79f3] transition-colors w-fit group"
+          >
+            <div className="p-2 bg-white rounded-full border border-[#ecedec] group-hover:border-[#2d79f3] group-hover:bg-blue-50 transition-all shadow-sm">
+              <svg className="w-4 h-4 transition-transform group-hover:-translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+              </svg>
+            </div>
+            <span className="text-sm font-medium">প্রোফাইলে ফিরে যান</span>
+          </Link>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
+            ম্যাসেজ সমূহ
+          </h1>
+        </div>
 
         {conversations.length === 0 ? (
           <div className="bg-white p-8 rounded-[20px] shadow-sm border border-[#ecedec] text-center">
