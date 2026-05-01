@@ -19,7 +19,7 @@ export default async function ConversationPage({
     data = await getMessages(conversationId);
   } catch {
     return (
-      <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-28 pb-12 min-h-screen">
+      <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12 min-h-screen">
         <div className="bg-white p-8 rounded-[20px] shadow-sm border border-red-200 text-center">
           <h2 className="text-2xl font-bold text-slate-800 mb-2">কথোপকথন পাওয়া যায়নি</h2>
           <p className="text-slate-500 mb-6">এই কথোপকথনটি আর নেই বা আপনার অ্যাক্সেস নেই।</p>
@@ -40,7 +40,7 @@ export default async function ConversationPage({
       : conversation.user1;
 
   return (
-    <main className="grow flex flex-col bg-[#daf2e0] pt-20 min-h-screen">
+    <main className="grow flex flex-col bg-[#daf2e0] pt-32 min-h-screen">
       <div className="w-full max-w-3xl mx-auto flex flex-col flex-1 bg-white shadow-sm border-x border-[#ecedec]">
         {/* Back button */}
         <div className="bg-white px-4 py-2 border-b border-slate-100">

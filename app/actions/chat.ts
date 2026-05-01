@@ -149,3 +149,38 @@ export async function getMessages(conversationId: string) {
 
   return { messages, conversation, currentUserId: currentUser.id };
 }
+
+// Delete Conversation
+export async function deleteConversation(conversationId: string) {
+  const { userId: clerkUserId } = await auth();
+  if (!clerkUserId) throw new Error("Unauthorized");
+
+  const currentUser = await prisma.user.findUnique({
+    where: { clerkId: clerkUserId },
+    select: { id: true },
+  });
+  if (!currentUser) throw new Error("User not found");
+
+  // Verify user is part of this conversation
+  const conversation = await prisma.conversation.findFirst({
+    where: {
+      id: conversationId,
+      OR: [
+        { user1Id: currentUser.id },
+        { user2Id: currentUser.id },
+      ],
+    },
+  });
+
+  if (!conversation) throw new Error("Conversation not found");
+
+  await prisma.message.deleteMany({
+    where: { conversationId },
+  });
+
+  await prisma.conversation.delete({
+    where: { id: conversationId },
+  });
+
+  return { success: true };
+}
