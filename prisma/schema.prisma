@@ -49,6 +49,7 @@ model Conversation {
 model Message {
   id        String   @id @default(cuid())
   content   String
+  isRead    Boolean  @default(false)
   createdAt DateTime @default(now())
 
   senderId       String

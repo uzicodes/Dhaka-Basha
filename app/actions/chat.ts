@@ -184,3 +184,51 @@ export async function deleteConversation(conversationId: string) {
 
   return { success: true };
 }
+
+// Get count of unread messages for the current user (messages sent by others that haven't been read)
+export async function getUnreadMessageCount() {
+  const { userId: clerkUserId } = await auth();
+  if (!clerkUserId) return 0;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { clerkId: clerkUserId },
+    select: { id: true },
+  });
+  if (!currentUser) return 0;
+
+  const count = await prisma.message.count({
+    where: {
+      isRead: false,
+      senderId: { not: currentUser.id },
+      conversation: {
+        OR: [
+          { user1Id: currentUser.id },
+          { user2Id: currentUser.id },
+        ],
+      },
+    },
+  });
+
+  return count;
+}
+
+// Mark all messages in a conversation as read (for messages not sent by the current user)
+export async function markMessagesAsRead(conversationId: string) {
+  const { userId: clerkUserId } = await auth();
+  if (!clerkUserId) return;
+
+  const currentUser = await prisma.user.findUnique({
+    where: { clerkId: clerkUserId },
+    select: { id: true },
+  });
+  if (!currentUser) return;
+
+  await prisma.message.updateMany({
+    where: {
+      conversationId,
+      isRead: false,
+      senderId: { not: currentUser.id },
+    },
+    data: { isRead: true },
+  });
+}

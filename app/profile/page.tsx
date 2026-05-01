@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
 import { updateProfileImage as updateDbProfileImage } from "@/app/actions/updateProfilePicture";
 import { deleteUserListing, deleteSavedListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
+import { getUnreadMessageCount } from "@/app/actions/chat";
 
 type DashboardSection = "my-listings" | "saved-listings";
 
@@ -52,12 +53,31 @@ export default function ProfilePage() {
   const [isDeletingListing, setIsDeletingListing] = useState(false);
   const [savedListingToDelete, setSavedListingToDelete] = useState<any | null>(null);
   const [isDeletingSavedListing, setIsDeletingSavedListing] = useState(false);
+  const [unreadCount, setUnreadCount] = useState(0);
 
   useEffect(() => {
     if (isLoaded && !user) {
       router.push("/login?redirectUrl=/profile");
     }
   }, [isLoaded, user, router]);
+
+  // Poll for unread message count
+  useEffect(() => {
+    if (!user) return;
+
+    const fetchUnread = async () => {
+      try {
+        const count = await getUnreadMessageCount();
+        setUnreadCount(count);
+      } catch (err) {
+        console.error("Failed to fetch unread count", err);
+      }
+    };
+
+    fetchUnread();
+    const interval = setInterval(fetchUnread, 15000);
+    return () => clearInterval(interval);
+  }, [user]);
 
   useEffect(() => {
     async function loadData() {
@@ -431,9 +451,14 @@ export default function ProfilePage() {
                 <li>
                   <Link
                     href="/inbox"
-                    className="block w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer"
+                    className="relative block w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer"
                   >
                     ম্যাসেজ সমূহ
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1.5 right-3 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full animate-pulse">
+                        {unreadCount > 99 ? "99+" : unreadCount}
+                      </span>
+                    )}
                   </Link>
                 </li>
                 <li>

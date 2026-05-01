@@ -1,4 +1,4 @@
-import { getMessages } from "@/app/actions/chat";
+import { getMessages, markMessagesAsRead } from "@/app/actions/chat";
 import { auth } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import Link from "next/link";
@@ -32,6 +32,9 @@ export default async function ConversationPage({
   }
 
   const { messages, conversation, currentUserId } = data;
+
+  // Mark messages as read when opening the conversation
+  await markMessagesAsRead(conversationId);
 
   // Determine the other user in the conversation
   const otherUser =
