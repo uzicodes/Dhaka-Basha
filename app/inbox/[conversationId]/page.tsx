@@ -43,18 +43,8 @@ export default async function ConversationPage({
       : conversation.user1;
 
   return (
-    <main className="grow flex flex-col bg-[#daf2e0] pt-32 min-h-screen">
-      <div className="w-full max-w-3xl mx-auto flex flex-col flex-1 bg-white shadow-sm border-x border-[#ecedec]">
-        {/* Back button */}
-        <div className="bg-white px-4 py-2 border-b border-slate-100">
-          <Link
-            href="/inbox"
-            className="text-sm text-slate-500 hover:text-[#2d79f3] transition-colors font-medium"
-          >
-            ← ইনবক্সে ফিরে যান
-          </Link>
-        </div>
-
+    <main className="grow flex flex-col bg-[#daf2e0] pt-24 md:pt-32 pb-4 md:pb-12 px-4 min-h-screen">
+      <div className="w-full max-w-4xl mx-auto flex flex-col flex-1 bg-white shadow-2xl rounded-[24px] overflow-hidden border border-white">
         {/* Chat Room */}
         <div className="flex-1 flex flex-col min-h-0">
           <ChatRoomClient
