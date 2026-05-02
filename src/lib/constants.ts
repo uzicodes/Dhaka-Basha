@@ -4,22 +4,22 @@ export type PropertyType = { value: string; label: string };
 
 export const propertyTypes: PropertyType[] = [
   { value: "", label: "-- প্রপার্টির ধরন নির্বাচন করুন --" },
-  { value: "single-room", label: "সিঙ্গেল রুম (Single room)" },
-  { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম) (Single Room - Washroom)" },
-  { value: "flat", label: "ফ্ল্যাট (Flat)" },
-  { value: "master-bedroom", label: "মাস্টার বেডরুম (Master Bedroom)" },
-  { value: "office", label: "অফিস / করপোরেট (Office / Corporate)" },
-  { value: "bachelors-male", label: "ব্যাচেলর - পুরুষ (Bachelors - Male)" },
-  { value: "bachelors-female", label: "ব্যাচেলর - মহিলা (Bachelors - Female)" }
+  { value: "single-room", label: "সিঙ্গেল রুম" },
+  { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম)" },
+  { value: "flat", label: "ফ্ল্যাট" },
+  { value: "master-bedroom", label: "মাস্টার বেডরুম" },
+  { value: "office", label: "অফিস / করপোরেট" },
+  { value: "bachelors-male", label: "ব্যাচেলর - পুরুষ" },
+  { value: "bachelors-female", label: "ব্যাচেলর - মহিলা" }
 ];
 
 export const locations: LocationType[] = [
-  { value: "gulshan", label: "গুলশান (Gulshan)", subLocations: [{ value: "1", label: "১ (1)" }, { value: "2", label: "২ (2)" }] },
+  { value: "gulshan", label: "গুলশান (Gulshan)" },
   { value: "banani", label: "বনানী (Banani)" },
-  { value: "baridhara", label: "বারিধারা (Baridhara)", subLocations: [{ value: "block-j", label: "ব্লক জে (Block J)" }, { value: "block-k", label: "ব্লক কে (Block K)" }, { value: "block-h", label: "ব্লক এইচ (Block H)" }] },
-  { value: "dhanmondi", label: "ধানমন্ডি (Dhanmondi)", subLocations: [{ value: "road-27", label: "রোড ২৭ (Road 27)" }, { value: "road-8", label: "রোড ৮ (Road 8)" }, { value: "road-32", label: "রোড ৩২ (Road 32)" }] },
-  { value: "mirpur", label: "মিরপুর (Mirpur)", subLocations: [{ value: "1", label: "১ (1)" }, { value: "2", label: "২ (2)" }, { value: "10", label: "১০ (10)" }, { value: "11", label: "১১ (11)" }, { value: "12", label: "১২ (12)" }] },
-  { value: "uttara", label: "উত্তরা (Uttara)", subLocations: [{ value: "sectors-1-10", label: "সেক্টর ১-১০ (Sectors 1-10)" }, { value: "sectors-11-14", label: "সেক্টর ১১-১৪ (Sectors 11-14)" }, { value: "sectors-15-18", label: "সেক্টর ১৫-১৮ (Sectors 15-18)" }] },
+  { value: "baridhara", label: "বারিধারা (Baridhara)" },
+  { value: "dhanmondi", label: "ধানমন্ডি (Dhanmondi)" },
+  { value: "mirpur", label: "মিরপুর (Mirpur)" },
+  { value: "uttara", label: "উত্তরা (Uttara)" },
   { value: "mohammadpur", label: "মোহাম্মদপুর (Mohammadpur)" },
   { value: "mohakhali", label: "মহাখালী (Mohakhali)" },
   { value: "bashundhara", label: "বসুন্ধরা (Bashundhara)", subLocations: [{ value: "block-a", label: "ব্লক এ (Block A)" }, { value: "block-b", label: "ব্লক বি (Block B)" }, { value: "block-c", label: "ব্লক সি (Block C)" }, { value: "block-d", label: "ব্লক ডি (Block D)" }, { value: "block-e", label: "ব্লক ই (Block E)" }, { value: "block-f", label: "ব্লক এফ (Block F)" }, { value: "block-g", label: "ব্লক জি (Block G)" }, { value: "block-h", label: "ব্লক এইচ (Block H)" }, { value: "block-i", label: "ব্লক আই (Block I)" }, { value: "block-j", label: "ব্লক জে (Block J)" }] },
