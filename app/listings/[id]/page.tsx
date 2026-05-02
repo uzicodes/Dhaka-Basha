@@ -37,10 +37,12 @@ export default async function ListingDetails({
   if (listing?.user?.clerkId) {
     try {
       const client = await clerkClient();
-      const authorClerkUser = await client.users.getUser(listing.user.clerkId);
-      authorClerkImage = authorClerkUser.imageUrl;
-    } catch (error) {
-      console.error("Error fetching author Clerk data:", error);
+      if (client && client.users) {
+        const authorClerkUser = await client.users.getUser(listing.user.clerkId);
+        authorClerkImage = authorClerkUser?.imageUrl || null;
+      }
+    } catch (error: any) {
+      console.warn("Author Clerk data not available (clerkId:", listing?.user?.clerkId, "):", error?.message || "Clerk API Error");
     }
   }
 
@@ -159,14 +161,14 @@ export default async function ListingDetails({
               {/* Action Buttons */}
               <div className="space-y-4">
                 {/* Contact Box */}
-                <div className="bg-[#2d79f3]/5 p-4 rounded-[12px] border border-[#2d79f3]/20">
+                <div className="bg-[#2d79f3]/5 p-3 rounded-[12px] border border-[#2d79f3]/20">
                   <p className="text-xs text-slate-500 font-semibold mb-2 text-center">যোগাযোগের নম্বর</p>
                   <div className="flex items-center justify-center gap-2 mb-3">
                     <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                     <span className="text-2xl font-bold text-[#151717] tracking-wider">{listing.contactInfo}</span>
                   </div>
                   <a href={`tel:${listing.contactInfo}`} className="w-full bg-[#2d79f3] text-white flex items-center justify-center gap-2 font-bold py-3 shadow-sm hover:bg-blue-700 hover:shadow-md transition-all active:scale-[0.98]">
-                    কল করুন (Call Now)
+                    কল করুন
                   </a>
                 </div>
 
@@ -180,15 +182,15 @@ export default async function ListingDetails({
                   <form action={handleToggleSaveAction}>
                     <button
                       type="submit"
-                      className={`w-full flex items-center justify-center gap-2 py-3.5 rounded-[10px] font-bold border-2 transition-all active:scale-[0.98] ${isSaved
-                        ? "border-[#2d79f3] bg-[#2d79f3] text-white hover:bg-blue-800"
+                      className={`w-full flex items-center justify-center gap-2 py-3 font-bold border-2 transition-all active:scale-[0.98] ${isSaved
+                        ? "border-[#2d79f3] bg-[#2d79f3] text-white hover:bg-blue-800 shadow-md"
                         : "border-slate-200 bg-white text-slate-600 hover:border-[#2d79f3] hover:text-[#2d79f3]"
                         }`}
                     >
                       <svg className={`w-5 h-5 ${isSaved ? 'text-white' : 'text-slate-400'}`} fill={isSaved ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={isSaved ? 1.5 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
                       </svg>
-                      {isSaved ? "সংরক্ষিত হয়েছে (Saved)" : "সংরক্ষণ করুন (Save Post)"}
+                      {isSaved ? "সংরক্ষণ বাতিল করুন" : "পোস্ট সংরক্ষণ করুন"}
                     </button>
                   </form>
                 )}
