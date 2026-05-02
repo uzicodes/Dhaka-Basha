@@ -45,6 +45,25 @@ function PostToLetForm() {
   const [existingImages, setExistingImages] = useState<string[]>([]);
   const [isDeletingImage, setIsDeletingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
+  const [viewYear, setViewYear] = useState(new Date().getFullYear());
+  const monthPickerRef = useRef<HTMLDivElement>(null);
+
+  const monthsBN = [
+    "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
+    "জুলাই", "আগস্ট", "সেপ্টেম্বর", "অক্টোবর", "নভেম্বর", "ডিসেম্বর"
+  ];
+
+  // Close picker when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (monthPickerRef.current && !monthPickerRef.current.contains(event.target as Node)) {
+        setIsMonthPickerOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   // Initialize React Hook Form 
   const {
@@ -372,16 +391,77 @@ function PostToLetForm() {
               {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
             </div>
 
-            {/* Rent From */}
-            <div className="flex flex-col gap-1.5">
+            {/* Rent From (Custom Month/Year Picker) */}
+            <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
               <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
-              <input
-                {...register("rentFrom")}
-                type="text"
-                placeholder="MM / YYYY"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                  }`}
-              />
+              <div 
+                onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
+                className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
+              >
+                <span className={watch("rentFrom") ? "text-green-600 font-medium" : "text-slate-400"}>
+                  {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
+                </span>
+                <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+              </div>
+              <input type="hidden" {...register("rentFrom")} />
+
+              {isMonthPickerOpen && (
+                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-[60] p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                  {/* Year Selector */}
+                  <div className="flex items-center justify-between mb-4 border-b pb-2">
+                    <button 
+                      type="button"
+                      onClick={() => setViewYear(prev => Math.max(new Date().getFullYear(), prev - 1))}
+                      disabled={viewYear <= new Date().getFullYear()}
+                      className="p-1 hover:bg-slate-100 rounded-full disabled:opacity-30"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                    </button>
+                    <span className="font-bold text-slate-800 text-lg">{viewYear}</span>
+                    <button 
+                      type="button"
+                      onClick={() => setViewYear(prev => prev + 1)}
+                      className="p-1 hover:bg-slate-100 rounded-full"
+                    >
+                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                    </button>
+                  </div>
+
+                  {/* Months Grid */}
+                  <div className="grid grid-cols-3 gap-2">
+                    {monthsBN.map((name, index) => {
+                      const monthNum = index + 1;
+                      const isPast = viewYear === new Date().getFullYear() && monthNum < (new Date().getMonth() + 1);
+                      const currentVal = watch("rentFrom");
+                      const isSelected = currentVal === `${String(monthNum).padStart(2, '0')}/${viewYear}`;
+
+                      return (
+                        <button
+                          key={name}
+                          type="button"
+                          disabled={isPast}
+                          onClick={() => {
+                            const val = `${String(monthNum).padStart(2, '0')}/${viewYear}`;
+                            setValue("rentFrom", val, { shouldValidate: true });
+                            setIsMonthPickerOpen(false);
+                          }}
+                          className={`py-2 text-sm rounded-md transition-all ${
+                            isSelected 
+                              ? "bg-[#2d79f3] text-white font-bold" 
+                              : isPast 
+                                ? "text-slate-300 cursor-not-allowed" 
+                                : "text-slate-600 hover:bg-blue-50 hover:text-[#2d79f3]"
+                          }`}
+                        >
+                          {name}
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               {errors.rentFrom && <span className="text-red-500 text-xs">{errors.rentFrom.message}</span>}
             </div>
           </div>
