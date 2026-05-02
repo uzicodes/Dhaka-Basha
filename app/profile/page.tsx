@@ -8,6 +8,7 @@ import { getUserProfile, updateUserProfile } from "@/app/actions/user";
 import { updateProfileImage as updateDbProfileImage } from "@/app/actions/updateProfilePicture";
 import { deleteUserListing, deleteSavedListing, getSavedListings, getUserListings } from "@/app/actions/getListings";
 import { getUnreadMessageCount } from "@/app/actions/chat";
+import { propertyTypes, locations } from "@/src/lib/constants";
 
 type DashboardSection = "my-listings" | "saved-listings";
 
@@ -30,6 +31,27 @@ function formatRentFromDate(rentFrom?: string) {
     month: "long",
     year: "numeric",
   });
+}
+
+function getPropertyTypeLabel(value: string) {
+  const type = propertyTypes.find((t) => t.value === value);
+  return type ? type.label : value;
+}
+
+function getLocationLabel(value: string) {
+  // Check main locations
+  const loc = locations.find((l) => l.value === value);
+  if (loc) return loc.label;
+
+  // Check sub-locations
+  for (const l of locations) {
+    if (l.subLocations) {
+      const sub = l.subLocations.find((s) => s.value === value);
+      if (sub) return sub.label;
+    }
+  }
+
+  return value;
 }
 
 export default function ProfilePage() {
@@ -519,7 +541,7 @@ export default function ProfilePage() {
                             <span className="font-medium text-slate-800">{authorName}</span>
                             {listing.propertyType && (
                               <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
-                                {listing.propertyType.charAt(0).toUpperCase() + listing.propertyType.slice(1)}
+                                {getPropertyTypeLabel(listing.propertyType)}
                               </span>
                             )}
                           </div>
@@ -539,7 +561,7 @@ export default function ProfilePage() {
                               </svg>
                               <span className="text-purple-500">স্থান:</span>
                               <span className="font-medium text-slate-800">
-                                {listing.location && listing.location.charAt(0).toUpperCase() + listing.location.slice(1)}
+                                {listing.location && getLocationLabel(listing.location)}
                               </span>
                             </span>
                           </div>
@@ -582,7 +604,7 @@ export default function ProfilePage() {
                         </h3>
                         {listing.propertyType && (
                           <span className="inline-flex shrink-0 items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
-                            {listing.propertyType.charAt(0).toUpperCase() + listing.propertyType.slice(1)}
+                            {getPropertyTypeLabel(listing.propertyType)}
                           </span>
                         )}
                       </div>
@@ -604,7 +626,7 @@ export default function ProfilePage() {
                             </svg>
                             <span className="text-purple-500">স্থান:</span>
                             <span className="font-medium text-slate-800">
-                              {listing.location && listing.location.charAt(0).toUpperCase() + listing.location.slice(1)}
+                              {listing.location && getLocationLabel(listing.location)}
                             </span>
                           </span>
                         </div>
