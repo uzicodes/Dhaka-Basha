@@ -4,18 +4,31 @@ import prisma from "@/src/lib/db";
 import pusher from "@/src/lib/pusher";
 import { auth } from "@clerk/nextjs/server";
 
-// Get or create a conversation between two users
-export async function getOrCreateConversation(otherUserId: string) {
+// ------------------------------------------------------------------
+// HELPER Function : Gets the current user (prevent repeating)
+// ------------------------------------------------------------------
+async function getAuthenticatedUser() {
   const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) throw new Error("Unauthorized");
+  if (!clerkUserId) throw new Error("Unauthorized: No Clerk session");
 
   const currentUser = await prisma.user.findUnique({
     where: { clerkId: clerkUserId },
-    select: { id: true },
+    select: { id: true, name: true, profileImage: true },
   });
-  if (!currentUser) throw new Error("User not found");
 
-  // Check if conversation already exists (in either direction)
+  if (!currentUser) throw new Error("Unauthorized: User not found in database");
+  return currentUser;
+}
+
+// ------------------------------------------------------------------
+// ACTIONS
+// ------------------------------------------------------------------
+
+// Get/Create conversation between two users
+export async function getOrCreateConversation(otherUserId: string) {
+  const currentUser = await getAuthenticatedUser();
+
+  // Check convo already exists?
   let conversation = await prisma.conversation.findFirst({
     where: {
       OR: [
@@ -25,7 +38,7 @@ export async function getOrCreateConversation(otherUserId: string) {
     },
   });
 
-  // If not, create one
+  // If not? create one
   if (!conversation) {
     conversation = await prisma.conversation.create({
       data: {
@@ -40,35 +53,28 @@ export async function getOrCreateConversation(otherUserId: string) {
 
 // Send a message in a conversation
 export async function sendMessage(conversationId: string, content: string) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) throw new Error("Unauthorized");
-
-  const currentUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUserId },
-    select: { id: true, name: true, profileImage: true },
-  });
-  if (!currentUser) throw new Error("User not found");
-
+  const currentUser = await getAuthenticatedUser();
   if (!content.trim()) throw new Error("Message cannot be empty");
 
-  const newMessage = await prisma.message.create({
-    data: {
-      content: content.trim(),
-      senderId: currentUser.id,
-      conversationId,
-    },
-    include: {
-      sender: {
-        select: { id: true, name: true, profileImage: true, clerkId: true },
+  // Use $transaction to ensure both DB updates happen simultaneously safely
+  const [newMessage] = await prisma.$transaction([
+    prisma.message.create({
+      data: {
+        content: content.trim(),
+        senderId: currentUser.id,
+        conversationId,
       },
-    },
-  });
-
-  // Update conversation timestamp
-  await prisma.conversation.update({
-    where: { id: conversationId },
-    data: { updatedAt: new Date() },
-  });
+      include: {
+        sender: {
+          select: { id: true, name: true, profileImage: true, clerkId: true },
+        },
+      },
+    }),
+    prisma.conversation.update({
+      where: { id: conversationId },
+      data: { updatedAt: new Date() },
+    })
+  ]);
 
   // Trigger Pusher event for real-time updates
   await pusher.trigger(conversationId, "new-message", newMessage);
@@ -78,14 +84,7 @@ export async function sendMessage(conversationId: string, content: string) {
 
 // Get all conversations for the current user
 export async function getConversations() {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) throw new Error("Unauthorized");
-
-  const currentUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUserId },
-    select: { id: true },
-  });
-  if (!currentUser) throw new Error("User not found");
+  const currentUser = await getAuthenticatedUser();
 
   const conversationsData = await prisma.conversation.findMany({
     where: {
@@ -121,14 +120,7 @@ export async function getConversations() {
 
 // Get messages for a specific conversation
 export async function getMessages(conversationId: string) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) throw new Error("Unauthorized");
-
-  const currentUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUserId },
-    select: { id: true },
-  });
-  if (!currentUser) throw new Error("User not found");
+  const currentUser = await getAuthenticatedUser();
 
   // Verify user is part of this conversation
   const conversation = await prisma.conversation.findFirst({
@@ -162,14 +154,7 @@ export async function getMessages(conversationId: string) {
 
 // Delete Conversation
 export async function deleteConversation(conversationId: string) {
-  const { userId: clerkUserId } = await auth();
-  if (!clerkUserId) throw new Error("Unauthorized");
-
-  const currentUser = await prisma.user.findUnique({
-    where: { clerkId: clerkUserId },
-    select: { id: true },
-  });
-  if (!currentUser) throw new Error("User not found");
+  const currentUser = await getAuthenticatedUser();
 
   // Verify user is part of this conversation
   const conversation = await prisma.conversation.findFirst({
@@ -184,18 +169,16 @@ export async function deleteConversation(conversationId: string) {
 
   if (!conversation) throw new Error("Conversation not found");
 
-  await prisma.message.deleteMany({
-    where: { conversationId },
-  });
-
-  await prisma.conversation.delete({
-    where: { id: conversationId },
-  });
+  // Use $transaction to delete messages BEFORE deleting the conversation safely
+  await prisma.$transaction([
+    prisma.message.deleteMany({ where: { conversationId } }),
+    prisma.conversation.delete({ where: { id: conversationId } })
+  ]);
 
   return { success: true };
 }
 
-// Get count of unread messages for the current user (messages sent by others that haven't been read)
+// count of unread messages (current user) 
 export async function getUnreadMessageCount() {
   const { userId: clerkUserId } = await auth();
   if (!clerkUserId) return 0;
@@ -222,7 +205,7 @@ export async function getUnreadMessageCount() {
   return count;
 }
 
-// Mark all messages in a conversation as read (for messages not sent by the current user)
+// Mark all messages in a conversation as read 
 export async function markMessagesAsRead(conversationId: string) {
   const { userId: clerkUserId } = await auth();
   if (!clerkUserId) return;
