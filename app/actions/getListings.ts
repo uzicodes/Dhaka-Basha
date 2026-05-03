@@ -2,6 +2,7 @@
 
 import { auth } from "@clerk/nextjs/server";
 import prisma from "@/src/lib/db";
+import { unstable_cache } from "next/cache";
 
 export async function getUserListings() {
   try {
@@ -29,27 +30,32 @@ export async function getUserListings() {
   }
 }
 
-export async function getRecentListings() {
-  try {
-    const listings = await prisma.listing.findMany({
-      orderBy: {
-        createdAt: "desc",
-      },
-      take: 20, // Limit to recent 20 for performance
-      include: {
-        user: {
-          select: {
-            name: true,
-          }
-        }
-      }
-    });
-    return listings;
-  } catch (error) {
-    console.error("Error fetching recent listings:", error);
-    return [];
-  }
-}
+// CACHED: Public recent listings (Refresh every 60s)
+export const getRecentListings = unstable_cache(
+  async () => {
+    try {
+      const listings = await prisma.listing.findMany({
+        orderBy: {
+          createdAt: "desc",
+        },
+        take: 20, // Limit to recent 20 for performance
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
+          },
+        },
+      });
+      return listings;
+    } catch (error) {
+      console.error("Error fetching recent listings:", error);
+      return [];
+    }
+  },
+  ["recent-listings"], // Cache bucket 
+  { revalidate: 60 } // in memory for 60 seconds
+);
 
 export async function getSavedListings() {
   try {
@@ -204,44 +210,45 @@ export async function getUserListingById(listingId: string) {
   }
 }
 
-export async function searchListings(filters: {
-  location?: string;
-  subLocation?: string;
-  propertyType?: string;
-}) {
-  try {
-    const where: any = {};
+// CACHED: Public searches (Refresh every 60s)
+export const searchListings = unstable_cache(
+  async (filters: { location?: string; subLocation?: string; propertyType?: string }) => {
+    try {
+      const where: any = {};
 
-    if (filters.location) {
-      where.location = filters.location;
-    }
-    if (filters.subLocation) {
-      where.subLocation = filters.subLocation;
-    }
-    if (filters.propertyType) {
-      where.propertyType = filters.propertyType;
-    }
+      if (filters.location) {
+        where.location = filters.location;
+      }
+      if (filters.subLocation) {
+        where.subLocation = filters.subLocation;
+      }
+      if (filters.propertyType) {
+        where.propertyType = filters.propertyType;
+      }
 
-    const listings = await prisma.listing.findMany({
-      where,
-      orderBy: {
-        createdAt: "desc",
-      },
-      include: {
-        user: {
-          select: {
-            name: true,
+      const listings = await prisma.listing.findMany({
+        where,
+        orderBy: {
+          createdAt: "desc",
+        },
+        include: {
+          user: {
+            select: {
+              name: true,
+            },
           },
         },
-      },
-    });
+      });
 
-    return listings;
-  } catch (error) {
-    console.error("Error searching listings:", error);
-    return [];
-  }
-}
+      return listings;
+    } catch (error) {
+      console.error("Error searching listings:", error);
+      return [];
+    }
+  },
+  ["search-listings"],
+  { revalidate: 60 }
+);
 
 export async function updateUserListing(
   listingId: string,
