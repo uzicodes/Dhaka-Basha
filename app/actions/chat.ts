@@ -3,6 +3,23 @@
 import prisma from "@/src/lib/db";
 import pusher from "@/src/lib/pusher";
 import { auth } from "@clerk/nextjs/server";
+import { Ratelimit } from "@upstash/ratelimit";
+import { Redis } from "@upstash/redis";
+
+
+// UPSTASH REDIS: Rate Limiter Setup
+const redis = new Redis({
+  url: process.env.UPSTASH_REDIS_REST_URL!,
+  token: process.env.UPSTASH_REDIS_REST_TOKEN!,
+});
+
+// (5 messages per 1 minute)
+const ratelimit = new Ratelimit({
+  redis: redis,
+  limiter: Ratelimit.slidingWindow(5, "1 m"),
+  analytics: true,
+  prefix: "dhakabasha:ratelimit:chat",
+});
 
 // ------------------------------------------------------------------
 // HELPER Function : Gets the current user (prevent repeating)
@@ -55,6 +72,13 @@ export async function getOrCreateConversation(otherUserId: string) {
 export async function sendMessage(conversationId: string, content: string) {
   const currentUser = await getAuthenticatedUser();
   if (!content.trim()) throw new Error("Message cannot be empty");
+
+  // Check the rate limit 
+  const { success } = await ratelimit.limit(currentUser.id);
+
+  if (!success) {
+    throw new Error("আপনি খুব দ্রুত মেসেজ পাঠাচ্ছেন। কিছুক্ষণ পর আবার চেষ্টা করুন। (Rate limit exceeded)");
+  }
 
   // Use $transaction to ensure both DB updates happen simultaneously safely
   const [newMessage] = await prisma.$transaction([
