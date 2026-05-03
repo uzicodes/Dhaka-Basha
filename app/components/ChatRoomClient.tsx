@@ -109,8 +109,9 @@ export default function ChatRoomClient({
       setInput("");
       if (textareaRef.current) textareaRef.current.style.height = "auto";
       textareaRef.current?.focus();
-    } catch (error) {
+    } catch (error: any) {
       console.error("Failed to send message:", error);
+      toast.error(error.message || "ম্যাসেজ পাঠাতে সমস্যা হয়েছে");
     } finally {
       setIsSending(false);
     }
@@ -643,7 +644,6 @@ export default function ChatRoomClient({
             ) : (
               <div className="avatar-fallback">{avatarInitial}</div>
             )}
-            {isOnline && <span className="online-dot" />}
           </div>
 
           <div className="header-info">
