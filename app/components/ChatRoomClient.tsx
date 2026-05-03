@@ -44,12 +44,12 @@ export default function ChatRoomClient({
   const [isSending, setIsSending] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isPending, startTransition] = useTransition();
+  const [isOnline] = useState(true); // placeholder
   const messagesEndRef = useRef<HTMLDivElement>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
-  // Auto-scroll to bottom
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
@@ -58,7 +58,6 @@ export default function ChatRoomClient({
     scrollToBottom();
   }, [messages]);
 
-  // Handle clicks outside of menu to close it
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -69,7 +68,6 @@ export default function ChatRoomClient({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // Pusher subscription for real-time updates
   useEffect(() => {
     const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
       cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
@@ -79,10 +77,7 @@ export default function ChatRoomClient({
 
     channel.bind("new-message", (data: MessageType) => {
       setMessages((prev) => {
-        // Prevent duplicates
-        if (prev.some((msg) => msg.id === data.id)) {
-          return prev;
-        }
+        if (prev.some((msg) => msg.id === data.id)) return prev;
         return [...prev, data];
       });
     });
@@ -94,7 +89,16 @@ export default function ChatRoomClient({
     };
   }, [conversationId]);
 
-  // Send message handler
+  // Auto-resize textarea
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInput(e.target.value);
+    const el = textareaRef.current;
+    if (el) {
+      el.style.height = "auto";
+      el.style.height = Math.min(el.scrollHeight, 120) + "px";
+    }
+  };
+
   const handleSend = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!input.trim() || isSending) return;
@@ -103,7 +107,8 @@ export default function ChatRoomClient({
     try {
       await sendMessage(conversationId, input);
       setInput("");
-      inputRef.current?.focus();
+      if (textareaRef.current) textareaRef.current.style.height = "auto";
+      textareaRef.current?.focus();
     } catch (error) {
       console.error("Failed to send message:", error);
     } finally {
@@ -114,7 +119,7 @@ export default function ChatRoomClient({
   const handleDelete = () => {
     setIsMenuOpen(false);
     toast("এই কথোপকথনটি মুছে ফেলবেন?", {
-      description: "এটি আর ফিরে পাওয়া যাবে না।",
+      description: "এটি আর ফিরে পাওয়া যাবে না।",
       action: {
         label: "মুছুন",
         onClick: () => {
@@ -131,7 +136,7 @@ export default function ChatRoomClient({
       },
       cancel: {
         label: "বাতিল",
-        onClick: () => {},
+        onClick: () => { },
       },
     });
   };
@@ -151,144 +156,562 @@ export default function ChatRoomClient({
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
 
-    if (date.toDateString() === today.toDateString()) {
-      return "আজ";
-    } else if (date.toDateString() === yesterday.toDateString()) {
-      return "গতকাল";
-    } else {
-      return date.toLocaleDateString("bn-BD", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      });
-    }
+    if (date.toDateString() === today.toDateString()) return "আজ";
+    if (date.toDateString() === yesterday.toDateString()) return "গতকাল";
+    return date.toLocaleDateString("bn-BD", {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    });
   };
 
+  // Group messages by date
+  const groupedMessages = messages.reduce((groups, msg, index) => {
+    const prevMsg = index > 0 ? messages[index - 1] : null;
+    const isSameDay =
+      prevMsg &&
+      new Date(msg.createdAt).toDateString() ===
+      new Date(prevMsg.createdAt).toDateString();
+    const isSameSender =
+      prevMsg &&
+      prevMsg.senderId === msg.senderId &&
+      isSameDay &&
+      new Date(msg.createdAt).getTime() - new Date(prevMsg.createdAt).getTime() < 5 * 60 * 1000;
+
+    return [
+      ...groups,
+      { ...msg, showDateSeparator: !isSameDay, isGrouped: !!isSameSender },
+    ];
+  }, [] as Array<MessageType & { showDateSeparator: boolean; isGrouped: boolean }>);
+
+  const avatarInitial = otherUser.name ? otherUser.name.charAt(0).toUpperCase() : "U";
+
   return (
-    <div className="flex flex-col h-full bg-[#f8fafc]">
-      {/* Chat Header */}
-      <div className="bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 py-3 flex items-center gap-3 shrink-0 sticky top-0 z-10 shadow-sm">
-        <Link 
-          href="/inbox" 
-          className="p-2 hover:bg-slate-100 rounded-full transition-colors text-slate-500"
-        >
-          <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-          </svg>
-        </Link>
+    <>
+      <style>{`
+        @import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600&display=swap');
 
-        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[#2d79f3]/10 shrink-0 relative shadow-sm">
-          {otherUser.profileImage ? (
-            <img
-              src={otherUser.profileImage}
-              alt={otherUser.name || "User"}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-slate-100 flex items-center justify-center text-slate-400">
-              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
-            </div>
-          )}
-        </div>
-        <div className="flex-1 min-w-0">
-          <h2 className="text-[#151717] font-bold text-base truncate">
-            {otherUser.name || "ব্যবহারকারী"}
-          </h2>
-        </div>
-        
-        <div className="flex items-center gap-1 relative" ref={menuRef}>
-          {otherUser.phone && (
-            <a 
-              href={`tel:${otherUser.phone}`}
-              className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all"
-              title="Call User"
-            >
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
-            </a>
-          )}
-          
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+        .chat-root {
+          font-family: 'Geist', -apple-system, BlinkMacSystemFont, sans-serif;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          background: #0f1117;
+          position: relative;
+          overflow: hidden;
+        }
+
+        /* Subtle noise texture overlay */
+        .chat-root::before {
+          content: '';
+          position: absolute;
+          inset: 0;
+          background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+          pointer-events: none;
+          z-index: 0;
+          opacity: 0.4;
+        }
+
+        /* ── HEADER ── */
+        .chat-header {
+          position: relative;
+          z-index: 10;
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          padding: 14px 16px;
+          background: rgba(255,255,255,0.04);
+          border-bottom: 1px solid rgba(255,255,255,0.07);
+          backdrop-filter: blur(20px);
+          -webkit-backdrop-filter: blur(20px);
+          flex-shrink: 0;
+        }
+
+        .back-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.6);
+          transition: all 0.2s ease;
+          flex-shrink: 0;
+          text-decoration: none;
+        }
+        .back-btn:hover {
+          background: rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.9);
+          transform: translateX(-1px);
+        }
+
+        .avatar-wrap {
+          position: relative;
+          flex-shrink: 0;
+        }
+        .avatar-img {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          object-fit: cover;
+          border: 2px solid rgba(255,255,255,0.1);
+        }
+        .avatar-fallback {
+          width: 42px;
+          height: 42px;
+          border-radius: 50%;
+          background: linear-gradient(135deg, #3b82f6 0%, #6366f1 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size: 16px;
+          font-weight: 600;
+          color: white;
+          border: 2px solid rgba(255,255,255,0.1);
+          letter-spacing: -0.3px;
+        }
+        .online-dot {
+          position: absolute;
+          bottom: 1px;
+          right: 1px;
+          width: 10px;
+          height: 10px;
+          background: #22c55e;
+          border-radius: 50%;
+          border: 2px solid #0f1117;
+        }
+
+        .header-info {
+          flex: 1;
+          min-width: 0;
+        }
+        .header-name {
+          font-size: 15px;
+          font-weight: 600;
+          color: rgba(255,255,255,0.92);
+          truncate: ellipsis;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          letter-spacing: -0.2px;
+        }
+        .header-status {
+          font-size: 11.5px;
+          color: #22c55e;
+          margin-top: 1px;
+          font-weight: 400;
+          letter-spacing: 0.1px;
+        }
+
+        .header-actions {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          position: relative;
+        }
+        .icon-btn {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 36px;
+          height: 36px;
+          border-radius: 10px;
+          background: transparent;
+          border: none;
+          color: rgba(255,255,255,0.4);
+          cursor: pointer;
+          transition: all 0.18s ease;
+          text-decoration: none;
+        }
+        .icon-btn:hover {
+          background: rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.85);
+        }
+
+        .dropdown-menu {
+          position: absolute;
+          top: calc(100% + 8px);
+          right: 0;
+          width: 200px;
+          background: #1c1f2b;
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 14px;
+          padding: 6px;
+          z-index: 50;
+          box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+          animation: dropIn 0.15s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes dropIn {
+          from { opacity: 0; transform: translateY(-6px) scale(0.97); }
+          to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        .dropdown-item {
+          width: 100%;
+          text-align: left;
+          padding: 10px 12px;
+          border-radius: 9px;
+          font-size: 13px;
+          font-weight: 500;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          gap: 9px;
+          border: none;
+          background: transparent;
+          transition: background 0.15s;
+          font-family: inherit;
+        }
+        .dropdown-item.danger {
+          color: #f87171;
+        }
+        .dropdown-item.danger:hover {
+          background: rgba(239,68,68,0.12);
+        }
+        .dropdown-item:disabled {
+          opacity: 0.5;
+          cursor: not-allowed;
+        }
+
+        /* ── MESSAGES ── */
+        .messages-scroll {
+          flex: 1;
+          overflow-y: auto;
+          padding: 20px 16px 8px;
+          display: flex;
+          flex-direction: column;
+          gap: 2px;
+          position: relative;
+          z-index: 1;
+          scroll-behavior: smooth;
+        }
+        .messages-scroll::-webkit-scrollbar {
+          width: 4px;
+        }
+        .messages-scroll::-webkit-scrollbar-track {
+          background: transparent;
+        }
+        .messages-scroll::-webkit-scrollbar-thumb {
+          background: rgba(255,255,255,0.1);
+          border-radius: 4px;
+        }
+
+        .date-separator {
+          display: flex;
+          align-items: center;
+          gap: 12px;
+          margin: 20px 0 16px;
+        }
+        .date-separator-line {
+          flex: 1;
+          height: 1px;
+          background: rgba(255,255,255,0.06);
+        }
+        .date-separator-label {
+          font-size: 11px;
+          font-weight: 500;
+          color: rgba(255,255,255,0.25);
+          letter-spacing: 0.6px;
+          text-transform: uppercase;
+          white-space: nowrap;
+        }
+
+        .msg-row {
+          display: flex;
+          animation: msgIn 0.25s cubic-bezier(0.16,1,0.3,1);
+        }
+        @keyframes msgIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .msg-row.own { justify-content: flex-end; }
+        .msg-row.other { justify-content: flex-start; }
+        .msg-row.grouped { margin-top: 2px; }
+        .msg-row:not(.grouped) { margin-top: 12px; }
+
+        .bubble {
+          max-width: min(75%, 380px);
+          padding: 10px 14px;
+          position: relative;
+          word-break: break-word;
+          white-space: pre-wrap;
+        }
+
+        /* Own bubble */
+        .bubble.own {
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          color: white;
+          border-radius: 18px 18px 4px 18px;
+          box-shadow: 0 4px 16px rgba(59,130,246,0.25);
+        }
+        /* Other bubble */
+        .bubble.other {
+          background: rgba(255,255,255,0.07);
+          color: rgba(255,255,255,0.88);
+          border-radius: 18px 18px 18px 4px;
+          border: 1px solid rgba(255,255,255,0.08);
+        }
+
+        .bubble.grouped.own {
+          border-radius: 18px 4px 4px 18px;
+        }
+        .bubble.grouped.other {
+          border-radius: 4px 18px 18px 4px;
+        }
+
+        .bubble-text {
+          font-size: 14px;
+          line-height: 1.55;
+          font-weight: 400;
+          letter-spacing: 0.05px;
+        }
+        .bubble-meta {
+          display: flex;
+          align-items: center;
+          gap: 4px;
+          margin-top: 4px;
+        }
+        .bubble-meta.own { justify-content: flex-end; }
+        .bubble-meta.other { justify-content: flex-start; }
+        .bubble-time {
+          font-size: 10px;
+          font-weight: 400;
+        }
+        .bubble.own .bubble-time { color: rgba(255,255,255,0.55); }
+        .bubble.other .bubble-time { color: rgba(255,255,255,0.28); }
+
+        .tick-icon { color: rgba(255,255,255,0.55); }
+
+        /* Empty state */
+        .empty-state {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 16px;
+          padding-bottom: 40px;
+        }
+        .empty-icon-wrap {
+          width: 72px;
+          height: 72px;
+          border-radius: 50%;
+          background: rgba(255,255,255,0.05);
+          border: 1px solid rgba(255,255,255,0.08);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: rgba(255,255,255,0.25);
+        }
+        .empty-label {
+          font-size: 14px;
+          color: rgba(255,255,255,0.25);
+          font-weight: 400;
+        }
+
+        /* ── INPUT AREA ── */
+        .input-area {
+          position: relative;
+          z-index: 10;
+          padding: 12px 16px 16px;
+          background: rgba(255,255,255,0.03);
+          border-top: 1px solid rgba(255,255,255,0.06);
+          backdrop-filter: blur(20px);
+          flex-shrink: 0;
+        }
+        .input-row {
+          display: flex;
+          align-items: flex-end;
+          gap: 10px;
+          max-width: 900px;
+          margin: 0 auto;
+        }
+        .input-wrap {
+          flex: 1;
+          position: relative;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.1);
+          border-radius: 20px;
+          transition: border-color 0.2s, box-shadow 0.2s;
+          overflow: hidden;
+        }
+        .input-wrap:focus-within {
+          border-color: rgba(59,130,246,0.5);
+          box-shadow: 0 0 0 3px rgba(59,130,246,0.08);
+        }
+        .chat-textarea {
+          width: 100%;
+          background: transparent;
+          border: none;
+          outline: none;
+          padding: 11px 16px;
+          font-size: 14px;
+          color: rgba(255,255,255,0.88);
+          font-family: inherit;
+          font-weight: 400;
+          resize: none;
+          min-height: 44px;
+          max-height: 120px;
+          line-height: 1.5;
+          letter-spacing: 0.05px;
+        }
+        .chat-textarea::placeholder {
+          color: rgba(255,255,255,0.22);
+        }
+
+        .attach-btn {
+          width: 42px;
+          height: 42px;
+          border-radius: 13px;
+          background: rgba(255,255,255,0.06);
+          border: 1px solid rgba(255,255,255,0.08);
+          color: rgba(255,255,255,0.35);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.18s;
+          flex-shrink: 0;
+          margin-bottom: 1px;
+        }
+        .attach-btn:hover {
+          background: rgba(255,255,255,0.1);
+          color: rgba(255,255,255,0.7);
+        }
+
+        .send-btn {
+          width: 42px;
+          height: 42px;
+          border-radius: 13px;
+          border: none;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.16,1,0.3,1);
+          flex-shrink: 0;
+          margin-bottom: 1px;
+          font-family: inherit;
+        }
+        .send-btn.active {
+          background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+          color: white;
+          box-shadow: 0 4px 16px rgba(59,130,246,0.35);
+        }
+        .send-btn.active:hover {
+          transform: scale(1.05);
+          box-shadow: 0 6px 20px rgba(59,130,246,0.45);
+        }
+        .send-btn.active:active {
+          transform: scale(0.96);
+        }
+        .send-btn.inactive {
+          background: rgba(255,255,255,0.05);
+          color: rgba(255,255,255,0.2);
+          cursor: not-allowed;
+        }
+
+        .input-hint {
+          text-align: center;
+          font-size: 10.5px;
+          color: rgba(255,255,255,0.15);
+          margin-top: 8px;
+          letter-spacing: 0.1px;
+        }
+
+        .spin {
+          animation: spin 0.8s linear infinite;
+        }
+        @keyframes spin {
+          to { transform: rotate(360deg); }
+        }
+      `}</style>
+
+      <div className="chat-root">
+        {/* ── HEADER ── */}
+        <header className="chat-header">
+          <Link href="/inbox" className="back-btn">
+            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
             </svg>
-          </button>
+          </Link>
 
-          {isMenuOpen && (
-            <div className="absolute top-full right-0 mt-1 w-48 bg-white rounded-[12px] shadow-xl border border-slate-100 py-1 z-50 animate-in fade-in zoom-in-95 duration-100">
-              <button
-                onClick={handleDelete}
-                disabled={isPending}
-                className="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 transition-colors flex items-center gap-2"
-              >
-                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                </svg>
-                কথোপকথন মুছে ফেলুন
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {/* Messages List */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 space-y-6 bg-slate-50/50">
-        {messages.length === 0 ? (
-          <div className="flex flex-col items-center justify-center h-full gap-4">
-            <div className="w-20 h-20 bg-blue-50 rounded-full flex items-center justify-center text-[#2d79f3]">
-              <svg className="w-10 h-10" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-              </svg>
-            </div>
-            <p className="text-slate-400 text-sm font-medium">
-              কোনো ম্যাসেজ নেই। কথোপকথন শুরু করুন!
-            </p>
+          <div className="avatar-wrap">
+            {otherUser.profileImage ? (
+              <img src={otherUser.profileImage} alt={otherUser.name || "User"} className="avatar-img" />
+            ) : (
+              <div className="avatar-fallback">{avatarInitial}</div>
+            )}
+            {isOnline && <span className="online-dot" />}
           </div>
-        ) : (
-          <div className="space-y-6">
-            {messages.map((msg, index) => {
+
+          <div className="header-info">
+            <div className="header-name">{otherUser.name || "ব্যবহারকারী"}</div>
+          </div>
+
+          <div className="header-actions" ref={menuRef}>
+            {otherUser.phone && (
+              <a href={`tel:${otherUser.phone}`} className="icon-btn" title="Call">
+                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                </svg>
+              </a>
+            )}
+            <button className="icon-btn" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+              </svg>
+            </button>
+
+            {isMenuOpen && (
+              <div className="dropdown-menu">
+                <button
+                  className="dropdown-item danger"
+                  onClick={handleDelete}
+                  disabled={isPending}
+                >
+                  <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                  কথোপকথন মুছুন
+                </button>
+              </div>
+            )}
+          </div>
+        </header>
+
+        {/* ── MESSAGES ── */}
+        <div className="messages-scroll">
+          {messages.length === 0 ? (
+            <div className="empty-state">
+              <div className="empty-icon-wrap">
+                <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+              </div>
+              <p className="empty-label">কথোপকথন শুরু করুন</p>
+            </div>
+          ) : (
+            groupedMessages.map((msg) => {
               const isOwn = msg.senderId === currentUserId;
-              const prevMsg = index > 0 ? messages[index - 1] : null;
-              const isSameDay = prevMsg && new Date(msg.createdAt).toDateString() === new Date(prevMsg.createdAt).toDateString();
-              const isSameSender = prevMsg && prevMsg.senderId === msg.senderId && isSameDay;
 
               return (
-                <div key={msg.id} className="space-y-4">
-                  {!isSameDay && (
-                    <div className="flex justify-center">
-                      <span className="bg-white px-3 py-1 rounded-full text-[10px] font-bold text-slate-400 uppercase tracking-wider shadow-sm border border-slate-100">
-                        {formatDateLabel(msg.createdAt)}
-                      </span>
+                <div key={msg.id}>
+                  {msg.showDateSeparator && (
+                    <div className="date-separator">
+                      <div className="date-separator-line" />
+                      <span className="date-separator-label">{formatDateLabel(msg.createdAt)}</span>
+                      <div className="date-separator-line" />
                     </div>
                   )}
-                  
-                  <div className={`flex ${isOwn ? "justify-end" : "justify-start"} ${isSameSender ? "-mt-4" : ""}`}>
-                    <div
-                      className={`max-w-[85%] sm:max-w-[70%] px-4 py-2.5 shadow-sm transition-all animate-in fade-in slide-in-from-bottom-2 duration-300 ${
-                        isOwn
-                          ? "bg-[#2d79f3] text-white rounded-[20px] rounded-tr-[4px]"
-                          : "bg-white text-[#151717] border border-slate-100 rounded-[20px] rounded-tl-[4px]"
-                      }`}
-                    >
-                      <p className="text-sm leading-relaxed whitespace-pre-wrap break-words">
-                        {msg.content}
-                      </p>
-                      <div
-                        className={`flex items-center gap-1.5 mt-1 ${
-                          isOwn ? "justify-end" : "justify-start"
-                        }`}
-                      >
-                        <span className={`text-[10px] ${isOwn ? "text-blue-100/80" : "text-slate-400"}`}>
-                          {formatTime(msg.createdAt)}
-                        </span>
+                  <div className={`msg-row ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
+                    <div className={`bubble ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
+                      <p className="bubble-text">{msg.content}</p>
+                      <div className={`bubble-meta ${isOwn ? "own" : "other"}`}>
+                        <span className="bubble-time">{formatTime(msg.createdAt)}</span>
                         {isOwn && (
-                          <svg className="w-3.5 h-3.5 text-blue-100/80" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <svg className="tick-icon" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
                           </svg>
                         )}
@@ -297,67 +720,57 @@ export default function ChatRoomClient({
                   </div>
                 </div>
               );
-            })}
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
+            })
+          )}
+          <div ref={messagesEndRef} />
+        </div>
 
-      {/* Chat Input */}
-      <div className="bg-white border-t border-slate-100 p-4 shrink-0">
-        <form
-          onSubmit={handleSend}
-          className="flex items-end gap-2 max-w-4xl mx-auto"
-        >
-          <button 
-            type="button"
-            className="mb-1 p-2.5 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-full transition-all shrink-0"
-          >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-            </svg>
-          </button>
-          
-          <div className="flex-1 relative">
-            <textarea
-              ref={inputRef as any}
-              rows={1}
-              value={input}
-              onChange={(e) => setInput(e.target.value)}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !e.shiftKey) {
-                  e.preventDefault();
-                  handleSend(e);
-                }
-              }}
-              placeholder="আপনার ম্যাসেজ লিখুন..."
-              className="w-full bg-slate-50 border border-slate-200 rounded-[24px] px-5 py-3 text-sm text-[#151717] focus:outline-none focus:border-[#2d79f3] focus:ring-4 focus:ring-blue-500/5 transition-all placeholder:text-slate-400 resize-none max-h-32"
-              disabled={isSending}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={!input.trim() || isSending}
-            className={`mb-1 w-11 h-11 rounded-full flex items-center justify-center shrink-0 transition-all shadow-md ${
-              !input.trim() || isSending
-                ? "bg-slate-100 text-slate-300 shadow-none cursor-not-allowed"
-                : "bg-[#2d79f3] text-white hover:bg-blue-600 hover:shadow-blue-500/20 active:scale-95"
-            }`}
-          >
-            {isSending ? (
-              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            ) : (
-              <svg className="w-6 h-6 rotate-45 -ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+        {/* ── INPUT ── */}
+        <div className="input-area">
+          <form onSubmit={handleSend} className="input-row">
+            <button type="button" className="attach-btn">
+              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
               </svg>
-            )}
-          </button>
-        </form>
-        <p className="text-[10px] text-center text-slate-400 mt-2">
-          শিফট + এন্টার দিয়ে নতুন লাইন লিখুন
-        </p>
+            </button>
+
+            <div className="input-wrap">
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                value={input}
+                onChange={handleInputChange}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" && !e.shiftKey) {
+                    e.preventDefault();
+                    handleSend(e);
+                  }
+                }}
+                placeholder="ম্যাসেজ লিখুন..."
+                className="chat-textarea"
+                disabled={isSending}
+              />
+            </div>
+
+            <button
+              type="submit"
+              disabled={!input.trim() || isSending}
+              className={`send-btn ${!input.trim() || isSending ? "inactive" : "active"}`}
+            >
+              {isSending ? (
+                <svg className="spin" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 12a8 8 0 018-8" />
+                </svg>
+              ) : (
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+                </svg>
+              )}
+            </button>
+          </form>
+          <p className="input-hint">Shift + Enter — নতুন লাইন</p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
