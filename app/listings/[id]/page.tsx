@@ -5,6 +5,21 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
 import ImageGallery from "@/app/components/ImageGallery";
 import StartChatButton from "@/app/components/StartChatButton";
+import { unstable_cache } from "next/cache";
+
+// CACHED: Fetch Property Details (Refresh every 5 minutes)
+const getCachedListing = unstable_cache(
+  async (listingId: string) => {
+    return await prisma.listing.findUnique({
+      where: { id: listingId },
+      include: {
+        user: true,
+      },
+    });
+  },
+  ["single-listing-details"],
+  { revalidate: 300 } //in memory for 5 minutes
+);
 
 export default async function ListingDetails({
   params,
@@ -15,12 +30,10 @@ export default async function ListingDetails({
 }) {
   const { id } = await params;
   const resolvedSearchParams = await searchParams;
-  const listing = await prisma.listing.findUnique({
-    where: { id },
-    include: {
-      user: true
-    }
-  });
+
+  // Use cached function 
+  const listing = await getCachedListing(id);
+
   const { userId: clerkUserId } = await auth();
   const currentUser = clerkUserId
     ? await prisma.user.findUnique({
@@ -110,7 +123,7 @@ export default async function ListingDetails({
                     {propTypeLabel}
                   </span>
                   <span className="bg-blue-50 text-[#2d79f3] text-xs md:text-sm font-bold px-3 py-1.5 rounded-md border border-purple-100">
-                    ভাড়া শুরু: {listing.rentFrom}
+                    ভাড়া শুরু: {listing.rentFrom}
                   </span>
                 </div>
                 <h1 className="text-2xl md:text-4xl font-extrabold text-[#151717] leading-tight">
@@ -134,7 +147,7 @@ export default async function ListingDetails({
                         </div>
                       )}
                     </div>
-                    <span className="font-bold text-slate-700">{listing.user.name || "নাম পাওয়া যায়নি"}</span>
+                    <span className="font-bold text-slate-700">{listing.user.name || "নাম পাওয়া যায়নি"}</span>
                   </div>
                 </div>
               </div>
@@ -155,7 +168,6 @@ export default async function ListingDetails({
                   ৳ {listing.rentPrice.toLocaleString('en-IN')}
                 </p>
               </div>
-
 
               {/* Action Buttons */}
               <div className="space-y-4">
@@ -229,8 +241,8 @@ export default async function ListingDetails({
                         {listing.mapLink.length > 10 ? `${listing.mapLink.slice(0, 10)}...` : listing.mapLink}
                       </span>
                     </div>
-                    {/* Self-contained copy button to keep page as a Server Component without extra files */}
-                    <div dangerouslySetInnerHTML={{ __html: `
+                    <div dangerouslySetInnerHTML={{
+                      __html: `
                       <button
                         class="p-2 hover:bg-blue-100 rounded-md transition-colors text-[#2d79f3]"
                         title="কপি করুন"
