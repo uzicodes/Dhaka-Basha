@@ -17,6 +17,8 @@
     "@neondatabase/serverless": "^1.1.0",
     "@prisma/adapter-neon": "^7.8.0",
     "@prisma/client": "^7.8.0",
+    "@upstash/ratelimit": "^2.0.8",
+    "@upstash/redis": "^1.37.0",
     "browser-image-compression": "^2.0.2",
     "next": "16.2.3",
     "pusher": "^5.3.3",
