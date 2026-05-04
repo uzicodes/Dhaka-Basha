@@ -16,7 +16,7 @@ export default function Contact() {
                 <span className="text-xs font-bold uppercase tracking-[0.2em] text-[#2d79f3]">আমাদের সম্পর্কে</span>
               </div>
               <h2 className="text-3xl font-black text-slate-900 leading-tight">
-                ঢাকা-বাসা<br />
+                <span className="font-ekush">ঢাকা-বাসা</span><br />
                 <span className="text-[#2d79f3]">কেন?</span>
               </h2>
             </div>

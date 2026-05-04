@@ -12,6 +12,11 @@ const ekush = localFont({
   variable: "--font-ekush",
 });
 
+const baraka = localFont({
+  src: "../public/fonts/FN Baraka Bangla Unicode.ttf",
+  variable: "--font-baraka",
+});
+
 // Modern Bangla font
 const hindSiliguri = Hind_Siliguri({
   weight: ["300", "400", "500", "600", "700"],
@@ -65,10 +70,10 @@ export default function RootLayout({
       <html
         lang="bn"
         translate="no"
-        className={`${hindSiliguri.variable} ${geistMono.variable} ${ekush.variable} h-full antialiased`}
+        className={`${hindSiliguri.variable} ${geistMono.variable} ${ekush.variable} ${baraka.variable} h-full antialiased`}
         suppressHydrationWarning
       >
-        <body className={`min-h-full flex flex-col font-sans`}>
+        <body className={`min-h-full flex flex-col`}>
           <GlobalLoader />
           <Navbar />
           <Toaster position="bottom-right" richColors />
