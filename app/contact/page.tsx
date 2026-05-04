@@ -79,7 +79,7 @@ export default function Contact() {
           {/* Right Column: Content */}
           <div className="space-y-10 text-slate-700 leading-relaxed">
             <p className="text-lg text-slate-600 border-l-4 border-[#2d79f3] pl-5">
-              ঢাকা-বাসা হল ঢাকা শহরে ভাড়া বাড়ি খুঁজে পাওয়ার জন্য একটি আধুনিক এবং নির্ভরযোগ্য প্ল্যাটফর্ম। আমরা বিশ্বাস করি যে প্রতিটি ব্যক্তি তাদের স্বপ্নের বাড়ি খুঁজে পাওয়ার অধিকার রাখে।
+              <span className="font-ekush">ঢাকা-বাসা</span> হল ঢাকা শহরে ভাড়া বাড়ি খুঁজে পাওয়ার জন্য একটি আধুনিক এবং নির্ভরযোগ্য প্ল্যাটফর্ম। আমরা বিশ্বাস করি যে প্রতিটি ব্যক্তি তাদের স্বপ্নের বাড়ি খুঁজে পাওয়ার অধিকার রাখে।
             </p>
 
             <div className="space-y-2">
