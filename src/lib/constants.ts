@@ -3,7 +3,6 @@ export type LocationType = { value: string; label: string; subLocations?: SubLoc
 export type PropertyType = { value: string; label: string };
 
 export const propertyTypes: PropertyType[] = [
-  { value: "", label: "-- প্রপার্টির ধরন নির্বাচন করুন --" },
   { value: "single-room", label: "সিঙ্গেল রুম" },
   { value: "single-room-attached", label: "সিঙ্গেল রুম - (ওয়াশরুম)" },
   { value: "flat", label: "ফ্ল্যাট" },
