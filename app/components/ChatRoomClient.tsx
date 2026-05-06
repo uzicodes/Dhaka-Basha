@@ -200,6 +200,7 @@ export default function ChatRoomClient({
           background: #0f1117;
           position: relative;
           overflow: hidden;
+          width: 100%;
         }
 
         /* Subtle noise texture overlay */

@@ -43,10 +43,10 @@ export default async function ConversationPage({
       : conversation.user1;
 
   return (
-    <main className="grow flex flex-col bg-[#daf2e0] pt-24 md:pt-32 pb-4 md:pb-12 px-4 min-h-screen">
+    <main className="grow flex flex-col bg-[#daf2e0] pt-24 md:pt-32 px-4 min-h-screen h-screen">
       <div className="w-full max-w-4xl mx-auto flex flex-col flex-1 bg-white shadow-2xl rounded-[24px] overflow-hidden border border-white">
         {/* Chat Room */}
-        <div className="flex-1 flex flex-col min-h-0">
+        <div className="flex-1 flex flex-col overflow-hidden">
           <ChatRoomClient
             initialMessages={JSON.parse(JSON.stringify(messages))}
             conversationId={conversationId}
