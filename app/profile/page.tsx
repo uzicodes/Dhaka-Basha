@@ -441,10 +441,9 @@ export default function ProfilePage() {
         {/* --- DASHBOARD SECTIONS --- */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
 
-          {/* Sidebar / Quick Links */}
+          {/* Sidebar */}
           <div className="md:col-span-1 space-y-4">
             <div className="bg-white p-5 rounded-[20px] shadow-sm border-[1.5px] border-[#ecedec]">
-              <h2 className="text-lg font-bold text-[#151717] mb-4 border-b pb-2">ড্যাশবোর্ড মেনু</h2>
               <ul className="space-y-2">
                 <li>
                   <button
@@ -477,7 +476,7 @@ export default function ProfilePage() {
                   >
                     ম্যাসেজ সমূহ
                     {unreadCount > 0 && (
-                      <span className="absolute top-1.5 right-3 inline-flex items-center justify-center min-w-[20px] h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full animate-pulse">
+                      <span className="absolute top-1.5 right-3 inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full animate-pulse">
                         {unreadCount > 99 ? "99+" : unreadCount}
                       </span>
                     )}
