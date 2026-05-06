@@ -38,6 +38,7 @@ function PostToLetForm() {
   const isEditMode = Boolean(listingId);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSelectOpen, setIsSelectOpen] = useState(false);
+  const [isPropertyTypeOpen, setIsPropertyTypeOpen] = useState(false);
   const [expandedLoc, setExpandedLoc] = useState("");
   const [isLoadingListing, setIsLoadingListing] = useState(isEditMode);
   const [selectedFiles, setSelectedFiles] = useState<File[]>([]);
@@ -48,6 +49,7 @@ function PostToLetForm() {
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
   const [viewYear, setViewYear] = useState(new Date().getFullYear());
   const monthPickerRef = useRef<HTMLDivElement>(null);
+  const propertyTypeRef = useRef<HTMLDivElement>(null);
 
   const monthsBN = [
     "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
@@ -59,6 +61,9 @@ function PostToLetForm() {
     const handleClickOutside = (event: MouseEvent) => {
       if (monthPickerRef.current && !monthPickerRef.current.contains(event.target as Node)) {
         setIsMonthPickerOpen(false);
+      }
+      if (propertyTypeRef.current && !propertyTypeRef.current.contains(event.target as Node)) {
+        setIsPropertyTypeOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
@@ -372,7 +377,7 @@ function PostToLetForm() {
             <input
               {...register("title")}
               type="text"
-              className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+              className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                 }`}
             />
             {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
@@ -385,7 +390,7 @@ function PostToLetForm() {
               <input
                 {...register("rentPrice")}
                 type="number"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
@@ -398,7 +403,7 @@ function PostToLetForm() {
                 onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
                 className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
               >
-                <span className={watch("rentFrom") ? "text-green-600 font-medium" : "text-slate-400"}>
+                <span className={watch("rentFrom") ? "text-red-600 font-medium" : "text-slate-400"}>
                   {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
                 </span>
                 <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -408,7 +413,7 @@ function PostToLetForm() {
               <input type="hidden" {...register("rentFrom")} />
 
               {isMonthPickerOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-[60] p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-60 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
                   {/* Year Selector */}
                   <div className="flex items-center justify-between mb-4 border-b pb-2">
                     <button 
@@ -468,17 +473,41 @@ function PostToLetForm() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             {/* Property Type */}
-            <div className="flex flex-col gap-1.5">
+            <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
               <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
-              <select
-                {...register("propertyType")}
-                className={`border-[1.5px] bg-white text-green-600 rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                  }`}
+              <input type="hidden" {...register("propertyType")} />
+
+              <button
+                type="button"
+                className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
+                onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}
               >
-                {propertyTypes.map((type) => (
-                  <option key={type.value} value={type.value} className="text-green-600">{type.label}</option>
-                ))}
-              </select>
+                <span className="text-red-600 truncate pr-4">
+                  {watch("propertyType") ? propertyTypes.find(p => p.value === watch("propertyType"))?.label : "-- নির্বাচন করুন --"}
+                </span>
+                <svg className={`w-5 h-5 text-slate-400 transition-transform ${isPropertyTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+              </button>
+
+              {isPropertyTypeOpen && (
+                <ul
+                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
+                  onMouseDown={(e) => e.preventDefault()}
+                >
+                  {propertyTypes.map((type) => (
+                    <li
+                      key={type.value}
+                      className="px-4 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors"
+                      onClick={() => {
+                        setValue("propertyType", type.value, { shouldValidate: true });
+                        setIsPropertyTypeOpen(false);
+                      }}
+                    >
+                      {type.label}
+                    </li>
+                  ))}
+                </ul>
+              )}
               {errors.propertyType && <span className="text-red-500 text-xs">{errors.propertyType.message}</span>}
             </div>
 
@@ -494,7 +523,7 @@ function PostToLetForm() {
                 onClick={() => setIsSelectOpen(!isSelectOpen)}
                 onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
               >
-                <span className={selectedLocation ? "text-green-600 truncate pr-4" : "text-green-600"}>
+                <span className={selectedLocation ? "text-red-600 truncate pr-4" : "text-red-600"}>
                   {selectedLocation
                     ? (() => {
                       const loc = locations.find(l => l.value === selectedLocation);
@@ -587,7 +616,7 @@ function PostToLetForm() {
               {...register("address")}
               type="text"
               placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-              className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+              className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                 }`}
             />
             {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
@@ -604,7 +633,7 @@ function PostToLetForm() {
                 type="text"
                 maxLength={11}
                 placeholder="01XXXXXXXXX"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
@@ -617,7 +646,7 @@ function PostToLetForm() {
                 {...register("mapLink")}
                 type="text"
                 placeholder="লিংক / কোড দিন "
-                className={`border-[1.5px] rounded-none h-11 px-3 text-green-600 placeholder:text-green-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
               {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
