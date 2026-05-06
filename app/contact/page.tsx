@@ -1,3 +1,4 @@
+
 export default function Contact() {
   return (
     <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-16">
@@ -72,6 +73,42 @@ export default function Contact() {
                     <p className="text-white text-sm">info@dhakabasha.com</p>
                   </div>
                 </div>
+
+                {/* Developer Info */}
+                <div className="pt-5 mt-2 border-t border-slate-700/50 flex items-start gap-4">
+                  <div className="w-9 h-9 bg-slate-800 flex items-center justify-center shrink-0">
+                    <svg className="w-4 h-4 text-[#2d79f3]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
+                    </svg>
+                  </div>
+                  <div>
+                    <p className="text-xs uppercase tracking-widest text-slate-500 mb-2">ডেভেলপার</p>
+                    <div className="flex items-center gap-4">
+                      {/* GitHub */}
+                      <a href="#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#2d79f3] transition-colors" aria-label="GitHub">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2.08 6-6.38 0-1.36-.5-2.6-1.3-3.5.14-.3.6-1.6-.1-3.4 0 0-1.05-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.25 2.5 5.2 2.8 5.2 2.8c-.7 1.8-.2 3.1-.1 3.4-.8.9-1.3 2.1-1.3 3.5 0 4.3 3 6 6 6.38a4.8 4.8 0 0 0-1 3.06v4"/>
+                        </svg>
+                      </a>
+                      {/* LinkedIn */}
+                      <a href="#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-[#2d79f3] transition-colors" aria-label="LinkedIn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
+                          <rect width="4" height="12" x="2" y="9"/>
+                          <circle cx="4" cy="4" r="2"/>
+                        </svg>
+                      </a>
+                      {/* Email */}
+                      <a href="mailto:your_email@example.com" className="text-white hover:text-[#2d79f3] transition-colors" aria-label="Email">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                          <rect width="20" height="16" x="2" y="4" rx="2"/>
+                          <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+                        </svg>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             </div>
           </div>
