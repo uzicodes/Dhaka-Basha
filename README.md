@@ -8,7 +8,11 @@
 
 Dhaka-Basha is a modern web application designed to simplify the process of finding and listing rental properties in Dhaka, Bangladesh. Built with Next.js, it provides a seamless and user-friendly experience for both tenants searching for their next home & landlords looking to advertise their "To-Let" properties. The platform features a clean, responsive interface with custom Bengali fonts, real-time messaging, and efficient property management tools.
 
-## Key Features
+
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Key%20Features-blue?style=for-the-badge" alt="Key Features" height="34">
+</div>
 
 *   **User Authentication**: Secure sign-up and login functionality powered by Clerk, including social sign-on with Google.
 *   **Property Listings**: Users can create, view, search, edit, and delete their rental property listings with an intuitive form and user dashboard.
@@ -19,7 +23,9 @@ Dhaka-Basha is a modern web application designed to simplify the process of find
 *   **Efficient Image Handling**: Features client-side image compression before uploading directly to Cloudflare R2, ensuring fast uploads and optimal performance. Includes a rich image gallery component with fullscreen and thumbnail views.
 *   **Server-Side Logic**: Utilizes Next.js Server Actions for robust backend operations, from creating listings to managing user data and chat functionalities.
 
-## Tech Stack
+<div align="center">
+  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Tech Stack" height="34">
+</div>
 
 -   **Framework**: Next.js 16 (App Router)
 -   **Language**: TypeScript
@@ -33,7 +39,10 @@ Dhaka-Basha is a modern web application designed to simplify the process of find
 -   **Rate Limiting**: Upstash Redis & Ratelimit
 -   **Deployment**: Vercel
 
-## Project Structure
+
+<div align="center">
+  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Project Structure" height="34">
+</div>
 
 The project follows the standard Next.js App Router structure.
 
@@ -61,7 +70,9 @@ The project follows the standard Next.js App Router structure.
 -   **`app/components/ChatRoomClient.tsx`**: A feature-rich, client-side chat component that subscribes to Pusher channels for real-time message updates, providing a smooth messaging experience.
 -   **`app/post/page.tsx`**: A comprehensive form component that handles both creating and editing listings. It uses React Hook Form and Zod for robust validation and manages the entire image upload flow, including client-side compression.
 
-## Setup and Installation
+<div align="center">
+  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Setup & Installation" height="34">
+</div>
 
 To run this project locally, follow these steps:
 
