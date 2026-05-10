@@ -11,7 +11,7 @@ Dhaka-Basha is a modern web application designed to simplify the process of find
 
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Key%20Features-blue?style=for-the-badge" alt="Key Features" height="34">
+  <img src="https://img.shields.io/badge/Key%20Features-purple?style=for-the-badge" alt="Key Features" height="34">
 </div>
 
 *   **User Authentication**: Secure sign-up and login functionality powered by Clerk, including social sign-on with Google.
@@ -24,7 +24,7 @@ Dhaka-Basha is a modern web application designed to simplify the process of find
 *   **Server-Side Logic**: Utilizes Next.js Server Actions for robust backend operations, from creating listings to managing user data and chat functionalities.
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Tech Stack" height="34">
+  <img src="https://img.shields.io/badge/Tech%20Stack-purple?style=for-the-badge" alt="Tech Stack" height="34">
 </div>
 
 -   **Framework**: Next.js 16 (App Router)
@@ -41,7 +41,7 @@ Dhaka-Basha is a modern web application designed to simplify the process of find
 
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Project Structure" height="34">
+  <img src="https://img.shields.io/badge/Project Structure%20-purple?style=for-the-badge" alt="Project Structure" height="34">
 </div>
 
 The project follows the standard Next.js App Router structure.
@@ -71,7 +71,7 @@ The project follows the standard Next.js App Router structure.
 -   **`app/post/page.tsx`**: A comprehensive form component that handles both creating and editing listings. It uses React Hook Form and Zod for robust validation and manages the entire image upload flow, including client-side compression.
 
 <div align="center">
-  <img src="https://img.shields.io/badge/Tech%20Stack-blue?style=for-the-badge" alt="Setup & Installation" height="34">
+  <img src="https://img.shields.io/badge/Setup &%20Installation-purple?style=for-the-badge" alt="Setup & Installation" height="34">
 </div>
 
 To run this project locally, follow these steps:
