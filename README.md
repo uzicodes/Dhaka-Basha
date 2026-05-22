@@ -130,3 +130,7 @@ To run this project locally, follow these steps:
     ```
 
     The application will be available at `http://localhost:3000`.
+
+
+
+    [![RepoStars](https://repostars.dev/api/embed?repo=uzicodes%2FDhaka-Basha&theme=dark)](https://repostars.dev/?repos=uzicodes%2FDhaka-Basha&theme=dark)
