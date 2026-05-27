@@ -329,7 +329,7 @@ function PostToLetForm() {
         localStorage.removeItem('savedPostData');
         setSelectedFiles([]);
         toast.success(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার টু-লেট সফলভাবে পোস্ট করা হয়েছে!");
-        
+
         // Update local state to reflect successful submission
         if (!isEditMode) {
           reset();
@@ -369,389 +369,388 @@ function PostToLetForm() {
         {isEditMode && isLoadingListing ? (
           <p className="text-center text-slate-500 py-10">পোস্টের তথ্য লোড হচ্ছে...</p>
         ) : (
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
 
-          {/* Title */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
-            <input
-              {...register("title")}
-              type="text"
-              className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
-            />
-            {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
-          </div>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Rent Price */}
+            {/* Title */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
+              <label className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
               <input
-                {...register("rentPrice")}
-                type="number"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                {...register("title")}
+                type="text"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
                   }`}
               />
-              {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
+              {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
             </div>
 
-            {/* Rent From (Custom Month/Year Picker) */}
-            <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
-              <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
-              <div 
-                onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
-                className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
-              >
-                <span className={watch("rentFrom") ? "text-red-600 font-medium" : "text-slate-400"}>
-                  {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
-                </span>
-                <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Rent Price */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
+                <input
+                  {...register("rentPrice")}
+                  type="number"
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                    }`}
+                />
+                {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
               </div>
-              <input type="hidden" {...register("rentFrom")} />
 
-              {isMonthPickerOpen && (
-                <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-60 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
-                  {/* Year Selector */}
-                  <div className="flex items-center justify-between mb-4 border-b pb-2">
-                    <button 
-                      type="button"
-                      onClick={() => setViewYear(prev => Math.max(new Date().getFullYear(), prev - 1))}
-                      disabled={viewYear <= new Date().getFullYear()}
-                      className="p-1 hover:bg-slate-100 rounded-full disabled:opacity-30"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
-                    </button>
-                    <span className="font-bold text-slate-800 text-lg">{viewYear}</span>
-                    <button 
-                      type="button"
-                      onClick={() => setViewYear(prev => prev + 1)}
-                      className="p-1 hover:bg-slate-100 rounded-full"
-                    >
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
-                    </button>
-                  </div>
-
-                  {/* Months Grid */}
-                  <div className="grid grid-cols-3 gap-2">
-                    {monthsBN.map((name, index) => {
-                      const monthNum = index + 1;
-                      const isPast = viewYear === new Date().getFullYear() && monthNum < (new Date().getMonth() + 1);
-                      const currentVal = watch("rentFrom");
-                      const isSelected = currentVal === `${String(monthNum).padStart(2, '0')}/${viewYear}`;
-
-                      return (
-                        <button
-                          key={name}
-                          type="button"
-                          disabled={isPast}
-                          onClick={() => {
-                            const val = `${String(monthNum).padStart(2, '0')}/${viewYear}`;
-                            setValue("rentFrom", val, { shouldValidate: true });
-                            setIsMonthPickerOpen(false);
-                          }}
-                          className={`py-2 text-sm rounded-md transition-all ${
-                            isSelected 
-                              ? "bg-[#2d79f3] text-white font-bold" 
-                              : isPast 
-                                ? "text-slate-300 cursor-not-allowed" 
-                                : "text-slate-600 hover:bg-blue-50 hover:text-[#2d79f3]"
-                          }`}
-                        >
-                          {name}
-                        </button>
-                      );
-                    })}
-                  </div>
+              {/* Rent From (Custom Month/Year Picker) */}
+              <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
+                <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
+                <div
+                  onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
+                  className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
+                >
+                  <span className={watch("rentFrom") ? "text-blue-600 font-medium" : "text-slate-400"}>
+                    {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
+                  </span>
+                  <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
                 </div>
-              )}
-              {errors.rentFrom && <span className="text-red-500 text-xs">{errors.rentFrom.message}</span>}
+                <input type="hidden" {...register("rentFrom")} />
+
+                {isMonthPickerOpen && (
+                  <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-60 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+                    {/* Year Selector */}
+                    <div className="flex items-center justify-between mb-4 border-b pb-2">
+                      <button
+                        type="button"
+                        onClick={() => setViewYear(prev => Math.max(new Date().getFullYear(), prev - 1))}
+                        disabled={viewYear <= new Date().getFullYear()}
+                        className="p-1 hover:bg-slate-100 rounded-full disabled:opacity-30"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+                      </button>
+                      <span className="font-bold text-slate-800 text-lg">{viewYear}</span>
+                      <button
+                        type="button"
+                        onClick={() => setViewYear(prev => prev + 1)}
+                        className="p-1 hover:bg-slate-100 rounded-full"
+                      >
+                        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+                      </button>
+                    </div>
+
+                    {/* Months Grid */}
+                    <div className="grid grid-cols-3 gap-2">
+                      {monthsBN.map((name, index) => {
+                        const monthNum = index + 1;
+                        const isPast = viewYear === new Date().getFullYear() && monthNum < (new Date().getMonth() + 1);
+                        const currentVal = watch("rentFrom");
+                        const isSelected = currentVal === `${String(monthNum).padStart(2, '0')}/${viewYear}`;
+
+                        return (
+                          <button
+                            key={name}
+                            type="button"
+                            disabled={isPast}
+                            onClick={() => {
+                              const val = `${String(monthNum).padStart(2, '0')}/${viewYear}`;
+                              setValue("rentFrom", val, { shouldValidate: true });
+                              setIsMonthPickerOpen(false);
+                            }}
+                            className={`py-2 text-sm rounded-md transition-all ${isSelected
+                              ? "bg-[#2d79f3] text-white font-bold"
+                              : isPast
+                                ? "text-slate-300 cursor-not-allowed"
+                                : "text-slate-600 hover:bg-blue-50 hover:text-[#2d79f3]"
+                              }`}
+                          >
+                            {name}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
+                {errors.rentFrom && <span className="text-red-500 text-xs">{errors.rentFrom.message}</span>}
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {/* Property Type */}
-            <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
-              <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
-              <input type="hidden" {...register("propertyType")} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {/* Property Type */}
+              <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
+                <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
+                <input type="hidden" {...register("propertyType")} />
 
-              <button
-                type="button"
-                className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
-                onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
-                onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}
-              >
-                <span className="text-red-600 truncate pr-4">
-                  {watch("propertyType") ? propertyTypes.find(p => p.value === watch("propertyType"))?.label : "-- নির্বাচন করুন --"}
-                </span>
-                <svg className={`w-5 h-5 text-slate-400 transition-transform ${isPropertyTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-              </button>
-
-              {isPropertyTypeOpen && (
-                <ul
-                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
-                  onMouseDown={(e) => e.preventDefault()}
+                <button
+                  type="button"
+                  className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                  onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
+                  onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}
                 >
-                  {propertyTypes.map((type) => (
-                    <li
-                      key={type.value}
-                      className="px-4 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors"
-                      onClick={() => {
-                        setValue("propertyType", type.value, { shouldValidate: true });
-                        setIsPropertyTypeOpen(false);
-                      }}
-                    >
-                      {type.label}
-                    </li>
-                  ))}
-                </ul>
-              )}
-              {errors.propertyType && <span className="text-red-500 text-xs">{errors.propertyType.message}</span>}
-            </div>
+                  <span className="text-blue-600 truncate pr-4">
+                    {watch("propertyType") ? propertyTypes.find(p => p.value === watch("propertyType"))?.label : "-- নির্বাচন করুন --"}
+                  </span>
+                  <svg className={`w-5 h-5 text-slate-400 transition-transform ${isPropertyTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
 
-            {/* Location (Custom Dropdown) */}
-            <div className="flex flex-col gap-1.5 relative">
-              <label className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
-              <input type="hidden" {...register("location")} />
-              <input type="hidden" {...register("subLocation")} />
-
-              <button
-                type="button"
-                className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
-                onClick={() => setIsSelectOpen(!isSelectOpen)}
-                onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
-              >
-                <span className={selectedLocation ? "text-red-600 truncate pr-4" : "text-red-600"}>
-                  {selectedLocation
-                    ? (() => {
-                      const loc = locations.find(l => l.value === selectedLocation);
-                      if (!loc) return "-- নির্বাচন করুন --";
-                      if (selectedSubLocation) {
-                        const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
-                        if (sub) {
-                          const locBn = loc.label.split(" (")[0];
-                          const locEn = loc.label.split(" (")[1]?.replace(")", "") || "";
-                          const subBn = sub.label.split(" (")[0];
-                          const subEn = sub.label.split(" (")[1]?.replace(")", "") || "";
-                          return `${locBn} - ${subBn} (${locEn} - ${subEn})`;
-                        }
-                      }
-                      return loc.label;
-                    })()
-                    : "-- নির্বাচন করুন --"}
-                </span>
-                <svg className={`w-5 h-5 text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-              </button>
-
-              {isSelectOpen && (
-                <ul
-                  className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
-                  onMouseDown={(e) => e.preventDefault()}
-                >
-                  {locations.map((loc) => (
-                    <div key={loc.value}>
+                {isPropertyTypeOpen && (
+                  <ul
+                    className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {propertyTypes.map((type) => (
                       <li
-                        className={`px-4 py-2.5 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-slate-100 font-semibold' : ''}`}
-                        onClick={(e) => {
-                          if (loc.subLocations) {
-                            e.stopPropagation();
-                            setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
-                          } else {
-                            setValue("location", loc.value, { shouldValidate: true });
-                            setValue("subLocation", "");
-                            setIsSelectOpen(false);
-                            setExpandedLoc("");
-                          }
+                        key={type.value}
+                        className="px-4 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors"
+                        onClick={() => {
+                          setValue("propertyType", type.value, { shouldValidate: true });
+                          setIsPropertyTypeOpen(false);
                         }}
                       >
-                        <span>{loc.label}</span>
-                        {loc.subLocations && (
-                          <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#2d79f3]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
-                        )}
+                        {type.label}
                       </li>
+                    ))}
+                  </ul>
+                )}
+                {errors.propertyType && <span className="text-red-500 text-xs">{errors.propertyType.message}</span>}
+              </div>
 
-                      {loc.subLocations && expandedLoc === loc.value && (
-                        <ul className="bg-slate-50 border-y border-gray-100">
-                          <li
-                            className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
-                            onClick={() => {
+              {/* Location (Custom Dropdown) */}
+              <div className="flex flex-col gap-1.5 relative">
+                <label className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
+                <input type="hidden" {...register("location")} />
+                <input type="hidden" {...register("subLocation")} />
+
+                <button
+                  type="button"
+                  className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                  onClick={() => setIsSelectOpen(!isSelectOpen)}
+                  onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
+                >
+                  <span className={selectedLocation ? "text-blue-600 truncate pr-4" : "text-blue-600"}>
+                    {selectedLocation
+                      ? (() => {
+                        const loc = locations.find(l => l.value === selectedLocation);
+                        if (!loc) return "-- নির্বাচন করুন --";
+                        if (selectedSubLocation) {
+                          const sub = loc.subLocations?.find(s => s.value === selectedSubLocation);
+                          if (sub) {
+                            const locBn = loc.label.split(" (")[0];
+                            const locEn = loc.label.split(" (")[1]?.replace(")", "") || "";
+                            const subBn = sub.label.split(" (")[0];
+                            const subEn = sub.label.split(" (")[1]?.replace(")", "") || "";
+                            return `${locBn} - ${subBn} (${locEn} - ${subEn})`;
+                          }
+                        }
+                        return loc.label;
+                      })()
+                      : "-- নির্বাচন করুন --"}
+                  </span>
+                  <svg className={`w-5 h-5 text-slate-400 transition-transform ${isSelectOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                </button>
+
+                {isSelectOpen && (
+                  <ul
+                    className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
+                    onMouseDown={(e) => e.preventDefault()}
+                  >
+                    {locations.map((loc) => (
+                      <div key={loc.value}>
+                        <li
+                          className={`px-4 py-2.5 text-slate-900 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-slate-100 font-semibold' : ''}`}
+                          onClick={(e) => {
+                            if (loc.subLocations) {
+                              e.stopPropagation();
+                              setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
+                            } else {
                               setValue("location", loc.value, { shouldValidate: true });
                               setValue("subLocation", "");
                               setIsSelectOpen(false);
                               setExpandedLoc("");
-                            }}
-                          >
-                            যেকোনো (Any)
-                          </li>
-                          {loc.subLocations.map((sub) => (
+                            }
+                          }}
+                        >
+                          <span>{loc.label}</span>
+                          {loc.subLocations && (
+                            <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#2d79f3]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                          )}
+                        </li>
+
+                        {loc.subLocations && expandedLoc === loc.value && (
+                          <ul className="bg-slate-50 border-y border-gray-100">
                             <li
-                              key={sub.value}
                               className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
                               onClick={() => {
                                 setValue("location", loc.value, { shouldValidate: true });
-                                setValue("subLocation", sub.value, { shouldValidate: true });
+                                setValue("subLocation", "");
                                 setIsSelectOpen(false);
                                 setExpandedLoc("");
                               }}
                             >
-                              {sub.label}
+                              যেকোনো (Any)
                             </li>
-                          ))}
-                        </ul>
-                      )}
-                    </div>
-                  ))}
-                </ul>
+                            {loc.subLocations.map((sub) => (
+                              <li
+                                key={sub.value}
+                                className="px-8 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                                onClick={() => {
+                                  setValue("location", loc.value, { shouldValidate: true });
+                                  setValue("subLocation", sub.value, { shouldValidate: true });
+                                  setIsSelectOpen(false);
+                                  setExpandedLoc("");
+                                }}
+                              >
+                                {sub.label}
+                              </li>
+                            ))}
+                          </ul>
+                        )}
+                      </div>
+                    ))}
+                  </ul>
+                )}
+                {errors.location && <span className="text-red-500 text-xs">{errors.location.message}</span>}
+              </div>
+            </div>
+
+            {/* Exact Address */}
+            <div className="flex flex-col gap-1.5">
+              <label className="text-[#151717] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
+              <input
+                {...register("address")}
+                type="text"
+                placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
+                className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                  }`}
+              />
+              {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
+            </div>
+
+            {/* Contact Info & Map Link placed */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+
+              {/* Contact Info */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
+                <input
+                  {...register("contactInfo")}
+                  type="text"
+                  maxLength={11}
+                  placeholder="01XXXXXXXXX"
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                    }`}
+                />
+                {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
+              </div>
+
+              {/* Google Maps Link */}
+              <div className="flex flex-col gap-1.5">
+                <label className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
+                <input
+                  {...register("mapLink")}
+                  type="text"
+                  placeholder="লিংক / কোড দিন "
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
+                    }`}
+                />
+                {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
+              </div>
+
+            </div>
+
+            {/* Image Upload */}
+            <div className="flex flex-col gap-1.5 mt-2">
+              <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
+
+              {/* Existing uploaded images (edit mode) */}
+              {existingImages.length > 0 && (
+                <div className="mb-2">
+                  <p className="text-xs text-slate-500 font-medium mb-1.5">বর্তমান ছবিসমূহ</p>
+                  <div className="flex flex-wrap gap-3">
+                    {existingImages.map((url, idx) => (
+                      <div key={url} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={url}
+                          alt={`ছবি ${idx + 1}`}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          disabled={isDeletingImage}
+                          onClick={() => removeExistingImage(url)}
+                          className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow disabled:opacity-50"
+                          title="স্থায়ীভাবে মুছুন"
+                        >
+                          <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    ))}
+                  </div>
+                </div>
               )}
-              {errors.location && <span className="text-red-500 text-xs">{errors.location.message}</span>}
-            </div>
-          </div>
 
-          {/* Exact Address */}
-          <div className="flex flex-col gap-1.5">
-            <label className="text-[#151717] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
-            <input
-              {...register("address")}
-              type="text"
-              placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-              className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                }`}
-            />
-            {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
-          </div>
-
-          {/* Contact Info & Map Link placed */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-
-            {/* Contact Info */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
+              {/* Hidden file input */}
               <input
-                {...register("contactInfo")}
-                type="text"
-                maxLength={11}
-                placeholder="01XXXXXXXXX"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                  }`}
+                ref={fileInputRef}
+                type="file"
+                multiple
+                accept="image/*"
+                className="hidden"
+                onChange={handleFileSelect}
               />
-              {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
+
+              {/* Dropzone / click area */}
+              {totalImageCount < 5 && (
+                <div
+                  onClick={() => fileInputRef.current?.click()}
+                  className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
+                >
+                  <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                  <span className="text-sm">ছবি যোগ করতে এখানে ক্লিক করুন</span>
+                  <span className="text-xs mt-1">{totalImageCount}/৫ টি ছবি</span>
+                </div>
+              )}
+
+              {/* New file thumbnail previews */}
+              {selectedFiles.length > 0 && (
+                <div>
+                  <p className="text-xs text-slate-500 font-medium mb-1.5">নতুন ছবি</p>
+                  <div className="flex flex-wrap gap-3">
+                    {selectedFiles.map((file, idx) => (
+                      <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-green-300 shadow-sm">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={URL.createObjectURL(file)}
+                          alt={file.name}
+                          className="w-full h-full object-cover"
+                        />
+                        <button
+                          type="button"
+                          onClick={() => removeFile(idx)}
+                          className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
+                          title="সরান"
+                        >
+                          ✕
+                        </button>
+                        <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] text-center truncate px-1 py-0.5">
+                          {file.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
 
-            {/* Google Maps Link */}
-            <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
-              <input
-                {...register("mapLink")}
-                type="text"
-                placeholder="লিংক / কোড দিন "
-                className={`border-[1.5px] rounded-none h-11 px-3 text-red-600 placeholder:text-red-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
-                  }`}
-              />
-              {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
-            </div>
-
-          </div>
-
-          {/* Image Upload */}
-          <div className="flex flex-col gap-1.5 mt-2">
-            <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
-
-            {/* Existing uploaded images (edit mode) */}
-            {existingImages.length > 0 && (
-              <div className="mb-2">
-                <p className="text-xs text-slate-500 font-medium mb-1.5">বর্তমান ছবিসমূহ</p>
-                <div className="flex flex-wrap gap-3">
-                  {existingImages.map((url, idx) => (
-                    <div key={url} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={url}
-                        alt={`ছবি ${idx + 1}`}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        disabled={isDeletingImage}
-                        onClick={() => removeExistingImage(url)}
-                        className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow disabled:opacity-50"
-                        title="স্থায়ীভাবে মুছুন"
-                      >
-                        <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                        </svg>
-                      </button>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Hidden file input */}
-            <input
-              ref={fileInputRef}
-              type="file"
-              multiple
-              accept="image/*"
-              className="hidden"
-              onChange={handleFileSelect}
-            />
-
-            {/* Dropzone / click area */}
-            {totalImageCount < 5 && (
-              <div
-                onClick={() => fileInputRef.current?.click()}
-                className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
-              >
-                <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
-                <span className="text-sm">ছবি যোগ করতে এখানে ক্লিক করুন</span>
-                <span className="text-xs mt-1">{totalImageCount}/৫ টি ছবি</span>
-              </div>
-            )}
-
-            {/* New file thumbnail previews */}
-            {selectedFiles.length > 0 && (
-              <div>
-                <p className="text-xs text-slate-500 font-medium mb-1.5">নতুন ছবি</p>
-                <div className="flex flex-wrap gap-3">
-                  {selectedFiles.map((file, idx) => (
-                    <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-green-300 shadow-sm">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        src={URL.createObjectURL(file)}
-                        alt={file.name}
-                        className="w-full h-full object-cover"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => removeFile(idx)}
-                        className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow"
-                        title="সরান"
-                      >
-                        ✕
-                      </button>
-                      <span className="absolute bottom-0 inset-x-0 bg-black/50 text-white text-[9px] text-center truncate px-1 py-0.5">
-                        {file.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            disabled={isSubmitting || isUploading}
-            className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            {isUploading ? "আপলোড হচ্ছে..." : isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
-          </button>
-        </form>
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isSubmitting || isUploading}
+              className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isUploading ? "আপলোড হচ্ছে..." : isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
+            </button>
+          </form>
         )}
       </div>
     </main>
