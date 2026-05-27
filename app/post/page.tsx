@@ -253,7 +253,7 @@ function PostToLetForm() {
     try {
       let uploadedImageUrls: string[] = [...existingImages];
 
-      // --- Phase 1: Compress images client-side ---
+      // ---Compress images client-side ---
       if (selectedFiles.length > 0) {
         const compressionOptions = {
           maxSizeMB: 0.5,
@@ -279,7 +279,7 @@ function PostToLetForm() {
           })
         );
 
-        // --- Phase 2: Get presigned URLs ---
+        // --- Get presigned URLs ---
         const presignRes = await fetch("/api/upload", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -294,7 +294,7 @@ function PostToLetForm() {
 
         const { results } = await presignRes.json();
 
-        // --- Phase 3: Upload compressed files to R2 in parallel ---
+        // --- Upload compressed files to R2 in parallel ---
         await Promise.all(
           compressedFiles.map((file, idx) =>
             fetch(results[idx].signedUrl, {
@@ -313,7 +313,7 @@ function PostToLetForm() {
         ];
       }
 
-      // --- Phase 4: Save to database ---
+      // --- Save to database ---
       const finalDataForDatabase = {
         ...data,
         rentPrice: Number(data.rentPrice),
@@ -324,7 +324,7 @@ function PostToLetForm() {
         ? await updateUserListing(listingId, finalDataForDatabase)
         : await createListing(finalDataForDatabase);
 
-      // --- Phase 5: Cleanup ---
+      // --- Cleanup ---
       if (result.success) {
         localStorage.removeItem('savedPostData');
         setSelectedFiles([]);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -11,9 +11,14 @@ export default function Login() {
   const [password, setPassword] = useState("");
   const [clerkError, setClerkError] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { isLoaded, signIn, setActive } = useSignIn() as any;
   const router = useRouter();
+
+  useEffect(() => {
+    setSearchQuery(window.location.search);
+  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -150,7 +155,7 @@ export default function Login() {
 
         <p className="text-center text-black text-[13px] my-2">
           অ্যাকাউন্ট নেই?
-          <Link href={`/sign-up${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href={`/sign-up${searchQuery}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
             সাইন আপ করুন
           </Link>
         </p>

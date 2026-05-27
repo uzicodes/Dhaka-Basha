@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
@@ -27,9 +27,14 @@ export default function SignUp() {
 
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
 
   const { isLoaded, signUp, setActive } = useSignUp() as any;
   const router = useRouter();
+
+  useEffect(() => {
+    setSearchQuery(window.location.search);
+  }, []);
 
   // --- VALIDATION LOGIC ---
   const validateName = (value: string) => {
@@ -314,7 +319,7 @@ export default function SignUp() {
 
         <p className="text-center text-black text-[13px] my-1">
           অ্যাকাউন্ট আছে?
-          <Link href={`/login${typeof window !== 'undefined' && window.location.search ? window.location.search : ''}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href={`/login${searchQuery}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
             লগইন করুন
           </Link>
         </p>
