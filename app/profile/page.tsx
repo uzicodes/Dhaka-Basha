@@ -425,7 +425,7 @@ export default function ProfilePage() {
                 type="button"
                 onClick={handleSave}
                 disabled={isSaving}
-                className="px-4 py-1.5 bg-slate-100 text-red-700 hover:bg-slate-300 text-sm font-medium rounded-full transition-colors cursor-pointer disabled:opacity-50"
+                className="px-4 py-1.5 bg-transparent border border-red-700 text-red-700 hover:bg-red-50 text-sm font-medium rounded-full transition-colors cursor-pointer disabled:opacity-50"
               >
                 {isSaving ? "সেভিং..." : (isEditing ? "সেভ" : "প্রোফাইল এডিট")}
               </button>
@@ -539,7 +539,7 @@ export default function ProfilePage() {
                             <span className="text-purple-500">লেখক:</span>
                             <span className="font-medium text-slate-800">{authorName}</span>
                             {listing.propertyType && (
-                              <span className="inline-flex items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                              <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600">
                                 {getPropertyTypeLabel(listing.propertyType)}
                               </span>
                             )}
@@ -602,7 +602,7 @@ export default function ProfilePage() {
                           {listing.title}
                         </h3>
                         {listing.propertyType && (
-                          <span className="inline-flex shrink-0 items-center rounded-full bg-purple-100 px-2 py-0.5 text-xs font-medium text-purple-700">
+                          <span className="inline-flex shrink-0 items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
                             {getPropertyTypeLabel(listing.propertyType)}
                           </span>
                         )}
