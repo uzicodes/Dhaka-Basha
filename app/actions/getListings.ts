@@ -4,14 +4,8 @@ import { auth } from "@clerk/nextjs/server";
 import prisma from "@/src/lib/db";
 import { unstable_cache } from "next/cache";
 
-export async function getUserListings() {
-  try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return [];
-    }
-
+const getCachedUserListings = unstable_cache(
+  async (userId: string) => {
     const listings = await prisma.listing.findMany({
       where: {
         user: {
@@ -22,6 +16,21 @@ export async function getUserListings() {
         createdAt: "desc",
       },
     });
+    return listings;
+  },
+  ["user-listings"],
+  { revalidate: 60, tags: ["user-listings"] }
+);
+
+export async function getUserListings() {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return [];
+    }
+
+    const listings = await getCachedUserListings(userId);
 
     return listings;
   } catch (error) {
@@ -57,14 +66,8 @@ export const getRecentListings = unstable_cache(
   { revalidate: 60 } // in memory for 60 seconds
 );
 
-export async function getSavedListings() {
-  try {
-    const { userId } = await auth();
-
-    if (!userId) {
-      return [];
-    }
-
+const getCachedSavedListings = unstable_cache(
+  async (userId: string) => {
     const user = await prisma.user.findUnique({
       where: {
         clerkId: userId,
@@ -102,6 +105,20 @@ export async function getSavedListings() {
       ...savedListing.listing,
       savedAt: savedListing.createdAt,
     }));
+  },
+  ["saved-listings"],
+  { revalidate: 60, tags: ["saved-listings"] }
+);
+
+export async function getSavedListings() {
+  try {
+    const { userId } = await auth();
+
+    if (!userId) {
+      return [];
+    }
+
+    return await getCachedSavedListings(userId);
   } catch (error) {
     console.error("Error fetching saved listings:", error);
     return [];
