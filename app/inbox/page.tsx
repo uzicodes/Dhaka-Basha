@@ -1,6 +1,7 @@
 "use client";
 
 import { getConversations, deleteConversation } from "@/app/actions/chat";
+import { Loader } from "@/app/components/GlobalLoader";
 import Link from "next/link";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
@@ -70,7 +71,7 @@ export default function InboxPage() {
   if (!isLoaded || isLoading) {
     return (
       <main className="grow flex flex-col items-center justify-center bg-[#daf2e0] pt-32 pb-12 min-h-screen">
-        <div className="w-8 h-8 border-4 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+        <Loader />
       </main>
     );
   }
