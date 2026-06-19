@@ -4,7 +4,7 @@ import { useState, useEffect, useRef, Suspense } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, redirect } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
@@ -47,9 +47,17 @@ function PostToLetForm() {
   const [isDeletingImage, setIsDeletingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
-  const [viewYear, setViewYear] = useState(new Date().getFullYear());
+  const [viewYear, setViewYear] = useState(2024);
+  const [currentDate, setCurrentDate] = useState({ year: 2024, month: 1 });
+  const [listingError, setListingError] = useState(false);
   const monthPickerRef = useRef<HTMLDivElement>(null);
   const propertyTypeRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const now = new Date();
+    setViewYear(now.getFullYear());
+    setCurrentDate({ year: now.getFullYear(), month: now.getMonth() + 1 });
+  }, []);
 
   const monthsBN = [
     "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",
@@ -97,6 +105,10 @@ function PostToLetForm() {
   const selectedLocation = watch("location");
   const selectedSubLocation = watch("subLocation");
 
+  if (listingError) {
+    redirect("/profile");
+  }
+
   useEffect(() => {
     if (isEditMode) {
       return;
@@ -131,7 +143,7 @@ function PostToLetForm() {
 
         if (!listing) {
           toast.error("এই পোস্টটি খুঁজে পাওয়া যায়নি বা আপনার নয়।");
-          router.replace("/profile");
+          setListingError(true);
           return;
         }
 
@@ -151,7 +163,7 @@ function PostToLetForm() {
       } catch (error) {
         console.error("Failed to load listing for edit:", error);
         toast.error("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
-        router.replace("/profile");
+        setListingError(true);
       } finally {
         if (isMounted) {
           setIsLoadingListing(false);
@@ -418,8 +430,8 @@ function PostToLetForm() {
                     <div className="flex items-center justify-between mb-4 border-b pb-2">
                       <button
                         type="button"
-                        onClick={() => setViewYear(prev => Math.max(new Date().getFullYear(), prev - 1))}
-                        disabled={viewYear <= new Date().getFullYear()}
+                        onClick={() => setViewYear(prev => Math.max(currentDate.year, prev - 1))}
+                        disabled={viewYear <= currentDate.year}
                         className="p-1 hover:bg-slate-100 rounded-full disabled:opacity-30"
                       >
                         <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
@@ -438,7 +450,7 @@ function PostToLetForm() {
                     <div className="grid grid-cols-3 gap-2">
                       {monthsBN.map((name, index) => {
                         const monthNum = index + 1;
-                        const isPast = viewYear === new Date().getFullYear() && monthNum < (new Date().getMonth() + 1);
+                        const isPast = viewYear === currentDate.year && monthNum < currentDate.month;
                         const currentVal = watch("rentFrom");
                         const isSelected = currentVal === `${String(monthNum).padStart(2, '0')}/${viewYear}`;
 

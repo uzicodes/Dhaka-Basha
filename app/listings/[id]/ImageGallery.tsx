@@ -129,7 +129,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
             {images.map((src, idx) => (
               <button
-                key={idx}
+                key={src}
                 onClick={() => setActiveIndex(idx)}
                 className={`relative flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
                   idx === activeIndex

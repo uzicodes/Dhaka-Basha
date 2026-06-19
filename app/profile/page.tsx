@@ -1,7 +1,7 @@
 "use client";
 
 import { useClerk, useUser } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, redirect } from "next/navigation";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
@@ -77,11 +77,9 @@ export default function ProfilePage() {
   const [isDeletingSavedListing, setIsDeletingSavedListing] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
 
-  useEffect(() => {
-    if (isLoaded && !user) {
-      router.push("/login?redirectUrl=/profile");
-    }
-  }, [isLoaded, user, router]);
+  if (isLoaded && !user) {
+    redirect("/login?redirectUrl=/profile");
+  }
 
   // Poll for unread message count
   useEffect(() => {
