@@ -114,7 +114,7 @@ function PostToLetForm() {
       return;
     }
 
-    const savedData = localStorage.getItem('savedPostData');
+    const savedData = localStorage.getItem('savedPostData:v1');
     if (savedData) {
       try {
         const parsed = JSON.parse(savedData);
@@ -251,7 +251,7 @@ function PostToLetForm() {
 
   const onSubmit = async (data: PostFormValues) => {
     if (isLoaded && !user) {
-      localStorage.setItem('savedPostData', JSON.stringify(data));
+      localStorage.setItem('savedPostData:v1', JSON.stringify(data));
       toast.error("দয়া করে আগে লগইন করুন। রিডাইরেক্ট করা হচ্ছে...");
       setTimeout(() => {
         router.push("/login?redirectUrl=/post");
@@ -338,7 +338,7 @@ function PostToLetForm() {
 
       // --- Cleanup ---
       if (result.success) {
-        localStorage.removeItem('savedPostData');
+        localStorage.removeItem('savedPostData:v1');
         setSelectedFiles([]);
         toast.success(isEditMode ? "আপনার পোস্ট সফলভাবে আপডেট হয়েছে!" : "আপনার টু-লেট সফলভাবে পোস্ট করা হয়েছে!");
 

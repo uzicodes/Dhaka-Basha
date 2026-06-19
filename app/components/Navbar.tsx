@@ -54,7 +54,7 @@ export default function Navbar() {
             </span>
           </div>
 
-          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-blue-600 focus:outline-none z-10">
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-blue-600 focus:outline-none z-10">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />

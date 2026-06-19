@@ -87,6 +87,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
 
           {/* Fullscreen hint */}
           <button
+            type="button"
             onClick={() => setFullscreenIndex(activeIndex)}
             className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
             title="ফুলস্ক্রিনে দেখুন"
@@ -105,6 +106,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           {images.length > 1 && (
             <>
               <button
+                type="button"
                 onClick={goPrev}
                 className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
               >
@@ -113,6 +115,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                 </svg>
               </button>
               <button
+                type="button"
                 onClick={goNext}
                 className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
               >
@@ -129,6 +132,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
             {images.map((src, idx) => (
               <button
+                type="button"
                 key={src}
                 onClick={() => setActiveIndex(idx)}
                 className={`relative flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
@@ -157,6 +161,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
         >
           {/* Close button */}
           <button
+            type="button"
             onClick={() => setFullscreenIndex(null)}
             className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-sm"
           >
@@ -188,6 +193,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           {images.length > 1 && (
             <>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   goFullscreenPrev();
@@ -199,6 +205,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                 </svg>
               </button>
               <button
+                type="button"
                 onClick={(e) => {
                   e.stopPropagation();
                   goFullscreenNext();

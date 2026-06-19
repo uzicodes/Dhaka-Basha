@@ -153,6 +153,7 @@ export default function InboxPage() {
                               </span>
                             )}
                             <button
+                              type="button"
                               onClick={(e) => handleDelete(e, convo.id)}
                               disabled={isPending}
                               className="p-1 text-slate-400 hover:text-red-500 transition-colors"
