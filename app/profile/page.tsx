@@ -33,25 +33,23 @@ function formatRentFromDate(rentFrom?: string) {
   });
 }
 
+const propertyTypeMap = new Map(propertyTypes.map((t) => [t.value, t.label]));
+const locationMap = new Map<string, string>();
+locations.forEach((l) => {
+  locationMap.set(l.value, l.label);
+  if (l.subLocations) {
+    l.subLocations.forEach((s) => {
+      locationMap.set(s.value, s.label);
+    });
+  }
+});
+
 function getPropertyTypeLabel(value: string) {
-  const type = propertyTypes.find((t) => t.value === value);
-  return type ? type.label : value;
+  return propertyTypeMap.get(value) || value;
 }
 
 function getLocationLabel(value: string) {
-  // Check main locations
-  const loc = locations.find((l) => l.value === value);
-  if (loc) return loc.label;
-
-  // Check sub-locations
-  for (const l of locations) {
-    if (l.subLocations) {
-      const sub = l.subLocations.find((s) => s.value === value);
-      if (sub) return sub.label;
-    }
-  }
-
-  return value;
+  return locationMap.get(value) || value;
 }
 
 export default function ProfilePage() {

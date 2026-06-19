@@ -47,17 +47,14 @@ function PostToLetForm() {
   const [isDeletingImage, setIsDeletingImage] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isMonthPickerOpen, setIsMonthPickerOpen] = useState(false);
-  const [viewYear, setViewYear] = useState(2024);
-  const [currentDate, setCurrentDate] = useState({ year: 2024, month: 1 });
+  const [viewYear, setViewYear] = useState(() => new Date().getFullYear());
+  const [currentDate, setCurrentDate] = useState(() => {
+    const now = new Date();
+    return { year: now.getFullYear(), month: now.getMonth() + 1 };
+  });
   const [listingError, setListingError] = useState(false);
   const monthPickerRef = useRef<HTMLDivElement>(null);
   const propertyTypeRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const now = new Date();
-    setViewYear(now.getFullYear());
-    setCurrentDate({ year: now.getFullYear(), month: now.getMonth() + 1 });
-  }, []);
 
   const monthsBN = [
     "জানুয়ারি", "ফেব্রুয়ারি", "মার্চ", "এপ্রিল", "মে", "জুন",

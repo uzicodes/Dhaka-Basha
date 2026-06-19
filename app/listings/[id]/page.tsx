@@ -28,13 +28,14 @@ export default async function ListingDetails({
   params: { id: string };
   searchParams?: Promise<{ from?: string }> | { from?: string };
 }) {
-  const { id } = await params;
-  const resolvedSearchParams = await searchParams;
+  const [{ id }, resolvedSearchParams, { userId: clerkUserId }] = await Promise.all([
+    params,
+    searchParams || Promise.resolve<{ from?: string }>({}),
+    auth(),
+  ]);
 
   // Use cached function 
   const listing = await getCachedListing(id);
-
-  const { userId: clerkUserId } = await auth();
   const currentUser = clerkUserId
     ? await prisma.user.findUnique({
       where: { clerkId: clerkUserId },
