@@ -1,9 +1,13 @@
-import type { CapacitorConfig } from '@capacitor/cli';
+import { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
   appId: 'com.dhakabasha.app',
   appName: 'Dhaka Basha',
-  webDir: 'public'
+  webDir: 'public',
+  server: {
+    url: 'https://dhaka-basha.vercel.app',
+    cleartext: true
+  }
 };
 
 export default config;
