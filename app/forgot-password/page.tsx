@@ -136,7 +136,7 @@ export default function ForgotPassword() {
           )}
 
           <div className="flex flex-col mt-0.5">
-            <label className="text-[#151717] text-sm font-semibold mb-1">
+            <label htmlFor="email" className="text-[#151717] text-sm font-semibold mb-1">
               ইমেইল
             </label>
           </div>
@@ -160,6 +160,7 @@ export default function ForgotPassword() {
               />
             </svg>
             <input
+              id="email"
               type="email"
               placeholder="আপনার ইমেইল দিন"
               value={email}
@@ -230,7 +231,7 @@ export default function ForgotPassword() {
 
           {/* Code Input */}
           <div className="flex flex-col mt-0.5">
-            <label className="text-[#151717] text-sm font-semibold mb-1">
+            <label htmlFor="code" className="text-[#151717] text-sm font-semibold mb-1">
               রিসেট কোড
             </label>
           </div>
@@ -254,6 +255,7 @@ export default function ForgotPassword() {
               />
             </svg>
             <input
+              id="code"
               type="text"
               inputMode="numeric"
               placeholder="ইমেইলে পাঠানো কোডটি দিন"
@@ -265,7 +267,7 @@ export default function ForgotPassword() {
 
           {/* New Password Input */}
           <div className="flex flex-col mt-3">
-            <label className="text-[#151717] text-sm font-semibold mb-1">
+            <label htmlFor="password" className="text-[#151717] text-sm font-semibold mb-1">
               নতুন পাসওয়ার্ড
             </label>
           </div>
@@ -289,6 +291,7 @@ export default function ForgotPassword() {
               />
             </svg>
             <input
+              id="password"
               type={showPassword ? "text" : "password"}
               placeholder="নতুন পাসওয়ার্ড দিন"
               value={password}

@@ -382,8 +382,9 @@ function PostToLetForm() {
 
             {/* Title */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
+              <label htmlFor="title" className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
               <input
+                id="title"
                 {...register("title")}
                 type="text"
                 className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
@@ -395,8 +396,9 @@ function PostToLetForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Rent Price */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
+                <label htmlFor="rentPrice" className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
                 <input
+                  id="rentPrice"
                   {...register("rentPrice")}
                   type="number"
                   className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"
@@ -407,8 +409,12 @@ function PostToLetForm() {
 
               {/* Rent From (Custom Month/Year Picker) */}
               <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
-                <label className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
+                <label id="rentFrom-label" className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
                 <div
+                  role="button"
+                  tabIndex={0}
+                  aria-labelledby="rentFrom-label"
+                  onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setIsMonthPickerOpen(!isMonthPickerOpen); }}
                   onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
                   className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
                 >
@@ -482,11 +488,12 @@ function PostToLetForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Property Type */}
               <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
-                <label className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
+                <label id="propertyType-label" className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
                 <input type="hidden" {...register("propertyType")} />
 
                 <button
                   type="button"
+                  aria-labelledby="propertyType-label"
                   className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
                   onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
                   onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}
@@ -521,12 +528,13 @@ function PostToLetForm() {
 
               {/* Location (Custom Dropdown) */}
               <div className="flex flex-col gap-1.5 relative">
-                <label className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
+                <label id="location-label" className="text-[#151717] text-sm font-semibold">এলাকা / লোকেশন</label>
                 <input type="hidden" {...register("location")} />
                 <input type="hidden" {...register("subLocation")} />
 
                 <button
                   type="button"
+                  aria-labelledby="location-label"
                   className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
                   onClick={() => setIsSelectOpen(!isSelectOpen)}
                   onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
@@ -619,8 +627,9 @@ function PostToLetForm() {
 
             {/* Exact Address */}
             <div className="flex flex-col gap-1.5">
-              <label className="text-[#151717] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
+              <label htmlFor="address" className="text-[#151717] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
               <input
+                id="address"
                 {...register("address")}
                 type="text"
                 placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
@@ -635,8 +644,9 @@ function PostToLetForm() {
 
               {/* Contact Info */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
+                <label htmlFor="contactInfo" className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
                 <input
+                  id="contactInfo"
                   {...register("contactInfo")}
                   type="text"
                   maxLength={11}
@@ -649,8 +659,9 @@ function PostToLetForm() {
 
               {/* Google Maps Link */}
               <div className="flex flex-col gap-1.5">
-                <label className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
+                <label htmlFor="mapLink" className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
                 <input
+                  id="mapLink"
                   {...register("mapLink")}
                   type="text"
                   placeholder="লিংক / কোড দিন "

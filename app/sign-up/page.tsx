@@ -192,10 +192,11 @@ export default function SignUp() {
           {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
 
           <div className="flex flex-col">
-            <label className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
+            <label htmlFor="verification-code" className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
           </div>
           <div className="border-[1.5px] border-[#ecedec] rounded-none h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
             <input
+              id="verification-code"
               type="text"
               value={code}
               onChange={(e) => setCode(e.target.value)}
@@ -222,13 +223,14 @@ export default function SignUp() {
 
         {/* Name Input */}
         <div className="flex flex-col">
-          <label className="text-[#151717] text-sm font-semibold mb-1">আপনার নাম</label>
+          <label htmlFor="name" className="text-[#151717] text-sm font-semibold mb-1">আপনার নাম</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.name ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <input
+            id="name"
             type="text"
             placeholder="আপনার পুরো নাম দিন"
             value={formData.name}
@@ -240,13 +242,14 @@ export default function SignUp() {
 
         {/* Email Input */}
         <div className="flex flex-col mt-0.5">
-          <label className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
+          <label htmlFor="email" className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
           <input
+            id="email"
             type="email"
             placeholder="আপনার ইমেইল দিন"
             value={formData.email}
@@ -258,13 +261,14 @@ export default function SignUp() {
 
         {/* Phone Input */}
         <div className="flex flex-col mt-0.5">
-          <label className="text-[#151717] text-sm font-semibold mb-1">ফোন নম্বর</label>
+          <label htmlFor="phone" className="text-[#151717] text-sm font-semibold mb-1">ফোন নম্বর</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.phone ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
           <input
+            id="phone"
             type="text"
             placeholder="আপনার ফোন নম্বর দিন"
             value={formData.phone}
@@ -276,13 +280,14 @@ export default function SignUp() {
 
         {/* Password Input */}
         <div className="flex flex-col mt-0.5">
-          <label className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
+          <label htmlFor="password" className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && errors.password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           <input
+            id="password"
             type={showPassword ? "text" : "password"}
             placeholder="নতুন পাসওয়ার্ড দিন"
             value={formData.password}

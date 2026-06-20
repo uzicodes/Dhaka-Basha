@@ -88,13 +88,14 @@ export default function Login() {
         )}
 
         <div className="flex flex-col mt-0.5">
-          <label className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
+          <label htmlFor="email" className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && !email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
           <input
+            id="email"
             type="email"
             placeholder="আপনার ইমেইল দিন"
             value={email}
@@ -104,13 +105,14 @@ export default function Login() {
         </div>
 
         <div className="flex flex-col mt-3">
-          <label className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
+          <label htmlFor="password" className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
         <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && !password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
           <input
+            id="password"
             type={showPassword ? "text" : "password"}
             placeholder="আপনার পাসওয়ার্ড দিন"
             value={password}
