@@ -6,6 +6,13 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
 
+  const navItems = [
+    { id: "home", label: "হোম", href: "/", icon: true },
+    { id: "properties", label: "খুজন", href: "/listings" },
+    { id: "post", label: "বিজ্ঞাপন", href: "/post" },
+    { id: "contact", label: "যোগাযোগ", href: "/contact" },
+  ];
+
 export default function Navbar() {
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -28,13 +35,6 @@ export default function Navbar() {
   };
   
   const active = getActiveId();
-
-  const navItems = [
-    { id: "home", label: "হোম", href: "/", icon: true },
-    { id: "properties", label: "খুজন", href: "/listings" },
-    { id: "post", label: "বিজ্ঞাপন", href: "/post" },
-    { id: "contact", label: "যোগাযোগ", href: "/contact" },
-  ];
 
   return (
     <nav className="fixed top-4 w-[calc(100%-2rem)] left-4 md:top-6 md:left-1/2 md:w-auto md:transform md:-translate-x-1/2 z-50">

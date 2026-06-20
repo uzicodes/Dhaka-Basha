@@ -631,149 +631,184 @@ export default function ChatRoomClient({
       `}</style>
 
       <div className="chat-root">
-        {/* ── HEADER ── */}
-        <header className="chat-header">
-          <Link href="/inbox" className="back-btn" aria-label="Go back">
-            <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-            </svg>
-          </Link>
-
-          <div className="avatar-wrap">
-            {otherUser.profileImage ? (
-              <img src={otherUser.profileImage} alt={otherUser.name || "User"} className="avatar-img" />
-            ) : (
-              <div className="avatar-fallback">{avatarInitial}</div>
-            )}
-          </div>
-
-          <div className="header-info">
-            <div className="header-name">{otherUser.name || "ব্যবহারকারী"}</div>
-          </div>
-
-          <div className="header-actions" ref={menuRef}>
-            {otherUser.phone && (
-              <a href={`tel:${otherUser.phone}`} className="icon-btn" title="Call" aria-label="Call user">
-                <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                </svg>
-              </a>
-            )}
-            <button type="button" className="icon-btn" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
-              <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
-              </svg>
-            </button>
-
-            {isMenuOpen && (
-              <div className="dropdown-menu">
-                <button
-                  type="button"
-                  className="dropdown-item danger"
-                  onClick={handleDelete}
-                  disabled={isPending}
-                >
-                  <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                  কথোপকথন মুছুন
-                </button>
-              </div>
-            )}
-          </div>
-        </header>
-
-        {/* ── MESSAGES ── */}
-        <div className="messages-scroll">
-          {messages.length === 0 ? (
-            <div className="empty-state">
-              <div className="empty-icon-wrap">
-                <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
-              </div>
-              <p className="empty-label">কথোপকথন শুরু করুন</p>
-            </div>
-          ) : (
-            groupedMessages.map((msg) => {
-              const isOwn = msg.senderId === currentUserId;
-
-              return (
-                <div key={msg.id}>
-                  {msg.showDateSeparator && (
-                    <div className="date-separator">
-                      <div className="date-separator-line" />
-                      <span className="date-separator-label">{formatDateLabel(msg.createdAt)}</span>
-                      <div className="date-separator-line" />
-                    </div>
-                  )}
-                  <div className={`msg-row ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
-                    <div className={`bubble ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
-                      <p className="bubble-text">{msg.content}</p>
-                      <div className={`bubble-meta ${isOwn ? "own" : "other"}`}>
-                        <span className="bubble-time">{formatTime(msg.createdAt)}</span>
-                        {isOwn && (
-                          <svg className="tick-icon" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                          </svg>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              );
-            })
-          )}
-          <div ref={messagesEndRef} />
-        </div>
-
-        {/* ── INPUT ── */}
-        <div className="input-area">
-          <form onSubmit={handleSend} className="input-row">
-            <button type="button" className="attach-btn" aria-label="Attach file">
-              <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-              </svg>
-            </button>
-
-            <div className="input-wrap">
-              <textarea
-                ref={textareaRef}
-                rows={1}
-                value={input}
-                onChange={handleInputChange}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) {
-                    e.preventDefault();
-                    handleSend(e);
-                  }
-                }}
-                placeholder="ম্যাসেজ লিখুন..."
-                className="chat-textarea"
-                disabled={isSending}
-              />
-            </div>
-
-            <button
-              type="submit"
-              disabled={!input.trim() || isSending}
-              className={`send-btn ${!input.trim() || isSending ? "inactive" : "active"}`}
-              aria-label="Send message"
-            >
-              {isSending ? (
-                <svg className="spin" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 12a8 8 0 018-8" />
-                </svg>
-              ) : (
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
-                </svg>
-              )}
-            </button>
-          </form>
-          <p className="input-hint">Shift + Enter — নতুন লাইন</p>
-        </div>
+        <ChatHeader
+          otherUser={otherUser}
+          isMenuOpen={isMenuOpen}
+          setIsMenuOpen={setIsMenuOpen}
+          handleDelete={handleDelete}
+          isPending={isPending}
+          menuRef={menuRef}
+        />
+        <MessageList
+          messages={messages}
+          groupedMessages={groupedMessages}
+          currentUserId={currentUserId}
+          formatTime={formatTime}
+          formatDateLabel={formatDateLabel}
+          messagesEndRef={messagesEndRef}
+        />
+        <ChatInput
+          handleSend={handleSend}
+          input={input}
+          handleInputChange={handleInputChange}
+          isSending={isSending}
+          textareaRef={textareaRef}
+        />
       </div>
     </>
+  );
+}
+
+function ChatHeader({ otherUser, isMenuOpen, setIsMenuOpen, handleDelete, isPending, menuRef }: any) {
+  const avatarInitial = otherUser.name ? otherUser.name.charAt(0).toUpperCase() : "U";
+
+  return (
+    <header className="chat-header">
+      <Link href="/inbox" className="back-btn" aria-label="Go back">
+        <svg width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+        </svg>
+      </Link>
+
+      <div className="avatar-wrap">
+        {otherUser.profileImage ? (
+          <img src={otherUser.profileImage} alt={otherUser.name || "User"} className="avatar-img" />
+        ) : (
+          <div className="avatar-fallback">{avatarInitial}</div>
+        )}
+      </div>
+
+      <div className="header-info">
+        <div className="header-name">{otherUser.name || "ব্যবহারকারী"}</div>
+      </div>
+
+      <div className="header-actions" ref={menuRef}>
+        {otherUser.phone && (
+          <a href={`tel:${otherUser.phone}`} className="icon-btn" title="Call" aria-label="Call user">
+            <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+            </svg>
+          </a>
+        )}
+        <button type="button" className="icon-btn" onClick={() => setIsMenuOpen(!isMenuOpen)} aria-label="Toggle menu">
+          <svg width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z" />
+          </svg>
+        </button>
+
+        {isMenuOpen && (
+          <div className="dropdown-menu">
+            <button
+              type="button"
+              className="dropdown-item danger"
+              onClick={handleDelete}
+              disabled={isPending}
+            >
+              <svg width="15" height="15" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+              </svg>
+              কথোপকথন মুছুন
+            </button>
+          </div>
+        )}
+      </div>
+    </header>
+  );
+}
+
+function MessageList({ messages, groupedMessages, currentUserId, formatTime, formatDateLabel, messagesEndRef }: any) {
+  return (
+    <div className="messages-scroll">
+      {messages.length === 0 ? (
+        <div className="empty-state">
+          <div className="empty-icon-wrap">
+            <svg width="32" height="32" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+            </svg>
+          </div>
+          <p className="empty-label">কথোপকথন শুরু করুন</p>
+        </div>
+      ) : (
+        groupedMessages.map((msg: any) => {
+          const isOwn = msg.senderId === currentUserId;
+
+          return (
+            <div key={msg.id}>
+              {msg.showDateSeparator && (
+                <div className="date-separator">
+                  <div className="date-separator-line" />
+                  <span className="date-separator-label">{formatDateLabel(msg.createdAt)}</span>
+                  <div className="date-separator-line" />
+                </div>
+              )}
+              <div className={`msg-row ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
+                <div className={`bubble ${isOwn ? "own" : "other"} ${msg.isGrouped ? "grouped" : ""}`}>
+                  <p className="bubble-text">{msg.content}</p>
+                  <div className={`bubble-meta ${isOwn ? "own" : "other"}`}>
+                    <span className="bubble-time">{formatTime(msg.createdAt)}</span>
+                    {isOwn && (
+                      <svg className="tick-icon" width="13" height="13" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
+                      </svg>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
+          );
+        })
+      )}
+      <div ref={messagesEndRef} />
+    </div>
+  );
+}
+
+function ChatInput({ handleSend, input, handleInputChange, isSending, textareaRef }: any) {
+  return (
+    <div className="input-area">
+      <form onSubmit={handleSend} className="input-row">
+        <button type="button" className="attach-btn" aria-label="Attach file">
+          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+          </svg>
+        </button>
+
+        <div className="input-wrap">
+          <textarea
+            ref={textareaRef}
+            rows={1}
+            value={input}
+            onChange={handleInputChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSend(e);
+              }
+            }}
+            placeholder="ম্যাসেজ লিখুন..."
+            className="chat-textarea"
+            disabled={isSending}
+          />
+        </div>
+
+        <button
+          type="submit"
+          disabled={!input.trim() || isSending}
+          className={`send-btn ${!input.trim() || isSending ? "inactive" : "active"}`}
+          aria-label="Send message"
+        >
+          {isSending ? (
+            <svg className="spin" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M4 12a8 8 0 018-8" />
+            </svg>
+          ) : (
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          )}
+        </button>
+      </form>
+      <p className="input-hint">Shift + Enter — নতুন লাইন</p>
+    </div>
   );
 }

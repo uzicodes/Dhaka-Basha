@@ -5,6 +5,36 @@ import Link from "next/link";
 import { useSignUp } from "@clerk/nextjs";
 import { useRouter } from "next/navigation";
 
+// --- VALIDATION LOGIC ---
+const validateName = (value: string) => {
+  if (!value) return "নাম প্রয়োজন";
+  const words = value.trim().split(/\s+/).length;
+  if (words > 30) return "নাম ৩০ শব্দের বেশি হতে পারে না";
+  if (!/^[a-zA-Z\s]+$/.test(value)) return "নাম শুধুমাত্র অক্ষর এবং স্পেস থাকতে পারে";
+  return "";
+};
+
+const validateEmail = (value: string) => {
+  if (!value) return "ইমেইল প্রয়োজন";
+  const atCount = (value.match(/@/g) || []).length;
+  if (atCount !== 1) return "সঠিক ইমেইল দিন";
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "সঠিক ইমেইল ফরম্যাট দিন";
+  return "";
+};
+
+const validatePhone = (value: string) => {
+  if (!value) return "ফোন নম্বর প্রয়োজন";
+  if (!/^\d+$/.test(value)) return "সঠিক ফোন নম্বর দিন";
+  if (value.length !== 11) return "সঠিক ফোন নম্বর (১১ ডিজিট) দিন";
+  return "";
+};
+
+const validatePassword = (value: string) => {
+  if (!value) return "পাসওয়ার্ড প্রয়োজন";
+  if (value.length < 6) return "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে";
+  return "";
+};
+
 export default function SignUp() {
   const [showPassword, setShowPassword] = useState(false);
 
@@ -35,36 +65,6 @@ export default function SignUp() {
   useEffect(() => {
     setSearchQuery(window.location.search);
   }, []);
-
-  // --- VALIDATION LOGIC ---
-  const validateName = (value: string) => {
-    if (!value) return "নাম প্রয়োজন";
-    const words = value.trim().split(/\s+/).length;
-    if (words > 30) return "নাম ৩০ শব্দের বেশি হতে পারে না";
-    if (!/^[a-zA-Z\s]+$/.test(value)) return "নাম শুধুমাত্র অক্ষর এবং স্পেস থাকতে পারে";
-    return "";
-  };
-
-  const validateEmail = (value: string) => {
-    if (!value) return "ইমেইল প্রয়োজন";
-    const atCount = (value.match(/@/g) || []).length;
-    if (atCount !== 1) return "সঠিক ইমেইল দিন";
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) return "সঠিক ইমেইল ফরম্যাট দিন";
-    return "";
-  };
-
-  const validatePhone = (value: string) => {
-    if (!value) return "ফোন নম্বর প্রয়োজন";
-    if (!/^\d+$/.test(value)) return "সঠিক ফোন নম্বর দিন";
-    if (value.length !== 11) return "সঠিক ফোন নম্বর (১১ ডিজিট) দিন";
-    return "";
-  };
-
-  const validatePassword = (value: string) => {
-    if (!value) return "পাসওয়ার্ড প্রয়োজন";
-    if (value.length < 6) return "পাসওয়ার্ড কমপক্ষে ৬ অক্ষর হতে হবে";
-    return "";
-  };
 
   const handleChange = (field: string, value: string) => {
     let filteredValue = value;
@@ -185,35 +185,67 @@ export default function SignUp() {
   // --- OTP VERIFICATION SCREEN ---
   if (pendingVerification) {
     return (
-      <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
-        <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">ইমেইল যাচাই করুন</h1>
-        <form onSubmit={onPressVerify} className="flex flex-col gap-1.5 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
-          <p className="text-center text-sm mb-4">আপনার ইমেইলে একটি কোড পাঠানো হয়েছে।</p>
-          {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
-
-          <div className="flex flex-col">
-            <label htmlFor="verification-code" className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
-          </div>
-          <div className="border-[1.5px] border-[#ecedec] rounded-none h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
-            <input
-              id="verification-code"
-              type="text"
-              value={code}
-              onChange={(e) => setCode(e.target.value)}
-              placeholder="কোড দিন"
-              className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
-            />
-          </div>
-
-          <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-none h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
-            যাচাই করুন
-          </button>
-        </form>
-      </main>
+      <VerificationForm
+        onPressVerify={onPressVerify}
+        code={code}
+        setCode={setCode}
+        isLoaded={isLoaded}
+        clerkError={clerkError}
+      />
     );
   }
 
   // --- MAIN SIGN-UP SCREEN ---
+  return (
+    <SignUpForm
+      handleSubmit={handleSubmit}
+      clerkError={clerkError}
+      formData={formData}
+      handleChange={handleChange}
+      submitted={submitted}
+      errors={errors}
+      showPassword={showPassword}
+      setShowPassword={setShowPassword}
+      isLoaded={isLoaded}
+      signUpWithGoogle={signUpWithGoogle}
+      searchQuery={searchQuery}
+    />
+  );
+}
+
+function VerificationForm({ onPressVerify, code, setCode, isLoaded, clerkError }: any) {
+  return (
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
+      <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">ইমেইল যাচাই করুন</h1>
+      <form onSubmit={onPressVerify} className="flex flex-col gap-1.5 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
+        <p className="text-center text-sm mb-4">আপনার ইমেইলে একটি কোড পাঠানো হয়েছে।</p>
+        {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
+
+        <div className="flex flex-col">
+          <label htmlFor="verification-code" className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
+        </div>
+        <div className="border-[1.5px] border-[#ecedec] rounded-none h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+          <input
+            id="verification-code"
+            type="text"
+            value={code}
+            onChange={(e) => setCode(e.target.value)}
+            placeholder="কোড দিন"
+            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
+          />
+        </div>
+
+        <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-none h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
+          যাচাই করুন
+        </button>
+      </form>
+    </main>
+  );
+}
+
+function SignUpForm({
+  handleSubmit, clerkError, formData, handleChange, submitted, errors, showPassword, setShowPassword, isLoaded, signUpWithGoogle, searchQuery
+}: any) {
   return (
     <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
       <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">সাইন আপ</h1>
@@ -317,7 +349,7 @@ export default function SignUp() {
         <button
           disabled={!isLoaded}
           type="submit"
-          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:hover:scale-105 transition-all duration-200"
+          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:scale-105 transition-all duration-200"
         >
           সাইন আপ
         </button>
