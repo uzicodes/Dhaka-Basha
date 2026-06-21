@@ -7,8 +7,10 @@ const config: CapacitorConfig = {
   server: {
     url: 'https://dhaka-basha.vercel.app',
     cleartext: true,
+
     allowNavigation: [
-      "*"
+      'dhaka-basha.vercel.app',
+      '*.dhaka-basha.vercel.app'
     ]
   }
 };
