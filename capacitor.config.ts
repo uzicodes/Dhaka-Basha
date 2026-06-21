@@ -5,13 +5,10 @@ const config: CapacitorConfig = {
   appName: 'Dhaka Basha',
   webDir: 'public',
   server: {
-
     url: 'https://dhaka-basha.vercel.app',
     cleartext: true,
     allowNavigation: [
-      'dhaka-basha.vercel.app',
-      '*.dhaka-basha.vercel.app',
-      '*.vercel.app'
+      "*"
     ]
   }
 };
