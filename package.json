@@ -33,6 +33,7 @@
     "zod": "^4.3.6"
   },
   "devDependencies": {
+    "@capacitor/assets": "^3.0.5",
     "@capacitor/cli": "^8.4.1",
     "@prisma/config": "^7.8.0",
     "@tailwindcss/postcss": "^4",
