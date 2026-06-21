@@ -1,0 +1,14 @@
+[
+    {
+        "relation": [
+            "delegate_permission/common.handle_all_urls"
+        ],
+        "target": {
+            "namespace": "android_app",
+            "package_name": "com.dhakabasha.app",
+            "sha256_cert_fingerprints": [
+                "61:BC:C0:2E:09:CA:96:C2:5A:08:64:AF:D6:8C:AB:C9:CA:9D:ED:1B:4B:3F:B6:FA:4C:C6:04:6B:9A:BD:69:2D"
+            ]
+        }
+    }
+]
