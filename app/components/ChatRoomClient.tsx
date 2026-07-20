@@ -787,6 +787,7 @@ function ChatInput({ handleSend, input, handleInputChange, isSending, textareaRe
               }
             }}
             placeholder="ম্যাসেজ লিখুন..."
+            aria-label="ম্যাসেজ ইনপুট"
             className="chat-textarea"
             disabled={isSending}
           />

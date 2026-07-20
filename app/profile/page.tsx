@@ -439,6 +439,7 @@ function ProfileHeader({
               value={name}
               onChange={(e) => setName(e.target.value)}
               placeholder="আপনার নাম"
+              aria-label="আপনার নাম"
               className="w-full text-2xl md:text-3xl font-bold text-[#151717] border-b-2 border-[#2d79f3] focus:outline-none bg-transparent"
             />
           </div>
@@ -461,6 +462,7 @@ function ProfileHeader({
                   value={phone}
                   onChange={(e) => handlePhoneChange(e.target.value)}
                   placeholder="১১ ডিজিট নম্বর"
+                  aria-label="ফোন নম্বর"
                   className="w-full border-none p-0 leading-tight focus:outline-none"
                 />
                 <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -481,6 +483,7 @@ function ProfileHeader({
                   value={address}
                   onChange={(e) => setAddress(e.target.value)}
                   placeholder="আপনার ঠিকানা"
+                  aria-label="আপনার ঠিকানা"
                   className="w-full border-none p-0 leading-tight focus:outline-none"
                 />
                 <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">

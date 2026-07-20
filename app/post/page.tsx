@@ -544,16 +544,18 @@ function MonthPickerInput({
               onClick={() => setViewYear((prev: number) => Math.max(currentDate.year, prev - 1))}
               disabled={viewYear <= currentDate.year}
               className="p-1 hover:bg-slate-100 rounded-full disabled:opacity-30"
+              aria-label="পূর্ববর্তী বছর"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
+              <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 19l-7-7 7-7" /></svg>
             </button>
             <span className="font-bold text-slate-800 text-lg">{viewYear}</span>
             <button
               type="button"
               onClick={() => setViewYear((prev: number) => prev + 1)}
               className="p-1 hover:bg-slate-100 rounded-full"
+              aria-label="পরবর্তী বছর"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
+              <svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" /></svg>
             </button>
           </div>
 
@@ -773,9 +775,9 @@ function ImageUploadSection({
                   disabled={isDeletingImage}
                   onClick={() => removeExistingImage(url)}
                   className="absolute top-0.5 right-0.5 w-5 h-5 bg-red-600 text-white rounded-full flex items-center justify-center text-xs opacity-0 group-hover:opacity-100 transition-opacity shadow disabled:opacity-50"
-                  title="স্থায়ীভাবে মুছুন"
+                  aria-label="মুছুন"
                 >
-                  <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg aria-hidden="true" className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                   </svg>
                 </button>
