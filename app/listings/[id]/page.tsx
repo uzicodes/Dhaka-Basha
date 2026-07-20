@@ -1,6 +1,7 @@
 import prisma from "@/src/lib/db";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import Link from "next/link";
+import Image from "next/image";
 import { auth, clerkClient } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
 import ImageGallery from "@/app/components/ImageGallery";
@@ -139,9 +140,9 @@ export default async function ListingDetails({
                     <span className="text-slate-400">লেখক:</span>
                     <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-200 shrink-0">
                       {listing.user.profileImage ? (
-                        <img src={listing.user.profileImage} alt={listing.user.name || ""} className="w-full h-full object-cover" />
+                        <Image src={listing.user.profileImage} alt={listing.user.name || ""} width={24} height={24} className="object-cover" />
                       ) : authorClerkImage ? (
-                        <img src={authorClerkImage} alt={listing.user.name || ""} className="w-full h-full object-cover" />
+                        <Image src={authorClerkImage} alt={listing.user.name || ""} width={24} height={24} className="object-cover" />
                       ) : (
                         <div className="w-full h-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-400">
                           <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>

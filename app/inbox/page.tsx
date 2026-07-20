@@ -3,6 +3,7 @@
 import { getConversations, deleteConversation } from "@/app/actions/chat";
 import { Loader } from "@/app/components/GlobalLoader";
 import Link from "next/link";
+import Image from "next/image";
 import { useAuth } from "@clerk/nextjs";
 import { redirect } from "next/navigation";
 import { useEffect, useState, useTransition } from "react";
@@ -126,10 +127,12 @@ export default function InboxPage() {
                       {/* Avatar */}
                       <div className="w-12 h-12 rounded-full overflow-hidden border-2 border-slate-100 shrink-0">
                         {otherUser.profileImage ? (
-                          <img
+                          <Image
                             src={otherUser.profileImage}
                             alt={otherUser.name || "User"}
-                            className="w-full h-full object-cover"
+                            width={48}
+                            height={48}
+                            className="object-cover"
                           />
                         ) : (
                           <div className="w-full h-full bg-slate-200 flex items-center justify-center text-slate-400">

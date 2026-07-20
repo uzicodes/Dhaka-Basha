@@ -2,6 +2,7 @@
 
 import { useClerk, useUser } from "@clerk/nextjs";
 import { useRouter, redirect } from "next/navigation";
+import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
@@ -367,15 +368,19 @@ function ProfileHeader({
       <div className="shrink-0 relative group">
         <div className="relative">
           {profileImage ? (
-            <img
+            <Image
               src={profileImage}
               alt="Profile"
+              width={128}
+              height={128}
               className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
             />
           ) : isGoogleUser && user.imageUrl ? (
-            <img
+            <Image
               src={user.imageUrl}
               alt="Profile"
+              width={128}
+              height={128}
               className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
             />
           ) : (

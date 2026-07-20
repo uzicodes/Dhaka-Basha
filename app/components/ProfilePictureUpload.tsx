@@ -4,6 +4,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import imageCompression from "browser-image-compression";
 import { updateProfileImage } from "@/app/actions/updateProfilePicture";
+import Image from "next/image";
 
 interface ProfilePictureUploadProps {
     currentImageUrl?: string | null;
@@ -85,10 +86,13 @@ export default function ProfilePictureUpload({ currentImageUrl }: ProfilePicture
             >
                 {/* Background Image Preview */}
                 {previewUrl ? (
-                    <img
+                    <Image
                         src={previewUrl}
                         alt="Profile Avatar"
-                        className="h-full w-full object-cover"
+                        fill
+                        sizes="96px"
+                        className="object-cover"
+                        unoptimized={previewUrl.startsWith('blob:')}
                     />
                 ) : (
                     <span className="text-xs text-gray-400">ছবি নাই</span>

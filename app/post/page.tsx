@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef, Suspense } from "react";
+import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -759,11 +760,13 @@ function ImageUploadSection({
           <div className="flex flex-wrap gap-3">
             {existingImages.map((url: string, idx: number) => (
               <div key={url} className="relative group w-20 h-20 rounded-md overflow-hidden border border-gray-200 shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={url}
                   alt={`ছবি ${idx + 1}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="80px"
+                  className="object-cover"
+                  unoptimized={url.startsWith('blob:')}
                 />
                 <button
                   type="button"
@@ -810,11 +813,13 @@ function ImageUploadSection({
           <div className="flex flex-wrap gap-3">
             {selectedFiles.map((file: File, idx: number) => (
               <div key={`${file.name}-${idx}`} className="relative group w-20 h-20 rounded-md overflow-hidden border border-green-300 shadow-sm">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={URL.createObjectURL(file)}
                   alt={file.name}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="80px"
+                  className="object-cover"
+                  unoptimized
                 />
                 <button
                   type="button"

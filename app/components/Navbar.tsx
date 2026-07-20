@@ -129,10 +129,12 @@ export default function Navbar() {
               active === "profile" ? "ring-2 ring-blue-600" : ""
             }`}>
               {isSignedIn && isGoogleUser && user?.imageUrl ? (
-                <img
+                <Image
                   src={user.imageUrl}
                   alt="Profile"
-                  className="w-5 h-5 rounded-full object-cover"
+                  width={20}
+                  height={20}
+                  className="rounded-full object-cover"
                 />
               ) : (
                 <svg

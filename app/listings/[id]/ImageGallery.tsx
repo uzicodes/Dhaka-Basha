@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback, useEffect } from "react";
+import Image from "next/image";
 
 interface ImageGalleryProps {
   images: string[];
@@ -77,11 +78,12 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
       <div className="mb-6">
         {/* Hero image */}
         <div className="relative w-full aspect-video rounded-[15px] overflow-hidden bg-slate-100 group">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={images[activeIndex]}
             alt={`ছবি ${activeIndex + 1}`}
-            className="w-full h-full object-cover cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
             onClick={() => setFullscreenIndex(activeIndex)}
           />
 
@@ -144,11 +146,12 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                     : "border-transparent opacity-60 hover:opacity-100 hover:border-slate-300"
                 }`}
               >
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
+                <Image
                   src={src}
                   alt={`থাম্বনেইল ${idx + 1}`}
-                  className="w-full h-full object-cover"
+                  fill
+                  sizes="80px"
+                  className="object-cover"
                 />
               </button>
             ))}
@@ -181,14 +184,14 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
 
           {/* Image */}
           <div
-            className="max-w-[90vw] max-h-[85vh] flex items-center justify-center"
+            className="relative w-[90vw] h-[85vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={images[fullscreenIndex]}
               alt={`ছবি ${fullscreenIndex + 1}`}
-              className="max-w-full max-h-[85vh] object-contain rounded-lg shadow-2xl select-none"
+              fill
+              className="object-contain shadow-2xl select-none rounded-lg"
               draggable={false}
             />
           </div>

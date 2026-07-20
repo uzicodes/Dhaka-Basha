@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useTransition } from "react";
 import Pusher from "pusher-js";
 import { sendMessage, deleteConversation } from "@/app/actions/chat";
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 
@@ -672,7 +673,7 @@ function ChatHeader({ otherUser, isMenuOpen, setIsMenuOpen, handleDelete, isPend
 
       <div className="avatar-wrap">
         {otherUser.profileImage ? (
-          <img src={otherUser.profileImage} alt={otherUser.name || "User"} className="avatar-img" />
+          <Image src={otherUser.profileImage} alt={otherUser.name || "User"} width={40} height={40} className="avatar-img" />
         ) : (
           <div className="avatar-fallback">{avatarInitial}</div>
         )}
