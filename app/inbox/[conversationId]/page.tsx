@@ -48,10 +48,10 @@ export default async function ConversationPage({
         {/* Chat Room */}
         <div className="flex-1 flex flex-col overflow-hidden">
           <ChatRoomClient
-            initialMessages={JSON.parse(JSON.stringify(messages))}
+            initialMessages={structuredClone(messages)}
             conversationId={conversationId}
             currentUserId={currentUserId}
-            otherUser={JSON.parse(JSON.stringify(otherUser))}
+            otherUser={structuredClone(otherUser)}
           />
         </div>
       </div>

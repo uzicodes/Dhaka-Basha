@@ -11,7 +11,7 @@ import { toast } from "sonner";
 type MessageType = {
   id: string;
   content: string;
-  createdAt: string;
+  createdAt: Date | string;
   senderId: string;
   sender: {
     id: string;
@@ -143,8 +143,8 @@ export default function ChatRoomClient({
     });
   };
 
-  const formatTime = (dateStr: string) => {
-    const date = new Date(dateStr);
+  const formatTime = (dateInput: Date | string) => {
+    const date = new Date(dateInput);
     return date.toLocaleTimeString("bn-BD", {
       hour: "2-digit",
       minute: "2-digit",
@@ -152,8 +152,8 @@ export default function ChatRoomClient({
     });
   };
 
-  const formatDateLabel = (dateStr: string) => {
-    const date = new Date(dateStr);
+  const formatDateLabel = (dateInput: Date | string) => {
+    const date = new Date(dateInput);
     const today = new Date();
     const yesterday = new Date();
     yesterday.setDate(today.getDate() - 1);
