@@ -29,6 +29,30 @@ type OtherUser = {
   phone?: string | null;
 };
 
+const formatTime = (dateInput: Date | string) => {
+  const date = new Date(dateInput);
+  return date.toLocaleTimeString("bn-BD", {
+    hour: "2-digit",
+    minute: "2-digit",
+    hour12: true,
+  });
+};
+
+const formatDateLabel = (dateInput: Date | string) => {
+  const date = new Date(dateInput);
+  const today = new Date();
+  const yesterday = new Date();
+  yesterday.setDate(today.getDate() - 1);
+
+  if (date.toDateString() === today.toDateString()) return "আজ";
+  if (date.toDateString() === yesterday.toDateString()) return "গতকাল";
+  return date.toLocaleDateString("bn-BD", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+};
+
 export default function ChatRoomClient({
   initialMessages,
   conversationId,
@@ -140,30 +164,6 @@ export default function ChatRoomClient({
         label: "বাতিল",
         onClick: () => { },
       },
-    });
-  };
-
-  const formatTime = (dateInput: Date | string) => {
-    const date = new Date(dateInput);
-    return date.toLocaleTimeString("bn-BD", {
-      hour: "2-digit",
-      minute: "2-digit",
-      hour12: true,
-    });
-  };
-
-  const formatDateLabel = (dateInput: Date | string) => {
-    const date = new Date(dateInput);
-    const today = new Date();
-    const yesterday = new Date();
-    yesterday.setDate(today.getDate() - 1);
-
-    if (date.toDateString() === today.toDateString()) return "আজ";
-    if (date.toDateString() === yesterday.toDateString()) return "গতকাল";
-    return date.toLocaleDateString("bn-BD", {
-      day: "numeric",
-      month: "long",
-      year: "numeric",
     });
   };
 

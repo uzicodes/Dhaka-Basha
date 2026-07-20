@@ -70,8 +70,8 @@ export async function getOrCreateConversation(otherUserId: string) {
 
 // Send a message in a conversation
 export async function sendMessage(conversationId: string, content: string) {
-  const currentUser = await getAuthenticatedUser();
   if (!content.trim()) throw new Error("Message cannot be empty");
+  const currentUser = await getAuthenticatedUser();
 
   // Check the rate limit 
   const { success } = await ratelimit.limit(currentUser.id);
