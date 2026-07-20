@@ -144,6 +144,22 @@ function SearchFilters({
                         setExpandedLoc("");
                       }
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        if (loc.subLocations) {
+                          e.stopPropagation();
+                          setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
+                        } else {
+                          setSelectedLocation(loc.value);
+                          setSelectedSubLocation("");
+                          setIsSelectOpen(false);
+                          setExpandedLoc("");
+                        }
+                      }
+                    }}
+                    tabIndex={0}
+                    role="option"
                   >
                     <span>{loc.label}</span>
                     {loc.subLocations && (
@@ -161,6 +177,17 @@ function SearchFilters({
                           setIsSelectOpen(false);
                           setExpandedLoc("");
                         }}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            e.preventDefault();
+                            setSelectedLocation(loc.value);
+                            setSelectedSubLocation("");
+                            setIsSelectOpen(false);
+                            setExpandedLoc("");
+                          }
+                        }}
+                        tabIndex={0}
+                        role="option"
                       >
                         যেকোনো (Any)
                       </li>
@@ -174,6 +201,17 @@ function SearchFilters({
                             setIsSelectOpen(false);
                             setExpandedLoc("");
                           }}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter' || e.key === ' ') {
+                              e.preventDefault();
+                              setSelectedLocation(loc.value);
+                              setSelectedSubLocation(sub.value);
+                              setIsSelectOpen(false);
+                              setExpandedLoc("");
+                            }
+                          }}
+                          tabIndex={0}
+                          role="option"
                         >
                           {sub.label}
                         </li>
@@ -223,6 +261,15 @@ function SearchFilters({
                     setSelectedType(type.value);
                     setIsTypeSelectOpen(false);
                   }}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      setSelectedType(type.value);
+                      setIsTypeSelectOpen(false);
+                    }
+                  }}
+                  tabIndex={0}
+                  role="option"
                 >
                   {type.label}
                 </li>

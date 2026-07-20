@@ -630,6 +630,15 @@ function PropertyTypeSelect({
                 setValue("propertyType", type.value, { shouldValidate: true });
                 setIsPropertyTypeOpen(false);
               }}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  e.preventDefault();
+                  setValue("propertyType", type.value, { shouldValidate: true });
+                  setIsPropertyTypeOpen(false);
+                }
+              }}
+              tabIndex={0}
+              role="option"
             >
               {type.label}
             </li>
@@ -702,6 +711,22 @@ function LocationSelect({
                     setExpandedLoc("");
                   }
                 }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault();
+                    if (loc.subLocations) {
+                      e.stopPropagation();
+                      setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
+                    } else {
+                      setValue("location", loc.value, { shouldValidate: true });
+                      setValue("subLocation", "");
+                      setIsSelectOpen(false);
+                      setExpandedLoc("");
+                    }
+                  }
+                }}
+                tabIndex={0}
+                role="option"
               >
                 <span>{loc.label}</span>
                 {loc.subLocations && (
@@ -719,6 +744,17 @@ function LocationSelect({
                       setIsSelectOpen(false);
                       setExpandedLoc("");
                     }}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        setValue("location", loc.value, { shouldValidate: true });
+                        setValue("subLocation", "");
+                        setIsSelectOpen(false);
+                        setExpandedLoc("");
+                      }
+                    }}
+                    tabIndex={0}
+                    role="option"
                   >
                     যেকোনো (Any)
                   </li>
@@ -732,6 +768,17 @@ function LocationSelect({
                         setIsSelectOpen(false);
                         setExpandedLoc("");
                       }}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' || e.key === ' ') {
+                          e.preventDefault();
+                          setValue("location", loc.value, { shouldValidate: true });
+                          setValue("subLocation", sub.value, { shouldValidate: true });
+                          setIsSelectOpen(false);
+                          setExpandedLoc("");
+                        }
+                      }}
+                      tabIndex={0}
+                      role="option"
                     >
                       {sub.label}
                     </li>
@@ -799,6 +846,15 @@ function ImageUploadSection({
       {totalImageCount < 5 && (
         <div
           onClick={() => fileInputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              fileInputRef.current?.click();
+            }
+          }}
+          tabIndex={0}
+          role="button"
+          aria-label="Upload Images"
           className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
         >
           <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

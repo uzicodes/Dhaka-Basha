@@ -85,6 +85,14 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
             onClick={() => setFullscreenIndex(activeIndex)}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                setFullscreenIndex(activeIndex);
+              }
+            }}
+            tabIndex={0}
+            role="button"
           />
 
           {/* Fullscreen hint */}
@@ -164,6 +172,14 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
         <div
           className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
           onClick={() => setFullscreenIndex(null)}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              setFullscreenIndex(null);
+            }
+          }}
+          tabIndex={0}
+          role="button"
         >
           {/* Close button */}
           <button
