@@ -5,6 +5,7 @@ import "./globals.css";
 import Navbar from "./components/Navbar";
 import GlobalLoader from "./components/GlobalLoader";
 import { ClerkProvider } from "@clerk/nextjs";
+import { ReactLenis } from "lenis/react";
 import { Toaster } from "sonner";
 
 const ekush = localFont({
@@ -74,10 +75,12 @@ export default function RootLayout({
         suppressHydrationWarning
       >
         <body className={`min-h-full flex flex-col`}>
-          <GlobalLoader />
-          <Navbar />
-          <Toaster position="bottom-right" richColors />
-          {children}
+          <ReactLenis root options={{ lerp: 0.1, smoothWheel: true }}>
+            <GlobalLoader />
+            <Navbar />
+            <Toaster position="bottom-right" richColors />
+            {children}
+          </ReactLenis>
         </body>
       </html>
     </ClerkProvider>
