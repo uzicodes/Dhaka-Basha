@@ -78,7 +78,7 @@ export default function Login() {
   };
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
+    <main className="grow min-h-screen flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
       <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">লগইন</h1>
       <form onSubmit={handleSubmit} className="flex flex-col gap-1 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
         {clerkError && (

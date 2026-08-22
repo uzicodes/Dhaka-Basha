@@ -3,7 +3,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <main className="relative grow flex flex-col items-center px-4 pt-34 bg-[url('/hero_bg.jpg')] bg-cover bg-center bg-no-repeat">
+    <main className="relative grow min-h-screen flex flex-col items-center px-4 pt-34 bg-[url('/hero_bg.jpg')] bg-cover bg-center bg-no-repeat">
       <div className="absolute inset-0 bg-white/50"></div>
 
       {/* Hero Section */}
