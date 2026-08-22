@@ -20,11 +20,19 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --brand-forest: #063B00;
+  --brand-moss: #266210;
+  --brand-lime: #90B800;
+  --brand-yellow: #E1E100;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-brand-forest: #063B00;
+  --color-brand-moss: #266210;
+  --color-brand-lime: #90B800;
+  --color-brand-yellow: #E1E100;
   --font-sans: var(--font-bengali), sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-ekush: var(--font-ekush);
@@ -36,7 +44,6 @@ body {
   color: var(--foreground);
   font-family: var(--font-bengali), sans-serif;
 }
-
 
 h2,
 h3,

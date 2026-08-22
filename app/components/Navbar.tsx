@@ -6,12 +6,12 @@ import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
 
-  const navItems = [
-    { id: "home", label: "হোম", href: "/", icon: true },
-    { id: "properties", label: "খুজন", href: "/listings" },
-    { id: "post", label: "বিজ্ঞাপন", href: "/post" },
-    { id: "contact", label: "যোগাযোগ", href: "/contact" },
-  ];
+const navItems = [
+  { id: "home", label: "হোম", href: "/", icon: true },
+  { id: "properties", label: "খুঁজুন", href: "/listings" },
+  { id: "post", label: "বিজ্ঞাপন", href: "/post" },
+  { id: "contact", label: "যোগাযোগ", href: "/contact" },
+];
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 w-[calc(100%-2rem)] left-4 md:top-6 md:left-1/2 md:w-auto md:transform md:-translate-x-1/2 z-50">
-      <div className={`bg-white/80 backdrop-blur-md shadow-lg border border-slate-100 flex flex-col md:flex-row md:items-center gap-1 transition-all duration-50 ${isMenuOpen ? "rounded-2xl p-4" : "rounded-full px-4 py-3"}`}>
+      <div className={`bg-white/85 backdrop-blur-md shadow-lg border border-slate-200/80 flex flex-col md:flex-row md:items-center gap-1 transition-all duration-50 ${isMenuOpen ? "rounded-2xl p-4" : "rounded-full px-4 py-2.5"}`}>
         
         {/* Mobile Header (Logo & Hamburger) */}
         <div className={`relative flex items-center justify-between md:hidden w-full ${isMenuOpen ? "mb-4" : ""}`}>
@@ -49,12 +49,12 @@ export default function Navbar() {
           </Link>
           
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
-            <span className="text-xl font-bold text-slate-900 font-ekush mt-1 inline-block">
-              ঢাকা-<span className="text-blue-600">বাসা</span>
+            <span className="text-xl font-bold text-[#063B00] font-ekush mt-1 inline-block">
+              ঢাকা-<span className="text-[#266210]">বাসা</span>
             </span>
           </div>
 
-          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-blue-600 focus:outline-none z-10">
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-[#266210] focus:outline-none z-10">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -74,12 +74,12 @@ export default function Navbar() {
               onClick={() => {
                 setIsMenuOpen(false);
               }}
-              className={`px-5 py-2 rounded-full text-sm font-medium transition-all duration-200 flex items-center justify-center w-full md:w-auto ${
+              className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 flex items-center justify-center w-full md:w-auto ${
                 item.id === "home" ? "hidden md:flex" : ""
               } ${
                 active === item.id
-                  ? "ring-2 ring-blue-600 text-blue-600"
-                  : "text-slate-700 hover:text-blue-600 hover:bg-slate-100"
+                  ? "bg-[#266210] text-white shadow-xs"
+                  : "text-slate-700 hover:text-[#063B00] hover:bg-[#90B800]/15"
               }`}
             >
               {item.icon ? (
@@ -110,11 +110,11 @@ export default function Navbar() {
                 onClick={() => {
                   setIsMenuOpen(false);
                 }}
-                className="px-6 py-2 rounded-md text-sm font-semibold text-red-600 hover:bg-green-50 transition-colors relative w-full md:w-auto text-center"
+                className="px-5 py-2 rounded-full text-sm font-bold text-[#063B00] hover:bg-[#90B800]/20 transition-colors relative w-full md:w-auto text-center"
               >
                 <span className={`inline-block ${
                   active === "login"
-                    ? "border-b-2 border-blue-600"
+                    ? "border-b-2 border-[#266210]"
                     : ""
                 }`}>
                   লগইন
@@ -124,16 +124,16 @@ export default function Navbar() {
           )}
 
           {/* Profile Icon */}
-          <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-blue-600 transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
-            <div className={`scale-130 origin-center rounded-full ${
-              active === "profile" ? "ring-2 ring-blue-600" : ""
+          <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-[#266210] transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
+            <div className={`scale-120 origin-center rounded-full p-0.5 ${
+              active === "profile" ? "ring-2 ring-[#266210] bg-[#90B800]/20" : ""
             }`}>
               {isSignedIn && isGoogleUser && user?.imageUrl ? (
                 <Image
                   src={user.imageUrl}
                   alt="Profile"
-                  width={20}
-                  height={20}
+                  width={22}
+                  height={22}
                   className="rounded-full object-cover"
                 />
               ) : (
