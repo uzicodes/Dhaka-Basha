@@ -158,7 +158,6 @@ export default function ProfilePage() {
     const file = e.target.files?.[0];
     if (!file) return;
 
-    // Check file size (e.g., 2MB limit)
     if (file.size > 2 * 1024 * 1024) {
       alert("ছবি ২ মেগাবাইটের কম হতে হবে");
       return;
@@ -166,7 +165,6 @@ export default function ProfilePage() {
 
     setIsUploading(true);
     try {
-      // 1. Get presigned URL
       const response = await fetch("/api/upload", {
         method: "POST",
         body: JSON.stringify({
@@ -179,7 +177,6 @@ export default function ProfilePage() {
       const { results } = await response.json();
       const { signedUrl, publicUrl } = results[0];
 
-      // 2. Upload to R2
       const uploadResponse = await fetch(signedUrl, {
         method: "PUT",
         body: file,
@@ -190,7 +187,6 @@ export default function ProfilePage() {
 
       if (!uploadResponse.ok) throw new Error("Failed to upload to R2");
 
-      // 3. Update database
       await updateDbProfileImage(publicUrl);
       setProfileImage(publicUrl);
     } catch (error) {
@@ -219,22 +215,16 @@ export default function ProfilePage() {
   };
 
   const closeDeleteDialog = () => {
-    if (isDeletingListing) {
-      return;
-    }
-
+    if (isDeletingListing) return;
     setListingToDelete(null);
   };
 
   const currentListings = activeSection === "my-listings" ? myListings : savedListings;
   const isLoadingCurrentListings = activeSection === "my-listings" ? isLoadingListings : isLoadingSavedListings;
-  const currentSectionTitle = activeSection === "my-listings" ? "আমার বিজ্ঞাপন সমূহ" : "সংরক্ষিত বিজ্ঞাপন";
+  const currentSectionTitle = activeSection === "my-listings" ? "আমার বিজ্ঞাপন সমূহ" : "সংরক্ষিত বিজ্ঞাপন সমূহ";
 
   const confirmDeleteListing = async () => {
-    if (!listingToDelete) {
-      return;
-    }
-
+    if (!listingToDelete) return;
     setIsDeletingListing(true);
 
     try {
@@ -255,18 +245,12 @@ export default function ProfilePage() {
   };
 
   const closeDeleteSavedListingDialog = () => {
-    if (isDeletingSavedListing) {
-      return;
-    }
-
+    if (isDeletingSavedListing) return;
     setSavedListingToDelete(null);
   };
 
   const confirmDeleteSavedListing = async () => {
-    if (!savedListingToDelete) {
-      return;
-    }
-
+    if (!savedListingToDelete) return;
     setIsDeletingSavedListing(true);
 
     try {
@@ -282,16 +266,20 @@ export default function ProfilePage() {
     }
   };
 
-
-
   return (
-    <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-32 pb-12 min-h-screen">
-      <div className="w-full max-w-4xl space-y-6">
+    <main className="min-h-screen bg-slate-50/50 flex flex-col items-center">
+      {/* Background Decorative Accent */}
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-blue-50/80 via-emerald-50/20 to-transparent pointer-events-none -z-10" />
+
+      <div className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-20 space-y-8">
+        
+        {/* PROFILE HEADER CARD */}
         <ProfileHeader
           user={user}
           isGoogleUser={isGoogleUser}
           profileImage={profileImage}
           isEditing={isEditing}
+          setIsEditing={setIsEditing}
           name={name}
           setName={setName}
           phone={phone}
@@ -305,17 +293,23 @@ export default function ProfilePage() {
           memberSince={memberSince}
         />
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="md:col-span-1 space-y-4">
+        {/* 2-COLUMN DASHBOARD LAYOUT */}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 items-start">
+          
+          {/* LEFT COLUMN: NAVIGATION SIDEBAR */}
+          <div className="lg:col-span-1 space-y-4 lg:sticky lg:top-28">
             <ProfileSidebar
               activeSection={activeSection}
               setActiveSection={setActiveSection}
+              myListingsCount={myListings.length}
+              savedListingsCount={savedListings.length}
               unreadCount={unreadCount}
               signOut={signOut}
             />
           </div>
 
-          <div className="md:col-span-2 space-y-4">
+          {/* RIGHT 3 COLUMNS: LISTINGS CONTENT */}
+          <div className="lg:col-span-3 space-y-6">
             <ProfileListings
               activeSection={activeSection}
               currentSectionTitle={currentSectionTitle}
@@ -326,9 +320,12 @@ export default function ProfilePage() {
               router={router}
             />
           </div>
+
         </div>
+
       </div>
 
+      {/* CONFIRMATION DIALOGS */}
       <DeleteListingDialog
         listingToDelete={listingToDelete}
         closeDeleteDialog={closeDeleteDialog}
@@ -351,6 +348,7 @@ function ProfileHeader({
   isGoogleUser,
   profileImage,
   isEditing,
+  setIsEditing,
   name,
   setName,
   phone,
@@ -364,47 +362,44 @@ function ProfileHeader({
   memberSince,
 }: any) {
   return (
-    <div className="bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3] flex flex-col md:flex-row items-center md:items-start gap-6">
+    <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center md:items-start gap-6">
+      
+      {/* Avatar Container */}
       <div className="shrink-0 relative group">
         <div className="relative">
           {profileImage ? (
             <Image
               src={profileImage}
               alt="Profile"
-              width={128}
-              height={128}
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
+              width={120}
+              height={120}
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-blue-50 shadow-sm"
             />
           ) : isGoogleUser && user.imageUrl ? (
             <Image
               src={user.imageUrl}
               alt="Profile"
-              width={128}
-              height={128}
-              className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 object-cover shadow-sm"
+              width={120}
+              height={120}
+              className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl object-cover border-2 border-blue-50 shadow-sm"
             />
           ) : (
-            <div className="w-24 h-24 md:w-32 md:h-32 rounded-full border-4 border-slate-50 bg-slate-100 shadow-sm flex items-center justify-center text-slate-500">
-              <svg
-                className="w-12 h-12 md:w-16 md:h-16"
-                fill="currentColor"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
+            <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-2xl bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-slate-100 flex items-center justify-center text-blue-600 font-extrabold text-3xl shadow-sm">
+              {name?.[0] || user.firstName?.[0] || "U"}
             </div>
           )}
 
+          {/* Upload overlay button */}
           {isEditing && (
             <label
               htmlFor="profile-upload"
-              className="absolute bottom-0 right-0 w-8 h-8 md:w-10 md:h-10 bg-[#2d79f3] rounded-full border-2 border-white flex items-center justify-center text-white cursor-pointer shadow-md hover:bg-blue-600 transition-colors z-10"
+              className="absolute -bottom-2 -right-2 w-8 h-8 sm:w-9 sm:h-9 bg-blue-600 hover:bg-blue-700 rounded-xl border-2 border-white flex items-center justify-center text-white cursor-pointer shadow-md transition-colors z-10"
+              title="ছবি পরিবর্তন করুন"
             >
               {isUploading ? (
                 <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
               ) : (
-                <svg className="w-5 h-5 md:w-6 md:h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
                 </svg>
@@ -419,154 +414,226 @@ function ProfileHeader({
               />
             </label>
           )}
-
-          {isEditing && (
-            <label
-              htmlFor="profile-upload"
-              className="absolute inset-0 flex items-center justify-center bg-black/20 rounded-full cursor-pointer opacity-0 group-hover:opacity-100 transition-opacity"
-            >
-              {!isUploading && <span className="text-white text-[10px] font-bold mt-8">পরিবর্তন করুন</span>}
-            </label>
-          )}
         </div>
       </div>
 
-      <div className="flex flex-col items-center md:items-start grow text-center md:text-left">
-        {isEditing ? (
-          <div className="mb-2 w-full max-w-sm">
-            <input
-              type="text"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              placeholder="আপনার নাম"
-              aria-label="আপনার নাম"
-              className="w-full text-2xl md:text-3xl font-bold text-[#151717] border-b-2 border-[#2d79f3] focus:outline-none bg-transparent"
-            />
-          </div>
-        ) : (
-          <h1 className="text-2xl md:text-3xl font-bold text-[#151717]">
-            {name || "N/A"}
-          </h1>
-        )}
-        <p className="text-slate-500 mt-1">{user.emailAddresses[0]?.emailAddress ?? "N/A"}</p>
+      {/* User Info & Edit Form */}
+      <div className="flex-1 min-w-0 flex flex-col items-center md:items-start text-center md:text-left space-y-3">
+        
+        <div className="space-y-1 w-full max-w-md">
+          {isEditing ? (
+            <div className="space-y-1">
+              <label className="block text-[11px] font-semibold text-slate-400 uppercase tracking-wider text-left">নাম</label>
+              <input
+                type="text"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="আপনার নাম লিখুন"
+                className="w-full text-lg font-bold text-slate-900 border border-slate-200 rounded-xl px-3 py-1.5 focus:outline-none focus:border-blue-500 bg-slate-50"
+              />
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center justify-center md:justify-start gap-2">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-slate-900 truncate">
+                {name || "ইউজার নাম নেই"}
+              </h1>
+              <span className="px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-[11px] font-bold">
+                ভেরিফায়েড একাউন্ট
+              </span>
+            </div>
+          )}
 
-        <div className="mt-4 w-full grid grid-cols-1 md:grid-cols-2 gap-3">
-          <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
-            <p className="text-xs text-purple-700 mb-1">ফোন নম্বর</p>
-            {isEditing ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  inputMode="numeric"
-                  maxLength={11}
-                  value={phone}
-                  onChange={(e) => handlePhoneChange(e.target.value)}
-                  placeholder="১১ ডিজিট নম্বর"
-                  aria-label="ফোন নম্বর"
-                  className="w-full border-none p-0 leading-tight focus:outline-none"
-                />
-                <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 4H6a2 2 0 00-2 2v12a2 2 0 002 2h12a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11 16H9v-2l8.586-8.586z" />
-                </svg>
-              </div>
-            ) : (
-              <p>{phone || "N/A"}</p>
-            )}
-          </div>
-
-          <div className={`w-full px-3 py-1 text-sm text-[#151717] transition-all ${isEditing ? "rounded-none border-[1.5px] border-[#ecedec] bg-white shadow-sm" : "border-transparent bg-transparent"}`}>
-            <p className="text-xs text-purple-700 mb-1">ঠিকানা</p>
-            {isEditing ? (
-              <div className="flex items-center gap-2">
-                <input
-                  type="text"
-                  value={address}
-                  onChange={(e) => setAddress(e.target.value)}
-                  placeholder="আপনার ঠিকানা"
-                  aria-label="আপনার ঠিকানা"
-                  className="w-full border-none p-0 leading-tight focus:outline-none"
-                />
-                <svg className="w-4 h-4 shrink-0 text-slate-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11 15H9v-2.828l8.586-8.586z" />
-                </svg>
-              </div>
-            ) : (
-              <p>{address ? address.charAt(0).toUpperCase() + address.slice(1) : "N/A"}</p>
-            )}
-          </div>
+          <p className="text-xs text-slate-500 font-medium truncate">
+            {user.emailAddresses[0]?.emailAddress ?? "ইমেইল পাওয়া যায়নি"}
+          </p>
         </div>
 
-        <div className="mt-4 flex flex-wrap gap-3 items-center justify-center md:justify-start">
+        {/* Details Matrix (Phone, Address) */}
+        <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+          
+          {/* Phone */}
+          <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 text-left space-y-0.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ফোন নম্বর</span>
+            {isEditing ? (
+              <input
+                type="text"
+                inputMode="numeric"
+                maxLength={11}
+                value={phone}
+                onChange={(e) => handlePhoneChange(e.target.value)}
+                placeholder="১১ ডিজিট মোবাইল নম্বর"
+                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-blue-500"
+              />
+            ) : (
+              <span className="text-xs font-bold text-slate-800 block">
+                {phone || "ফোন নম্বর যুক্ত করা নেই"}
+              </span>
+            )}
+          </div>
+
+          {/* Address */}
+          <div className="p-3 rounded-2xl bg-slate-50 border border-slate-100 text-left space-y-0.5">
+            <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ঠিকানা</span>
+            {isEditing ? (
+              <input
+                type="text"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="আপনার পূর্ণ ঠিকানা"
+                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-blue-500"
+              />
+            ) : (
+              <span className="text-xs font-bold text-slate-800 block truncate">
+                {address || "ঠিকানা যুক্ত করা নেই"}
+              </span>
+            )}
+          </div>
+
+        </div>
+
+        {/* Action Controls */}
+        <div className="pt-2 flex flex-wrap items-center justify-center md:justify-start gap-3">
           <button
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className="px-4 py-1.5 bg-transparent border border-red-700 text-red-700 hover:bg-red-50 text-sm font-medium rounded-full transition-colors cursor-pointer disabled:opacity-50"
+            className={`px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer ${
+              isEditing
+                ? "bg-emerald-600 hover:bg-emerald-700 text-white"
+                : "bg-blue-600 hover:bg-blue-700 text-white"
+            }`}
           >
-            {isSaving ? "সেভিং..." : (isEditing ? "সেভ" : "প্রোফাইল এডিট")}
+            {isSaving ? "সেভ হচ্ছে..." : isEditing ? "✓ পরিবর্তন সেভ করুন" : "প্রোফাইল এডিট করুন"}
           </button>
+
+          {isEditing && (
+            <button
+              type="button"
+              onClick={() => setIsEditing(false)}
+              className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer"
+            >
+              বাতিল
+            </button>
+          )}
+
           {memberSince && (
-            <span className="inline-flex items-center rounded-full bg-green-100 px-4 py-1.5 text-sm font-medium text-purple-700">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-slate-100 px-3 py-1 rounded-full">
+              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
               সদস্য: {memberSince}
             </span>
           )}
         </div>
+
       </div>
+
     </div>
   );
 }
 
-function ProfileSidebar({ activeSection, setActiveSection, unreadCount, signOut }: any) {
+function ProfileSidebar({
+  activeSection,
+  setActiveSection,
+  myListingsCount,
+  savedListingsCount,
+  unreadCount,
+  signOut,
+}: any) {
   return (
-    <div className="bg-white p-5 rounded-[20px] shadow-sm border-[1.5px] border-[#ecedec]">
-      <ul className="space-y-2">
-        <li>
-          <button
-            type="button"
-            onClick={() => setActiveSection("my-listings")}
-            className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${activeSection === "my-listings"
-              ? "bg-[#2d79f3] text-white"
-              : "text-slate-600 hover:bg-slate-50 cursor-pointer"
-              }`}
-          >
-            আমার বিজ্ঞাপন সমূহ
-          </button>
-        </li>
-        <li>
-          <button
-            type="button"
-            onClick={() => setActiveSection("saved-listings")}
-            className={`w-full text-left px-4 py-2.5 rounded-none font-medium transition-colors ${activeSection === "saved-listings"
-              ? "bg-[#2d79f3] text-white"
-              : "text-slate-600 hover:bg-slate-50 cursor-pointer"
-              }`}
-          >
-            সংরক্ষিত বিজ্ঞাপন (Saved)
-          </button>
-        </li>
-        <li>
-          <Link
-            href="/inbox"
-            className="relative block w-full text-left px-4 py-2.5 text-slate-600 hover:bg-slate-50 rounded-none font-medium transition-colors cursor-pointer"
-          >
-            ম্যাসেজ সমূহ
-            {unreadCount > 0 && (
-              <span className="absolute top-1.5 right-3 inline-flex items-center justify-center min-w-5 h-5 px-1.5 text-[11px] font-bold text-white bg-red-500 rounded-full animate-pulse">
-                {unreadCount > 99 ? "99+" : unreadCount}
-              </span>
-            )}
-          </Link>
-        </li>
-        <li>
-          <button
-            type="button"
-            onClick={() => signOut({ redirectUrl: "/" })}
-            className="w-full text-left px-4 py-2.5 text-red-600 hover:bg-red-50 rounded-none font-medium transition-colors cursor-pointer"
-          >
-            লগ আউট
-          </button>
-        </li>
-      </ul>
+    <div className="bg-white p-3 rounded-3xl border border-slate-200/80 shadow-xs space-y-1.5">
+      
+      {/* My Listings Tab */}
+      <button
+        type="button"
+        onClick={() => setActiveSection("my-listings")}
+        className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+          activeSection === "my-listings"
+            ? "bg-blue-600 text-white shadow-xs"
+            : "text-slate-700 hover:bg-slate-50"
+        }`}
+      >
+        <span className="flex items-center gap-2.5">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+          </svg>
+          আমার বিজ্ঞাপন
+        </span>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+          activeSection === "my-listings" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+        }`}>
+          {myListingsCount}
+        </span>
+      </button>
+
+      {/* Saved Listings Tab */}
+      <button
+        type="button"
+        onClick={() => setActiveSection("saved-listings")}
+        className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
+          activeSection === "saved-listings"
+            ? "bg-blue-600 text-white shadow-xs"
+            : "text-slate-700 hover:bg-slate-50"
+        }`}
+      >
+        <span className="flex items-center gap-2.5">
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+          </svg>
+          সংরক্ষিত বিজ্ঞাপন
+        </span>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
+          activeSection === "saved-listings" ? "bg-white/20 text-white" : "bg-slate-100 text-slate-600"
+        }`}>
+          {savedListingsCount}
+        </span>
+      </button>
+
+      {/* Messages / Inbox */}
+      <Link
+        href="/inbox"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors"
+      >
+        <span className="flex items-center gap-2.5">
+          <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+          মেসেজ সমূহ
+        </span>
+        {unreadCount > 0 ? (
+          <span className="px-2 py-0.5 rounded-full bg-red-500 text-white text-[10px] font-bold animate-pulse">
+            {unreadCount > 99 ? "99+" : unreadCount}
+          </span>
+        ) : (
+          <span className="text-[10px] text-slate-400 font-medium">ইনবক্স</span>
+        )}
+      </Link>
+
+      <div className="pt-2 border-t border-slate-100 my-1">
+        {/* Post New Listing Action */}
+        <Link
+          href="/post"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-blue-700 bg-blue-50 hover:bg-blue-100 border border-blue-200/60 transition-colors mb-1.5"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
+          </svg>
+          নতুন বিজ্ঞাপন দিন
+        </Link>
+
+        {/* Sign Out */}
+        <button
+          type="button"
+          onClick={() => signOut({ redirectUrl: "/" })}
+          className="w-full flex items-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+        >
+          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+          লগ আউট করুন
+        </button>
+      </div>
+
     </div>
   );
 }
@@ -581,175 +648,211 @@ function ProfileListings({
   router,
 }: any) {
   return (
-    <>
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-xl font-bold text-[#151717]">{currentSectionTitle}</h2>
-        <Link
-          href="/post"
-          className="text-sm font-medium text-[#2d79f3] hover:underline"
-        >
-          + নতুন পোস্ট করুন
-        </Link>
+    <div className="space-y-4">
+      
+      {/* Title Bar */}
+      <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
+        <div className="flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-900">{currentSectionTitle}</h2>
+          {!isLoadingCurrentListings && (
+            <span className="px-2.5 py-0.5 rounded-full bg-blue-50 text-blue-700 text-xs font-bold border border-blue-200/60">
+              {currentListings.length}টি
+            </span>
+          )}
+        </div>
+
+        {activeSection === "my-listings" && (
+          <Link
+            href="/post"
+            className="text-xs font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1"
+          >
+            + নতুন পোস্ট করুন
+          </Link>
+        )}
       </div>
 
+      {/* Listings List */}
       {isLoadingCurrentListings ? (
-        <p className="text-slate-500">লোডিং...</p>
+        <div className="space-y-3 animate-pulse">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="h-28 bg-white rounded-2xl border border-slate-200 p-4" />
+          ))}
+        </div>
       ) : currentListings.length === 0 ? (
-        <p className="text-slate-500">
-          {activeSection === "my-listings"
-            ? "আপনার কোনো বিজ্ঞাপন নেই।"
-            : "আপনি এখনো কোনো বিজ্ঞাপন সংরক্ষণ করেননি।"}
-        </p>
+        <div className="text-center py-12 px-4 bg-white rounded-3xl border border-slate-200 text-slate-500 space-y-4">
+          <div className="w-12 h-12 rounded-full bg-slate-100 flex items-center justify-center mx-auto text-slate-400">
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
+            </svg>
+          </div>
+          <p className="text-sm font-medium">
+            {activeSection === "my-listings"
+              ? "আপনার কোনো সক্রিয় বিজ্ঞাপন নেই।"
+              : "আপনি এখনো কোনো বিজ্ঞাপন সংরক্ষণ করেননি।"}
+          </p>
+          <Link
+            href={activeSection === "my-listings" ? "/post" : "/listings"}
+            className="inline-block px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
+          >
+            {activeSection === "my-listings" ? "বিজ্ঞাপন পোস্ট করুন" : "টু-লেট খুঁজুন"}
+          </Link>
+        </div>
       ) : (
-        currentListings.map((listing: any) => {
-          const authorName = listing.user?.name || "অজানা লেখক";
-          const rentFromText = formatRentFromDate(listing.rentFrom);
+        <div className="space-y-3">
+          {currentListings.map((listing: any) => {
+            const propType = getPropertyTypeLabel(listing.propertyType);
+            const locLabel = getLocationLabel(listing.location);
+            const rentFromText = formatRentFromDate(listing.rentFrom);
+            const hasImages = listing.images && Array.isArray(listing.images) && listing.images.length > 0;
 
-          if (activeSection === "saved-listings") {
-            return (
-              <div
-                key={listing.id}
-                className="group rounded-[18px] border border-[#d7e6ff] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2d79f3] hover:shadow-md"
-              >
-                <div className="flex items-start gap-4">
-                  <div className="min-w-0 flex-1">
-                    <h3 className="mt-2 truncate text-lg font-semibold text-[#151717]">
-                      {listing.title}
-                    </h3>
-
-                    <div className="mt-3 space-y-2 text-sm text-slate-600">
-                      <div className="flex items-center gap-2">
-                        <span className="text-purple-500">লেখক:</span>
-                        <span className="font-medium text-slate-800">{authorName}</span>
-                        {listing.propertyType && (
-                          <span className="inline-flex items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-600">
-                            {getPropertyTypeLabel(listing.propertyType)}
-                          </span>
-                        )}
-                      </div>
-                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
-                        <span className="flex items-center gap-1.5 text-slate-700">
-                          <span className="text-purple-500">ভাড়া শুরু:</span>
-                          <span className="font-medium text-slate-800">{rentFromText}</span>
-                        </span>
-                        <span className="flex items-center gap-1.5 text-slate-700">
-                          <span className="text-purple-500">ভাড়া:</span>
-                          <span className="font-medium text-slate-800">৳ {listing.rentPrice} / মাস</span>
-                        </span>
-                        <span className="flex items-center gap-1.5 text-slate-700">
-                          <svg className="h-4 w-4 text-[#2d79f3]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            if (activeSection === "saved-listings") {
+              return (
+                <div
+                  key={listing.id}
+                  className="group bg-white rounded-2xl border border-slate-200/80 hover:border-blue-400/80 p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                >
+                  <div className="flex items-center gap-3.5 min-w-0">
+                    <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
+                      {hasImages ? (
+                        <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center text-slate-300">
+                          <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                           </svg>
-                          <span className="text-purple-500">স্থান:</span>
-                          <span className="font-medium text-slate-800">
-                            {listing.location && getLocationLabel(listing.location)}
-                          </span>
+                        </div>
+                      )}
+                    </div>
+
+                    <div className="min-w-0 space-y-1">
+                      <div className="flex items-center gap-2">
+                        <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold">
+                          {propType}
+                        </span>
+                        <span className="text-xs font-bold text-slate-900 truncate">
+                          ৳{listing.rentPrice.toLocaleString("en-IN")} /মাস
                         </span>
                       </div>
+
+                      <Link href={`/listings/${listing.id}`}>
+                        <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                          {listing.title}
+                        </h3>
+                      </Link>
+
+                      <p className="text-[11px] text-slate-500 truncate flex items-center gap-1">
+                        <svg className="w-3 h-3 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                        </svg>
+                        {locLabel} • ভাড়া শুরু: {rentFromText}
+                      </p>
                     </div>
                   </div>
 
+                  <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+                    <Link
+                      href={`/listings/${listing.id}`}
+                      className="px-3.5 py-1.5 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold transition-colors"
+                    >
+                      দেখুন
+                    </Link>
+                    <button
+                      type="button"
+                      onClick={() => openDeleteSavedListingDialog(listing)}
+                      className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                      title="সংরক্ষণ বাতিল"
+                      aria-label="Remove saved"
+                    >
+                      <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                      </svg>
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
+            // MY LISTINGS ITEM
+            return (
+              <div
+                key={listing.id}
+                className="group bg-white rounded-2xl border border-slate-200/80 hover:border-blue-400/80 p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+              >
+                <div className="flex items-center gap-3.5 min-w-0">
+                  <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
+                    {hasImages ? (
+                      <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-slate-300">
+                        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                        </svg>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="min-w-0 space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">
+                        {propType}
+                      </span>
+                      <span className="text-xs font-bold text-slate-900 truncate">
+                        ৳{listing.rentPrice.toLocaleString("en-IN")} /মাস
+                      </span>
+                    </div>
+
+                    <Link href={`/listings/${listing.id}?from=profile`}>
+                      <h3 className="text-sm font-bold text-slate-900 group-hover:text-blue-600 transition-colors line-clamp-1">
+                        {listing.title}
+                      </h3>
+                    </Link>
+
+                    <p className="text-[11px] text-slate-500 truncate flex items-center gap-1">
+                      <svg className="w-3 h-3 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      </svg>
+                      {locLabel} • ভাড়া শুরু: {rentFromText}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                   <Link
-                    href={`/listings/${listing.id}`}
-                    className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#d7e6ff] px-3 py-2 text-sm font-medium text-[#043307] transition-colors hover:bg-red-100"
-                    title="View"
+                    href={`/listings/${listing.id}?from=profile`}
+                    className="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-blue-50 hover:text-blue-700 text-slate-700 text-xs font-bold transition-colors"
                   >
                     দেখুন
                   </Link>
                   <button
                     type="button"
-                    onClick={() => openDeleteSavedListingDialog(listing)}
-                    className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors shrink-0"
-                    title="Delete from saved"
-                    aria-label="Delete from saved"
+                    onClick={() => router.push(`/post?listingId=${listing.id}`)}
+                    className="p-1.5 rounded-xl text-slate-500 hover:text-blue-600 hover:bg-blue-50 transition-colors cursor-pointer"
+                    title="এডিট"
+                    aria-label="Edit listing"
                   >
-                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                    </svg>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => openDeleteDialog(listing)}
+                    className="p-1.5 rounded-xl text-slate-400 hover:text-rose-600 hover:bg-rose-50 transition-colors cursor-pointer"
+                    title="ডিলিট"
+                    aria-label="Delete listing"
+                  >
+                    <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
                     </svg>
                   </button>
                 </div>
               </div>
             );
-          }
-
-          return (
-            <div
-              key={listing.id}
-              className="group rounded-[18px] border border-[#d7e6ff] bg-white p-4 shadow-sm transition-all duration-200 hover:-translate-y-0.5 hover:border-[#2d79f3] hover:shadow-md"
-            >
-              <div className="flex items-start gap-4">
-                <div className="min-w-0 flex-1">
-                  <div className="mt-2 flex items-center gap-2">
-                    <h3 className="truncate text-lg font-semibold text-[#151717]">
-                      {listing.title}
-                    </h3>
-                    {listing.propertyType && (
-                      <span className="inline-flex shrink-0 items-center rounded-full bg-red-100 px-2 py-0.5 text-xs font-medium text-red-700">
-                        {getPropertyTypeLabel(listing.propertyType)}
-                      </span>
-                    )}
-                  </div>
-
-                  <div className="mt-3 space-y-2 text-sm text-slate-600">
-                    <div className="flex items-center gap-4">
-                      <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
-                        <span className="text-purple-500">ভাড়া শুরু:</span>
-                        <span className="font-medium text-slate-800">{rentFromText}</span>
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
-                        <span className="text-purple-500">ভাড়া:</span>
-                        <span className="font-medium text-slate-800">৳ {listing.rentPrice} / মাস</span>
-                      </span>
-                      <span className="flex items-center gap-1.5 text-slate-700 whitespace-nowrap">
-                        <svg className="h-4 w-4 text-[#2d79f3] shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                        </svg>
-                        <span className="text-purple-500">স্থান:</span>
-                        <span className="font-medium text-slate-800">
-                          {listing.location && getLocationLabel(listing.location)}
-                        </span>
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                <Link
-                  href={`/listings/${listing.id}?from=profile`}
-                  className="inline-flex shrink-0 items-center justify-center rounded-full border border-[#d7e6ff] px-3 py-2 text-sm font-medium text-[#043307] transition-colors hover:bg-red-100"
-                  title="View"
-                >
-                  দেখুন
-                </Link>
-                <button
-                  type="button"
-                  onClick={() => router.push(`/post?listingId=${listing.id}`)}
-                  className="p-2 text-slate-400 hover:text-[#2d79f3] hover:bg-blue-50 rounded-none transition-colors shrink-0"
-                  title="Edit"
-                  aria-label="Edit listing"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => openDeleteDialog(listing)}
-                  className="p-2 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-none transition-colors shrink-0"
-                  title="Delete"
-                  aria-label="Delete listing"
-                >
-                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                  </svg>
-                </button>
-              </div>
-            </div>
-          );
-        })
+          })}
+        </div>
       )}
-    </>
+
+    </div>
   );
 }
 
@@ -762,29 +865,37 @@ function DeleteListingDialog({
   if (!listingToDelete) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-md rounded-[20px] bg-white p-6 shadow-xl border border-slate-200">
-        <h3 className="text-lg font-bold text-[#151717]">এই পোস্টটি মুছতে চান?</h3>
-        <p className="mt-2 text-sm text-slate-600">
-          <span className="font-medium text-slate-900">{listingToDelete.title}</span> স্থায়ীভাবে মুছে যাবে এবং আর কোথাও দেখা যাবে না।
-        </p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-xs px-4 animate-in fade-in duration-150">
+      <div className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+          </svg>
+        </div>
 
-        <div className="mt-6 flex items-center justify-end gap-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-slate-900">বিজ্ঞাপনটি মুছে ফেলতে চান?</h3>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            <span className="font-bold text-slate-800">{listingToDelete.title}</span> পোস্টটি স্থায়ীভাবে মুছে ফেলা হবে এবং আর ফিরে পাওয়া যাবে না।
+          </p>
+        </div>
+
+        <div className="pt-2 flex items-center justify-end gap-2.5">
           <button
             type="button"
             onClick={closeDeleteDialog}
             disabled={isDeletingListing}
-            className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer disabled:opacity-50"
           >
-            না
+            বাতিল করুন
           </button>
           <button
             type="button"
             onClick={confirmDeleteListing}
             disabled={isDeletingListing}
-            className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50"
           >
-            {isDeletingListing ? "ডিলিট হচ্ছে..." : "হ্যাঁ, ডিলিট করুন"}
+            {isDeletingListing ? "মুছে ফেলা হচ্ছে..." : "হ্যাঁ, মুছে ফেলুন"}
           </button>
         </div>
       </div>
@@ -801,29 +912,37 @@ function DeleteSavedListingDialog({
   if (!savedListingToDelete) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 px-4">
-      <div className="w-full max-w-md rounded-[20px] bg-white p-6 shadow-xl border border-slate-200">
-        <h3 className="text-lg font-bold text-[#151717]">এই সংরক্ষিত পোস্টটি সরাতে চান?</h3>
-        <p className="mt-2 text-sm text-slate-600">
-          <span className="font-medium text-slate-900">{savedListingToDelete.title}</span> আপনার সংরক্ষিত তালিকা থেকে সরিয়ে ফেলা হবে।
-        </p>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 backdrop-blur-xs px-4 animate-in fade-in duration-150">
+      <div className="w-full max-w-md rounded-3xl bg-white p-6 sm:p-7 shadow-2xl border border-slate-200 space-y-4">
+        <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+          <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+          </svg>
+        </div>
 
-        <div className="mt-6 flex items-center justify-end gap-3">
+        <div className="space-y-1">
+          <h3 className="text-lg font-bold text-slate-900">সংরক্ষিত তালিকা থেকে সরাতে চান?</h3>
+          <p className="text-xs text-slate-500 leading-relaxed">
+            <span className="font-bold text-slate-800">{savedListingToDelete.title}</span> পোস্টটি আপনার সংরক্ষিত তালিকা থেকে সরিয়ে ফেলা হবে।
+          </p>
+        </div>
+
+        <div className="pt-2 flex items-center justify-end gap-2.5">
           <button
             type="button"
             onClick={closeDeleteSavedListingDialog}
             disabled={isDeletingSavedListing}
-            className="rounded-full border border-slate-200 px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-50 disabled:cursor-not-allowed disabled:opacity-50"
+            className="px-4 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:bg-slate-100 transition-colors cursor-pointer disabled:opacity-50"
           >
-            না
+            বাতিল করুন
           </button>
           <button
             type="button"
             onClick={confirmDeleteSavedListing}
             disabled={isDeletingSavedListing}
-            className="rounded-full bg-red-600 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-red-700 disabled:cursor-not-allowed disabled:opacity-50"
+            className="px-4 py-2 rounded-xl bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold transition-all cursor-pointer shadow-xs disabled:opacity-50"
           >
-            {isDeletingSavedListing ? "সরাচ্ছে..." : "হ্যাঁ, সরান"}
+            {isDeletingSavedListing ? "সরানো হচ্ছে..." : "হ্যাঁ, সরান"}
           </button>
         </div>
       </div>

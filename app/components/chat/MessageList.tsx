@@ -16,6 +16,7 @@ export default function MessageList({
             </svg>
           </div>
           <p className="empty-label">কথোপকথন শুরু করুন</p>
+          <p className="empty-subtext">বাসার বিস্তারিত, পরিদর্শন সময় বা ভাড়া সম্পর্কিত যে কোনো তথ্য জানতে বার্তা লিখুন।</p>
         </div>
       ) : (
         groupedMessages.map((msg: any) => {

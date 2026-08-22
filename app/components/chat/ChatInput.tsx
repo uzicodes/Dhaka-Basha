@@ -2,12 +2,6 @@ export default function ChatInput({ handleSend, input, handleInputChange, isSend
   return (
     <div className="input-area">
       <form onSubmit={handleSend} className="input-row">
-        <button type="button" className="attach-btn" aria-label="Attach file">
-          <svg width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
-          </svg>
-        </button>
-
         <div className="input-wrap">
           <textarea
             ref={textareaRef}
@@ -20,8 +14,8 @@ export default function ChatInput({ handleSend, input, handleInputChange, isSend
                 handleSend(e);
               }
             }}
-            placeholder="ম্যাসেজ লিখুন..."
-            aria-label="ম্যাসেজ ইনপুট"
+            placeholder="আপনার বার্তা লিখুন..."
+            aria-label="বার্তা লিখুন"
             className="chat-textarea"
             disabled={isSending}
           />
@@ -32,6 +26,7 @@ export default function ChatInput({ handleSend, input, handleInputChange, isSend
           disabled={!input.trim() || isSending}
           className={`send-btn ${!input.trim() || isSending ? "inactive" : "active"}`}
           aria-label="Send message"
+          title="পাঠান"
         >
           {isSending ? (
             <svg className="spin" width="18" height="18" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -44,7 +39,7 @@ export default function ChatInput({ handleSend, input, handleInputChange, isSend
           )}
         </button>
       </form>
-      <p className="input-hint">Shift + Enter — নতুন লাইন</p>
+      <p className="input-hint">Enter টিপুন বার্তা পাঠাতে • Shift + Enter নতুন লাইন</p>
     </div>
   );
 }
