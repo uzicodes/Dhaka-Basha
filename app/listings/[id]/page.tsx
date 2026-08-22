@@ -241,7 +241,7 @@ export default async function ListingDetails({
                 </div>
                 <div className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 space-y-1">
                   <span className="block text-[11px] font-semibold text-slate-400 uppercase">মাসিক ভাড়া</span>
-                  <span className="block text-xs sm:text-sm font-extrabold text-blue-600">৳{listing.rentPrice.toLocaleString("en-IN")}</span>
+                  <span className="block text-xs sm:text-sm font-extrabold text-red-600">৳{listing.rentPrice.toLocaleString("en-IN")}</span>
                 </div>
               </div>
 
@@ -318,7 +318,7 @@ export default async function ListingDetails({
                 <div>
                   <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">মাসিক ভাড়া</span>
                   <div className="flex items-baseline gap-1">
-                    <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-red-600 tracking-tight">
                       ৳{listing.rentPrice.toLocaleString("en-IN")}
                     </span>
                     <span className="text-sm font-semibold text-slate-400"> / মাস</span>
@@ -411,7 +411,7 @@ export default async function ListingDetails({
                           {sim.rentFrom}
                         </span>
                       </div>
-                      <span className="text-xs font-extrabold text-blue-600 shrink-0">
+                      <span className="text-xs font-extrabold text-red-600 shrink-0">
                         ৳{sim.rentPrice.toLocaleString("en-IN")}
                       </span>
                     </Link>

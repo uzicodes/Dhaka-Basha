@@ -7,18 +7,6 @@ import Link from "next/link";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { getRecentListings, searchListings } from "@/app/actions/getListings";
 
-// Quick filter pills for popular areas
-const POPULAR_AREAS = [
-  { value: "dhanmondi", label: "ধানমন্ডি" },
-  { value: "mirpur", label: "মিরপুর" },
-  { value: "uttara", label: "উত্তরা" },
-  { value: "gulshan", label: "গুলশান" },
-  { value: "banani", label: "বনানী" },
-  { value: "bashundhara", label: "বসুন্ধরা" },
-  { value: "mohammadpur", label: "মোহাম্মদপুর" },
-  { value: "badda", label: "বাড্ডা" },
-];
-
 export default function ListingsPage() {
   return (
     <Suspense fallback={<ListingsLoadingSkeleton />}>
@@ -152,15 +140,6 @@ function ListingsContent() {
     handleExecuteSearch(selectedLocation, selectedSubLocation, newType);
   };
 
-  // Quick area select
-  const handleAreaSelect = (areaVal: string) => {
-    const newLoc = selectedLocation === areaVal ? "" : areaVal;
-    setSelectedLocation(newLoc);
-    setSelectedSubLocation("");
-    setExpandedLoc(newLoc);
-    handleExecuteSearch(newLoc, "", selectedType);
-  };
-
   // Filtered locations for dropdown search
   const filteredLocations = useMemo(() => {
     if (!locationSearchQuery.trim()) return locations;
@@ -207,12 +186,12 @@ function ListingsContent() {
         
         {/* HERO SECTION */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-blue-50 border border-blue-200/60 text-blue-700 text-xs font-semibold shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-orange-50 border border-blue-200/60 text-blue-700 text-xs font-semibold shadow-xs">
             <span className="relative flex h-2 w-2">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-blue-600"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-green-600"></span>
             </span>
-            ঢাকা শহরের ভেরিফায়েড বাসা ও টু-লেট পোর্টাল
+            ভেরিফায়েড টু-লেট পোর্টাল
           </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-slate-900 tracking-tight leading-tight">
@@ -493,64 +472,36 @@ function ListingsContent() {
           </div>
         </div>
 
-        {/* POPULAR AREA CHIPS & CATEGORY TABS */}
-        <section className="space-y-3 pt-2">
-          {/* Quick Area Chips */}
-          <div className="flex items-center gap-2 overflow-x-auto pb-1.5 scrollbar-none no-scrollbar justify-start md:justify-center">
-            <span className="text-xs font-semibold text-slate-500 shrink-0 mr-1 flex items-center gap-1">
-              <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 10V3L4 14h7v7l9-11h-7z" /></svg>
-              জনপ্রিয় এলাকা:
-            </span>
-            {POPULAR_AREAS.map((area) => {
-              const isSelected = selectedLocation === area.value;
-              return (
-                <button
-                  key={area.value}
-                  type="button"
-                  onClick={() => handleAreaSelect(area.value)}
-                  className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all border shrink-0 cursor-pointer ${
-                    isSelected
-                      ? "bg-blue-600 text-white border-blue-600 shadow-xs"
-                      : "bg-white text-slate-600 border-slate-200 hover:border-blue-300 hover:text-blue-600"
-                  }`}
-                >
-                  {area.label}
-                </button>
-              );
-            })}
-          </div>
-
-          {/* Quick Category Filter Pills */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none justify-start md:justify-center">
-            <button
-              type="button"
-              onClick={() => handleCategorySelect("")}
-              className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
-                !selectedType
-                  ? "bg-slate-900 text-white shadow-xs"
-                  : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
-              }`}
-            >
-              সকল টু-লেট
-            </button>
-            {propertyTypes.map((type) => {
-              const isSelected = selectedType === type.value;
-              return (
-                <button
-                  key={type.value}
-                  type="button"
-                  onClick={() => handleCategorySelect(type.value)}
-                  className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
-                    isSelected
-                      ? "bg-slate-900 text-white shadow-xs"
-                      : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
-                  }`}
-                >
-                  {type.label}
-                </button>
-              );
-            })}
-          </div>
+        {/* QUICK CATEGORY FILTER PILLS */}
+        <section className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none justify-start md:justify-center pt-2">
+          <button
+            type="button"
+            onClick={() => handleCategorySelect("")}
+            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+              !selectedType
+                ? "bg-slate-900 text-white shadow-xs"
+                : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+            }`}
+          >
+            সকল টু-লেট
+          </button>
+          {propertyTypes.map((type) => {
+            const isSelected = selectedType === type.value;
+            return (
+              <button
+                key={type.value}
+                type="button"
+                onClick={() => handleCategorySelect(type.value)}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                  isSelected
+                    ? "bg-slate-900 text-white shadow-xs"
+                    : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-100"
+                }`}
+              >
+                {type.label}
+              </button>
+            );
+          })}
         </section>
 
         {/* RESULTS HEADER & SORTING / VIEW CONTROLS */}
@@ -757,7 +708,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
               {/* Price */}
               <div className="text-right">
-                <span className="text-xl font-extrabold text-blue-600">
+                <span className="text-xl font-extrabold text-red-600">
                   ৳{listing.rentPrice.toLocaleString("en-IN")}
                 </span>
                 <span className="text-xs text-slate-400 font-medium"> /মাস</span>
@@ -848,8 +799,8 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
         {/* Rent badge overlay on thumbnail */}
         <div className="absolute bottom-3 left-3">
-          <div className="bg-slate-950/80 backdrop-blur-md px-3 py-1 rounded-xl text-white border border-white/10 shadow-md">
-            <span className="text-base font-extrabold text-white">
+          <div className="bg-slate-950/85 backdrop-blur-md px-3 py-1 rounded-xl text-white border border-white/10 shadow-md">
+            <span className="text-base font-extrabold text-red-500">
               ৳{listing.rentPrice.toLocaleString("en-IN")}
             </span>
             <span className="text-[10px] text-slate-300 font-medium"> /মাস</span>

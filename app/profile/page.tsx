@@ -729,7 +729,7 @@ function ProfileListings({
                         <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-700 text-[10px] font-bold">
                           {propType}
                         </span>
-                        <span className="text-xs font-bold text-slate-900 truncate">
+                        <span className="text-xs font-bold text-red-600 truncate">
                           ৳{listing.rentPrice.toLocaleString("en-IN")} /মাস
                         </span>
                       </div>
@@ -796,7 +796,7 @@ function ProfileListings({
                       <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 text-[10px] font-bold">
                         {propType}
                       </span>
-                      <span className="text-xs font-bold text-slate-900 truncate">
+                      <span className="text-xs font-bold text-red-600 truncate">
                         ৳{listing.rentPrice.toLocaleString("en-IN")} /মাস
                       </span>
                     </div>
