@@ -31,17 +31,17 @@ export default function StartChatButton({
       type="button"
       onClick={handleClick}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-[10px] font-bold border-2 border-green-200 bg-white text-green-700 hover:border-green-500 hover:bg-green-50 transition-all active:scale-[0.98] disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold border-2 border-emerald-600/30 bg-emerald-50/50 text-emerald-700 hover:border-emerald-600 hover:bg-emerald-100/70 transition-all active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-2xs"
     >
       {isLoading ? (
         <>
-          <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin" />
-          মেসেজ পাঠানো হচ্ছে...
+          <div className="w-4 h-4 border-2 border-emerald-600 border-t-transparent rounded-full animate-spin" />
+          <span>লোড হচ্ছে...</span>
         </>
       ) : (
         <>
           <svg
-            className="w-5 h-5"
+            className="w-4 h-4 text-emerald-600"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -53,7 +53,7 @@ export default function StartChatButton({
               d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
             />
           </svg>
-          মেসেজ দিন
+          <span>মেসেজ দিন</span>
         </>
       )}
     </button>

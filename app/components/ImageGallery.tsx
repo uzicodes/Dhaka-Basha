@@ -63,11 +63,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
 
   if (!images || images.length === 0) {
     return (
-      <div className="w-full aspect-video bg-slate-50 border-2 border-dashed border-slate-200 rounded-[15px] flex flex-col items-center justify-center mb-6 text-slate-400">
-        <svg className="w-12 h-12 mb-3 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="w-full aspect-video bg-gradient-to-br from-slate-50 to-blue-50/20 border border-slate-200 rounded-2xl flex flex-col items-center justify-center mb-6 text-slate-400">
+        <svg className="w-12 h-12 mb-2 text-slate-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
         </svg>
-        <span className="font-medium text-sm md:text-base">কোনো ছবি আপলোড করা হয়নি</span>
+        <span className="font-semibold text-sm text-slate-400">কোনো ছবি আপলোড করা হয়নি</span>
       </div>
     );
   }
@@ -75,18 +75,19 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
   return (
     <>
       {/* Main Image Viewer */}
-      <div className="mb-6">
+      <div className="mb-6 space-y-3">
         {/* Hero image */}
-        <div className="relative w-full aspect-video rounded-[15px] overflow-hidden bg-slate-100 group">
+        <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 group shadow-xs">
           <Image
             src={images[activeIndex]}
             alt={`ছবি ${activeIndex + 1}`}
             fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-            className="object-cover cursor-pointer transition-transform duration-300 group-hover:scale-[1.02]"
+            priority
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+            className="object-cover cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]"
             onClick={() => setFullscreenIndex(activeIndex)}
             onKeyDown={(e) => {
-              if (e.key === 'Enter' || e.key === ' ') {
+              if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 setFullscreenIndex(activeIndex);
               }
@@ -99,17 +100,17 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <button
             type="button"
             onClick={() => setFullscreenIndex(activeIndex)}
-            className="absolute top-3 right-3 bg-black/50 hover:bg-black/70 text-white p-2 rounded-lg transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+            className="absolute top-3 right-3 bg-slate-900/60 hover:bg-slate-900/80 text-white p-2.5 rounded-xl transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer shadow-xs"
             title="ফুলস্ক্রিনে দেখুন"
             aria-label="Open fullscreen"
           >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4" />
             </svg>
           </button>
 
           {/* Image counter badge */}
-          <span className="absolute bottom-3 right-3 bg-black/50 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm">
+          <span className="absolute bottom-3 right-3 bg-slate-950/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10 shadow-xs">
             {activeIndex + 1} / {images.length}
           </span>
 
@@ -119,20 +120,20 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               <button
                 type="button"
                 onClick={goPrev}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer"
                 aria-label="Previous image"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
               <button
                 type="button"
                 onClick={goNext}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/70 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-sm"
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer"
                 aria-label="Next image"
               >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </button>
@@ -142,15 +143,15 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
 
         {/* Thumbnail strip (only if more than 1 image) */}
         {images.length > 1 && (
-          <div className="flex gap-2 mt-3 overflow-x-auto pb-1">
+          <div className="flex gap-2.5 overflow-x-auto pb-1.5 no-scrollbar">
             {images.map((src, idx) => (
               <button
                 type="button"
                 key={src}
                 onClick={() => setActiveIndex(idx)}
-                className={`relative flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-200 ${
+                className={`relative shrink-0 w-20 h-16 rounded-xl overflow-hidden border-2 transition-all duration-200 cursor-pointer ${
                   idx === activeIndex
-                    ? "border-[#2d79f3] shadow-md ring-2 ring-[#2d79f3]/30"
+                    ? "border-blue-600 shadow-sm ring-2 ring-blue-600/20 scale-[1.02]"
                     : "border-transparent opacity-60 hover:opacity-100 hover:border-slate-300"
                 }`}
               >
@@ -170,10 +171,10 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
       {/* Fullscreen Lightbox */}
       {fullscreenIndex !== null && (
         <div
-          className="fixed inset-0 z-[9999] bg-black/95 flex items-center justify-center"
+          className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-200"
           onClick={() => setFullscreenIndex(null)}
           onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
+            if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
               setFullscreenIndex(null);
             }
@@ -185,29 +186,29 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           <button
             type="button"
             onClick={() => setFullscreenIndex(null)}
-            className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-sm"
+            className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
             aria-label="Close fullscreen"
           >
-            <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
 
           {/* Counter */}
-          <span className="absolute top-5 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium backdrop-blur-sm bg-white/10 px-4 py-1.5 rounded-full">
+          <span className="absolute top-5 left-1/2 -translate-x-1/2 text-white/80 text-xs font-semibold backdrop-blur-md bg-white/10 px-4 py-1.5 rounded-full border border-white/10">
             {fullscreenIndex + 1} / {images.length}
           </span>
 
           {/* Image */}
           <div
-            className="relative w-[90vw] h-[85vh] flex items-center justify-center"
+            className="relative w-[90vw] h-[82vh] flex items-center justify-center"
             onClick={(e) => e.stopPropagation()}
           >
             <Image
               src={images[fullscreenIndex]}
               alt={`ছবি ${fullscreenIndex + 1}`}
               fill
-              className="object-contain shadow-2xl select-none rounded-lg"
+              className="object-contain select-none rounded-xl"
               draggable={false}
             />
           </div>
@@ -221,10 +222,10 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                   e.stopPropagation();
                   goFullscreenPrev();
                 }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/25 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all backdrop-blur-sm"
+                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
                 aria-label="Previous fullscreen image"
               >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
                 </svg>
               </button>
@@ -234,10 +235,10 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
                   e.stopPropagation();
                   goFullscreenNext();
                 }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/25 text-white w-12 h-12 rounded-full flex items-center justify-center transition-all backdrop-blur-sm"
+                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
                 aria-label="Next fullscreen image"
               >
-                <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
                 </svg>
               </button>

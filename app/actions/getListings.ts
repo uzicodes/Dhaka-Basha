@@ -47,11 +47,12 @@ export const getRecentListings = unstable_cache(
         orderBy: {
           createdAt: "desc",
         },
-        take: 20, // Limit to recent 20 for performance
+        take: 40, // Limit to recent 40 for performance
         include: {
           user: {
             select: {
               name: true,
+              profileImage: true,
             },
           },
         },
@@ -252,6 +253,7 @@ export const searchListings = unstable_cache(
           user: {
             select: {
               name: true,
+              profileImage: true,
             },
           },
         },

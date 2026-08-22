@@ -6,6 +6,7 @@ import { auth, clerkClient } from "@clerk/nextjs/server";
 import { checkIfSaved, toggleSaveListing } from "@/app/actions/saveListing";
 import ImageGallery from "@/app/components/ImageGallery";
 import StartChatButton from "@/app/components/StartChatButton";
+import ShareListingButton from "@/app/components/ShareListingButton";
 import { unstable_cache } from "next/cache";
 
 // CACHED: Fetch Property Details (Refresh every 5 minutes)
@@ -19,8 +20,27 @@ const getCachedListing = unstable_cache(
     });
   },
   ["single-listing-details"],
-  { revalidate: 300 } //in memory for 5 minutes
+  { revalidate: 300 }
 );
+
+// Fetch similar listings in same area
+async function getSimilarListings(currentId: string, location: string) {
+  try {
+    return await prisma.listing.findMany({
+      where: {
+        location: location,
+        id: { not: currentId },
+      },
+      take: 3,
+      orderBy: { createdAt: "desc" },
+      include: {
+        user: { select: { name: true, profileImage: true } },
+      },
+    });
+  } catch (err) {
+    return [];
+  }
+}
 
 export default async function ListingDetails({
   params,
@@ -35,7 +55,6 @@ export default async function ListingDetails({
     auth(),
   ]);
 
-  // Use cached function 
   const listing = await getCachedListing(id);
   const currentUser = clerkUserId
     ? await prisma.user.findUnique({
@@ -43,9 +62,10 @@ export default async function ListingDetails({
       select: { id: true },
     })
     : null;
+
   const isFromProfile = resolvedSearchParams?.from === "profile";
   const backHref = isFromProfile ? "/profile" : "/listings";
-  const backLabel = isFromProfile ? "← প্রোফাইল পেজে ফিরে যান" : "← সব টু-লেট এ ফিরে যান";
+  const backLabel = isFromProfile ? "প্রোফাইল পেজে ফিরে যান" : "সকল টু-লেট দেখুন";
 
   // Fetch author's Clerk data for the image fallback
   let authorClerkImage = null;
@@ -57,214 +77,353 @@ export default async function ListingDetails({
         authorClerkImage = authorClerkUser?.imageUrl || null;
       }
     } catch (error: any) {
-      console.warn("Author Clerk data not available (clerkId:", listing?.user?.clerkId, "):", error?.message || "Clerk API Error");
+      console.warn("Author Clerk data not available:", error?.message);
     }
   }
 
   if (!listing) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-[#daf2e0]">
-        <div className="bg-white p-8 rounded-[20px] shadow-sm border border-red-200 text-center">
-          <h2 className="text-2xl font-bold text-slate-800 mb-2">পোস্টটি পাওয়া যায়নি</h2>
-          <p className="text-slate-500 mb-6">এই টু-লেট পোস্টটি মুছে ফেলা হয়েছে অথবা আর নেই। (Post not found)</p>
-          <Link href="/listings" className="bg-[#2d79f3] text-white px-6 py-2.5 rounded-[10px] font-medium hover:bg-blue-700 transition-colors">
+      <main className="min-h-screen bg-slate-50/50 flex items-center justify-center px-4 pt-28 pb-16">
+        <div className="bg-white p-8 md:p-10 rounded-3xl shadow-sm border border-slate-200 text-center max-w-md w-full space-y-4">
+          <div className="w-16 h-16 bg-red-50 text-red-500 rounded-full flex items-center justify-center mx-auto">
+            <svg className="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-bold text-slate-900">টু-লেট পোস্টটি পাওয়া যায়নি</h2>
+          <p className="text-slate-500 text-sm">এই পোস্টটি মুছে ফেলা হয়েছে অথবা লিংকটি সঠিক নয়।</p>
+          <Link
+            href="/listings"
+            className="inline-block px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-semibold text-sm rounded-xl transition-all shadow-sm"
+          >
             সব টু-লেট দেখুন
           </Link>
         </div>
-      </div>
+      </main>
     );
   }
 
   const listingId = listing.id;
-  const canSaveListing = Boolean(currentUser && currentUser.id !== listing.userId);
-  const isSaved = canSaveListing ? await checkIfSaved(id) : false;
+  const isOwner = Boolean(currentUser && currentUser.id === listing.userId);
+  const isSaved = currentUser && !isOwner ? await checkIfSaved(id) : false;
 
   async function handleToggleSaveAction() {
     "use server";
     await toggleSaveListing(listingId, `/listings/${listingId}`);
   }
 
-  const propTypeLabel = propertyTypes.find(pt => pt.value === listing.propertyType)?.label || listing.propertyType;
-  const locLabel = locations.find(l => l.value === listing.location)?.label || listing.location;
+  const propTypeLabel = propertyTypes.find((pt) => pt.value === listing.propertyType)?.label || listing.propertyType;
+  const locObj = locations.find((l) => l.value === listing.location);
+  const locLabel = locObj?.label || listing.location;
   let subLocLabel = "";
   if (listing.subLocation) {
-    const loc = locations.find(l => l.value === listing.location);
-    if (loc && loc.subLocations) {
-      subLocLabel = loc.subLocations.find(sl => sl.value === listing.subLocation)?.label || listing.subLocation;
+    if (locObj && locObj.subLocations) {
+      subLocLabel = locObj.subLocations.find((sl) => sl.value === listing.subLocation)?.label || listing.subLocation;
     } else {
       subLocLabel = listing.subLocation;
     }
   }
 
+  const similarListings = await getSimilarListings(listing.id, listing.location);
+
   return (
-    <main className="grow flex flex-col items-center px-4 bg-[#daf2e0] pt-28 pb-16 min-h-screen">
-      <div className="w-full max-w-6xl space-y-6">
+    <main className="min-h-screen bg-slate-50/50 flex flex-col items-center">
+      {/* Background Decorative Accent */}
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-blue-50/80 via-emerald-50/20 to-transparent pointer-events-none -z-10" />
 
-        {/* Top Navigation */}
-        <div>
-          <Link href={backHref} className="inline-flex items-center text-slate-600 hover:text-[#2d79f3] font-medium transition-colors bg-white/50 px-4 py-2 rounded-full border border-white hover:border-[#2d79f3]/30 shadow-sm backdrop-blur-sm">
-            {backLabel}
-          </Link>
-        </div>
-
-        {/* Main Grid Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-
-          {/* LEFT COLUMN: Property Images & Main Info */}
-          <div className="lg:col-span-2 space-y-6">
-
-            {/* Hero Card (Images & Title) */}
-            <div className="bg-white p-4 md:p-6 rounded-[20px] shadow-sm border border-[#ecedec]">
-              {/* Image Gallery */}
-              <ImageGallery images={listing.images ?? []} />
-
-              {/* Title & Badges */}
-              <div>
-                <div className="flex flex-wrap gap-2 mb-3">
-                  <span className="bg-green-100 text-green-700 text-xs md:text-sm font-bold px-3 py-1.5 rounded-md border border-green-200">
-                    {propTypeLabel}
-                  </span>
-                  <span className="bg-blue-50 text-[#2d79f3] text-xs md:text-sm font-bold px-3 py-1.5 rounded-md border border-purple-100">
-                    ভাড়া শুরু: {listing.rentFrom}
-                  </span>
-                </div>
-                <h1 className="text-2xl md:text-4xl font-extrabold text-[#151717] leading-tight">
-                  {listing.title}
-                </h1>
-                <div className="text-slate-500 mt-3 flex flex-wrap items-center gap-y-2 gap-x-4">
-                  <p className="flex items-center gap-1.5 text-sm">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
-                    পোস্ট করা হয়েছে: {new Date(listing.createdAt).toLocaleDateString('en-GB')}
-                  </p>
-                  <div className="flex items-center gap-2 text-sm bg-slate-50 px-2.5 py-1 rounded-full border border-slate-100">
-                    <span className="text-slate-400">লেখক:</span>
-                    <div className="w-6 h-6 rounded-full overflow-hidden border border-slate-200 shrink-0">
-                      {listing.user.profileImage ? (
-                        <Image src={listing.user.profileImage} alt={listing.user.name || ""} width={24} height={24} className="object-cover" />
-                      ) : authorClerkImage ? (
-                        <Image src={authorClerkImage} alt={listing.user.name || ""} width={24} height={24} className="object-cover" />
-                      ) : (
-                        <div className="w-full h-full bg-slate-200 flex items-center justify-center text-[10px] text-slate-400">
-                          <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" /></svg>
-                        </div>
-                      )}
-                    </div>
-                    <span className="font-bold text-slate-700">{listing.user.name || "নাম পাওয়া যায়নি"}</span>
-                  </div>
-                </div>
-              </div>
-            </div>
-
+      <div className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-20 space-y-6">
+        
+        {/* TOP NAVIGATION & ACTIONS BAR */}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          {/* Breadcrumb & Back */}
+          <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
+            <Link
+              href={backHref}
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-full bg-white text-slate-700 hover:text-blue-600 border border-slate-200 shadow-2xs transition-colors"
+            >
+              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+              </svg>
+              <span>{backLabel}</span>
+            </Link>
+            <span className="hidden sm:inline text-slate-300">/</span>
+            <span className="hidden sm:inline text-slate-600 font-semibold truncate max-w-xs">{locLabel}</span>
           </div>
 
-          {/* RIGHT COLUMN: Sticky Sidebar */}
-          <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-28">
+          {/* Quick Actions (Share & Save) */}
+          <div className="flex items-center gap-2">
+            <ShareListingButton title={listing.title} />
 
-            {/* CARD 1: Pricing & Action Buttons */}
-            <div className="bg-white p-6 rounded-[20px] shadow-lg border-2 border-[#2d79f3]">
+            {!isOwner && (
+              currentUser ? (
+                <form action={handleToggleSaveAction}>
+                  <button
+                    type="submit"
+                    className={`inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold border transition-all cursor-pointer shadow-2xs ${
+                      isSaved
+                        ? "bg-rose-50 border-rose-200 text-rose-600 hover:bg-rose-100"
+                        : "bg-white border-slate-200 text-slate-700 hover:text-rose-600 hover:border-rose-200"
+                    }`}
+                    title={isSaved ? "সংরক্ষণ বাতিল করুন" : "পোস্ট সংরক্ষণ করুন"}
+                  >
+                    <svg className="w-4 h-4" fill={isSaved ? "currentColor" : "none"} stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span>{isSaved ? "সংরক্ষিত" : "সংরক্ষণ"}</span>
+                  </button>
+                </form>
+              ) : (
+                <Link
+                  href={`/login?redirectUrl=${encodeURIComponent(`/listings/${listing.id}`)}`}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full text-xs font-semibold border bg-white border-slate-200 text-slate-700 hover:text-rose-600 hover:border-rose-200 shadow-2xs transition-all"
+                  title="সংরক্ষণ করতে লগইন করুন"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                  </svg>
+                  <span>সংরক্ষণ</span>
+                </Link>
+              )
+            )}
+          </div>
+        </div>
 
-              {/* Pricing Section */}
-              <div className="text-center md:text-left mb-6">
-                <p className="text-sm text-purple-700 font-medium mb-1 uppercase tracking-wider">মাসিক ভাড়া</p>
-                <p className="text-3xl md:text-4xl font-extrabold text-red-700">
-                  ৳ {listing.rentPrice.toLocaleString('en-IN')}
-                </p>
-              </div>
+        {/* MAIN GRID LAYOUT */}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+          
+          {/* LEFT 2 COLUMNS: Property Gallery & Deep Details */}
+          <div className="lg:col-span-2 space-y-6">
+            
+            {/* HERO CARD (Images, Title, Highlights) */}
+            <div className="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs space-y-6">
+              
+              {/* Image Gallery with Lightbox */}
+              <ImageGallery images={listing.images ?? []} />
 
-              {/* Action Buttons */}
-              <div className="space-y-4">
-                {/* Contact Box  */}
-                {currentUser?.id !== listing.userId && (
-                  <div className="bg-[#2d79f3]/5 p-3 rounded-xl border border-[#2d79f3]/20">
-                    <p className="text-xs text-slate-500 font-semibold mb-2 text-center">যোগাযোগের নম্বর</p>
-                    <div className="flex items-center justify-center gap-2">
-                      <svg className="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                      <span className="text-2xl font-bold text-[#151717] tracking-wider">{listing.contactInfo}</span>
-                    </div>
-                  </div>
-                )}
-
-                {/* Primary Actions (Call & Message) */}
-                <div className="flex gap-3">
-                  {currentUser?.id !== listing.userId && (
-                    <a href={`tel:${listing.contactInfo}`} className="flex-1 bg-[#2d79f3] text-white flex items-center justify-center gap-2 font-bold py-3.5 rounded-[10px] shadow-sm hover:bg-blue-700 hover:shadow-md transition-all active:scale-[0.98]">
-                      <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-                      কল করুন
-                    </a>
-                  )}
-                  {canSaveListing && (
-                    <div className={currentUser?.id !== listing.userId ? "flex-1" : "w-full"}>
-                      <StartChatButton landlordId={listing.userId} />
-                    </div>
-                  )}
+              {/* Badges & Title */}
+              <div className="space-y-3">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="px-3 py-1 rounded-full bg-blue-50 text-blue-700 border border-blue-200/60 text-xs font-bold">
+                    {propTypeLabel}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200/60 text-xs font-bold flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                    ভাড়া শুরু: {listing.rentFrom}
+                  </span>
+                  <span className="px-3 py-1 rounded-full bg-slate-100 text-slate-600 text-xs font-medium flex items-center gap-1">
+                    <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    {new Date(listing.createdAt).toLocaleDateString("en-GB")}
+                  </span>
                 </div>
 
-                {/* Save Button */}
-                {canSaveListing && (
-                  <form action={handleToggleSaveAction}>
-                    <button
-                      type="submit"
-                      className={`w-full flex items-center justify-center gap-2 py-3 font-bold border-2 transition-all active:scale-[0.98] ${isSaved
-                        ? "border-[#2d79f3] bg-[#2d79f3] text-white hover:bg-blue-800 shadow-md"
-                        : "border-slate-200 bg-white text-slate-600 hover:border-[#2d79f3] hover:text-[#2d79f3]"
-                        }`}
-                    >
-                      <svg className={`w-5 h-5 ${isSaved ? 'text-white' : 'text-slate-400'}`} fill={isSaved ? "currentColor" : "none"} viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={isSaved ? 1.5 : 2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-                      </svg>
-                      {isSaved ? "সংরক্ষণ বাতিল করুন" : "পোস্ট সংরক্ষণ করুন"}
-                    </button>
-                  </form>
-                )}
+                <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 leading-tight">
+                  {listing.title}
+                </h1>
               </div>
+
+              {/* KEY HIGHLIGHTS 4-GRID */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-2">
+                <div className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 space-y-1">
+                  <span className="block text-[11px] font-semibold text-slate-400 uppercase">প্রপার্টি ধরন</span>
+                  <span className="block text-xs sm:text-sm font-bold text-slate-800 truncate">{propTypeLabel}</span>
+                </div>
+                <div className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 space-y-1">
+                  <span className="block text-[11px] font-semibold text-slate-400 uppercase">এলাকা</span>
+                  <span className="block text-xs sm:text-sm font-bold text-slate-800 truncate">{locLabel}</span>
+                </div>
+                <div className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 space-y-1">
+                  <span className="block text-[11px] font-semibold text-slate-400 uppercase">ভাড়া শুরু</span>
+                  <span className="block text-xs sm:text-sm font-bold text-slate-800 truncate">{listing.rentFrom}</span>
+                </div>
+                <div className="bg-slate-50/80 p-3.5 rounded-2xl border border-slate-100 space-y-1">
+                  <span className="block text-[11px] font-semibold text-slate-400 uppercase">মাসিক ভাড়া</span>
+                  <span className="block text-xs sm:text-sm font-extrabold text-blue-600">৳{listing.rentPrice.toLocaleString("en-IN")}</span>
+                </div>
+              </div>
+
             </div>
 
-            {/* CARD 2: Location Section */}
-            <div className="bg-white p-6 rounded-[20px] shadow-sm border border-[#ecedec]">
-              <h3 className="text-lg font-bold text-[#151717] mb-4 flex items-center gap-2 border-b border-slate-100 pb-3">
-                <svg className="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
+            {/* ADDRESS & LOCATION DETAILS CARD */}
+            <div className="bg-white p-5 sm:p-7 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+              <h3 className="text-base sm:text-lg font-bold text-slate-900 flex items-center gap-2">
+                <div className="w-7 h-7 rounded-full bg-red-50 text-red-500 flex items-center justify-center">
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                  </svg>
+                </div>
                 ঠিকানা ও অবস্থান
               </h3>
 
-              <div className="space-y-4">
-                <div>
-                  <p className="text-xs text-purple-700 font-medium mb-1">এলাকা</p>
-                  <p className="text-[#151717] font-semibold text-base">
-                    {locLabel} {subLocLabel && <span className="text-slate-500 font-normal">({subLocLabel})</span>}
+              <div className="space-y-3">
+                <div className="bg-slate-50/80 p-4 rounded-2xl border border-slate-100 space-y-1">
+                  <span className="text-[11px] font-semibold text-slate-400 uppercase block">সম্পূর্ণ ঠিকানা</span>
+                  <p className="text-sm font-medium text-slate-800 leading-relaxed whitespace-pre-line">
+                    {listing.address}
                   </p>
                 </div>
 
-                <div className="bg-slate-50 p-3.5 rounded-[10px] border border-slate-100">
-                  <p className="text-xs text-purple-700 font-medium mb-1">সম্পূর্ণ ঠিকানা</p>
-                  <p className="text-[#151717] font-medium text-sm leading-relaxed">{listing.address}</p>
-                </div>
-
-                {listing.mapLink && (
-                  <div className="mt-2 flex items-center justify-between gap-2 bg-blue-50 px-3 py-1.5 rounded-[10px] border border-blue-100">
-                    <div className="flex items-center gap-2 overflow-hidden">
-                      <svg className="w-4 h-4 text-[#2d79f3] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-                      <span className="text-sm font-medium text-slate-700 truncate">
-                        {listing.mapLink.length > 10 ? `${listing.mapLink.slice(0, 10)}...` : listing.mapLink}
-                      </span>
-                    </div>
-                    <div dangerouslySetInnerHTML={{
-                      __html: `
-                      <button
-                        class="p-2 hover:bg-blue-100 rounded-md transition-colors text-[#2d79f3]"
-                        title="কপি করুন"
-                        onclick="navigator.clipboard.writeText('${listing.mapLink}'); this.innerHTML = '<svg class=\\'w-4 h-4\\' fill=\\'none\\' stroke=\\'currentColor\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'2\\' d=\\'M5 13l4 4L19 7\\'></path></svg>'; setTimeout(() => { this.innerHTML = '<svg class=\\'w-4 h-4\\' fill=\\'none\\' stroke=\\'currentColor\\' viewBox=\\'0 0 24 24\\'><path stroke-linecap=\\'round\\' stroke-linejoin=\\'round\\' stroke-width=\\'2\\' d=\\'M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3\\'></path></svg>'; }, 2000);"
-                      >
-                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"></path></svg>
-                      </button>
-                    ` }} />
+                <div className="flex flex-wrap items-center justify-between gap-3 pt-1">
+                  <div className="flex items-center gap-2 text-xs font-semibold text-slate-600">
+                    <span className="text-slate-400">লোকেশন:</span>
+                    <span>{locLabel} {subLocLabel && `— ${subLocLabel}`}</span>
                   </div>
-                )}
+
+                  {listing.mapLink && (
+                    <a
+                      href={listing.mapLink.startsWith("http") ? listing.mapLink : `https://${listing.mapLink}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-blue-50 hover:bg-blue-100 text-blue-700 text-xs font-bold border border-blue-200 transition-colors"
+                    >
+                      <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                      </svg>
+                      গুগল ম্যাপে দেখুন ↗
+                    </a>
+                  )}
+                </div>
               </div>
+            </div>
+
+            {/* SAFETY & TENANT TIPS CARD */}
+            <div className="bg-gradient-to-r from-amber-50/80 via-orange-50/50 to-amber-50/80 p-5 rounded-3xl border border-amber-200/70 space-y-2">
+              <div className="flex items-center gap-2 text-amber-900 font-bold text-xs sm:text-sm">
+                <svg className="w-4 h-4 text-amber-600 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                ভাড়াটিয়াদের জন্য নিরাপত্তা টিপস
+              </div>
+              <p className="text-xs text-amber-800/90 leading-relaxed font-normal">
+                বাসা সরাসরি পরিদর্শন না করে এবং মালিকের পরিচয় নিশ্চিত না করে কখনোই কোনো অগ্রিম টাকা বা বুকিং মানি পাঠাবেন না।
+              </p>
             </div>
 
           </div>
 
+          {/* RIGHT COLUMN: STICKY SIDEBAR */}
+          <div className="lg:col-span-1 space-y-6 lg:sticky lg:top-28">
+            
+            {/* PRICING & CONTACT ACTION CARD */}
+            <div className="bg-white rounded-3xl border border-slate-200/90 shadow-md shadow-slate-200/50 overflow-hidden">
+              <div className="h-1.5 w-full bg-gradient-to-r from-blue-600 via-indigo-500 to-emerald-500" />
+              
+              <div className="p-6 space-y-6">
+                
+                {/* Price Display */}
+                <div>
+                  <span className="block text-xs font-bold text-slate-400 uppercase tracking-wider mb-1">মাসিক ভাড়া</span>
+                  <div className="flex items-baseline gap-1">
+                    <span className="text-3xl sm:text-4xl font-extrabold text-slate-900 tracking-tight">
+                      ৳{listing.rentPrice.toLocaleString("en-IN")}
+                    </span>
+                    <span className="text-sm font-semibold text-slate-400"> / মাস</span>
+                  </div>
+                </div>
+
+                {/* Contact Box */}
+                {listing.contactInfo && (
+                  <div className="bg-slate-50 p-4 rounded-2xl border border-slate-100 text-center space-y-1">
+                    <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider block">যোগাযোগের নম্বর</span>
+                    <div className="flex items-center justify-center gap-2">
+                      <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                      </svg>
+                      <span className="text-xl font-bold text-slate-900 tracking-wide">{listing.contactInfo}</span>
+                    </div>
+                  </div>
+                )}
+
+                {/* Action CTA Buttons */}
+                {!isOwner && (
+                  <div className="space-y-3">
+                    {listing.contactInfo && (
+                      <a
+                        href={`tel:${listing.contactInfo}`}
+                        className="w-full h-12 bg-blue-600 hover:bg-blue-700 active:scale-[0.98] text-white font-bold text-sm rounded-xl shadow-md shadow-blue-600/20 transition-all flex items-center justify-center gap-2 cursor-pointer"
+                      >
+                        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                        </svg>
+                        সরাসরি কল করুন
+                      </a>
+                    )}
+
+                    <StartChatButton landlordId={listing.userId} />
+                  </div>
+                )}
+
+              </div>
+            </div>
+
+            {/* LANDLORD PROFILE CARD */}
+            <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
+              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">বিজ্ঞাপনদাতা</span>
+              
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-2xl bg-slate-100 overflow-hidden border border-slate-200 shrink-0 flex items-center justify-center text-slate-600 font-bold text-base">
+                  {listing.user.profileImage ? (
+                    <Image src={listing.user.profileImage} alt={listing.user.name || ""} width={48} height={48} className="object-cover" />
+                  ) : authorClerkImage ? (
+                    <Image src={authorClerkImage} alt={listing.user.name || ""} width={48} height={48} className="object-cover" />
+                  ) : (
+                    listing.user.name?.[0] || "U"
+                  )}
+                </div>
+
+                <div className="min-w-0">
+                  <h4 className="text-sm font-bold text-slate-900 truncate">
+                    {listing.user.name || "নাম পাওয়া যায়নি"}
+                  </h4>
+                  <div className="flex items-center gap-1 text-[11px] text-emerald-600 font-semibold mt-0.5">
+                    <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    ভেরিফায়েড বিজ্ঞাপনদাতা
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* SIMILAR LISTINGS IN SAME AREA (If any) */}
+            {similarListings.length > 0 && (
+              <div className="bg-white p-5 rounded-3xl border border-slate-200/80 shadow-xs space-y-3">
+                <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">
+                  {locLabel} এলাকার অন্যান্য টু-লেট
+                </span>
+                
+                <div className="space-y-3">
+                  {similarListings.map((sim) => (
+                    <Link
+                      key={sim.id}
+                      href={`/listings/${sim.id}`}
+                      className="group flex items-center justify-between p-2.5 rounded-xl hover:bg-slate-50 border border-transparent hover:border-slate-100 transition-colors"
+                    >
+                      <div className="min-w-0 pr-2">
+                        <p className="text-xs font-bold text-slate-800 group-hover:text-blue-600 transition-colors truncate">
+                          {sim.title}
+                        </p>
+                        <span className="text-[11px] text-slate-400">
+                          {sim.rentFrom}
+                        </span>
+                      </div>
+                      <span className="text-xs font-extrabold text-blue-600 shrink-0">
+                        ৳{sim.rentPrice.toLocaleString("en-IN")}
+                      </span>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
+
+          </div>
+
         </div>
+
       </div>
     </main>
   );
