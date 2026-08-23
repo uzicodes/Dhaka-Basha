@@ -1,5 +1,3 @@
-import Link from "next/link";
-
 export default function ContactPage() {
   return (
     <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center">
@@ -35,7 +33,7 @@ export default function ContactPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
               </svg>
             </div>
-            <h3 className="text-base font-bold text-[#063B00]">হেড অফিস</h3>
+            <h3 className="font-sans text-base font-bold text-[#063B00]">হেড অফিস</h3>
             <p className="text-xs text-slate-500">ঢাকা শহর, বাংলাদেশ</p>
             <span className="text-[11px] font-semibold text-[#063B00] bg-[#90B800]/20 px-2.5 py-1 rounded-full">
               সারা ঢাকা জুড়ে কার্যক্রম
@@ -49,7 +47,7 @@ export default function ContactPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
               </svg>
             </div>
-            <h3 className="text-base font-bold text-[#063B00]">ফোন সাপোর্ট</h3>
+            <h3 className="font-sans text-base font-bold text-[#063B00]">ফোন সাপোর্ট</h3>
             <p className="text-xs text-slate-500">সকাল ৯টা থেকে রাত ১০টা পর্যন্ত</p>
             <a
               href="tel:+8801700000000"
@@ -66,7 +64,7 @@ export default function ContactPage() {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
             </div>
-            <h3 className="text-base font-bold text-[#063B00]">ইমেইল সাপোর্ট</h3>
+            <h3 className="font-sans text-base font-bold text-[#063B00]">ইমেইল সাপোর্ট</h3>
             <p className="text-xs text-slate-500">যে কোনো প্রশ্ন বা অফিসিয়াল যোগাযোগ</p>
             <a
               href="mailto:support@dhakabasha.com"
@@ -78,11 +76,10 @@ export default function ContactPage() {
 
         </section>
 
-        {/* ABOUT & DEVELOPER SECTION */}
-        <section className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
+        {/* ABOUT PLATFORM SECTION */}
+        <section>
           
-          {/* LEFT 2 COLUMNS: About Platform */}
-          <div className="lg:col-span-2 space-y-6">
+          <div className="space-y-6">
             
             {/* Story Card */}
             <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs space-y-5">
@@ -127,76 +124,6 @@ export default function ContactPage() {
                   <h4 className="text-xs font-bold text-[#063B00]">মালিকের সাথে কীভাবে কথা বলব?</h4>
                   <p className="text-xs text-slate-500">প্রতিটি পোস্টের সাথে দেওয়া ফোন নম্বরে সরাসরি কল করতে পারেন অথবা ইন-অ্যাপ চ্যাট অপশন ব্যবহার করে মেসেজ পাঠাতে পারেন।</p>
                 </div>
-              </div>
-            </div>
-
-          </div>
-
-          {/* RIGHT COLUMN: DEVELOPER & TEAM CARD */}
-          <div className="lg:col-span-1 space-y-6">
-            
-            <div className="bg-gradient-to-br from-[#063B00] to-[#134d08] text-white p-6 sm:p-7 rounded-3xl shadow-xl space-y-6">
-              <div className="space-y-2">
-                <span className="text-[11px] font-bold text-[#E1E100] uppercase tracking-widest block">ডেভেলপমেন্ট ও ক্রিয়েটর</span>
-                <h3 className="text-xl font-extrabold text-white">ঢাকা-বাসা প্ল্যাটফর্ম</h3>
-                <p className="text-xs text-slate-200 leading-relaxed">
-                  আধুনিক ওয়েব প্রযুক্তি দিয়ে তৈরি যা ব্যবহারে দ্রুত ও অত্যন্ত নিরাপদ।
-                </p>
-              </div>
-
-              <div className="pt-4 border-t border-white/10 space-y-4">
-                <span className="text-xs font-semibold text-slate-300 block">কানেক্ট করুন:</span>
-                
-                <div className="flex items-center gap-3">
-                  {/* GitHub */}
-                  <a
-                    href="https://github.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-xl bg-white/10 hover:bg-[#90B800] hover:text-[#063B00] text-white flex items-center justify-center transition-colors border border-white/15"
-                    aria-label="GitHub"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M15 22v-4a4.8 4.8 0 0 0-1-3.06c3-.36 6-2.08 6-6.38 0-1.36-.5-2.6-1.3-3.5.14-.3.6-1.6-.1-3.4 0 0-1.05-.3-3.4 1.3a11.6 11.6 0 0 0-6 0C6.25 2.5 5.2 2.8 5.2 2.8c-.7 1.8-.2 3.1-.1 3.4-.8.9-1.3 2.1-1.3 3.5 0 4.3 3 6 6 6.38a4.8 4.8 0 0 0-1 3.06v4"/>
-                    </svg>
-                  </a>
-
-                  {/* LinkedIn */}
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-10 h-10 rounded-xl bg-white/10 hover:bg-[#90B800] hover:text-[#063B00] text-white flex items-center justify-center transition-colors border border-white/15"
-                    aria-label="LinkedIn"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/>
-                      <rect width="4" height="12" x="2" y="9"/>
-                      <circle cx="4" cy="4" r="2"/>
-                    </svg>
-                  </a>
-
-                  {/* Email */}
-                  <a
-                    href="mailto:contact@dhakabasha.com"
-                    className="w-10 h-10 rounded-xl bg-white/10 hover:bg-[#90B800] hover:text-[#063B00] text-white flex items-center justify-center transition-colors border border-white/15"
-                    aria-label="Email"
-                  >
-                    <svg className="w-5 h-5" fill="none" stroke="currentColor" strokeWidth="2" viewBox="0 0 24 24">
-                      <rect width="20" height="16" x="2" y="4" rx="2"/>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
-                    </svg>
-                  </a>
-                </div>
-              </div>
-
-              <div className="pt-4 border-t border-white/10">
-                <Link
-                  href="/listings"
-                  className="w-full py-3 bg-[#E1E100] hover:bg-[#b0d41c] text-[#063B00] text-xs font-bold rounded-xl flex items-center justify-center gap-1.5 transition-colors shadow-sm"
-                >
-                  সব টু-লেট পোস্ট দেখুন →
-                </Link>
               </div>
             </div>
 
