@@ -49,12 +49,12 @@ export default function Navbar() {
           </Link>
           
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
-            <span className="text-xl font-bold text-[#063B00] font-ekush mt-1 inline-block">
-              ঢাকা-<span className="text-[#266210]">বাসা</span>
+            <span className="text-xl font-bold text-[#2E2910] font-ekush mt-1 inline-block">
+              ঢাকা-<span className="text-[#2C5745]">বাসা</span>
             </span>
           </div>
 
-          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-[#266210] focus:outline-none z-10">
+          <button type="button" onClick={() => setIsMenuOpen(!isMenuOpen)} className="p-2 text-slate-700 hover:text-[#2C5745] focus:outline-none z-10">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isMenuOpen ? (
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -78,8 +78,8 @@ export default function Navbar() {
                 item.id === "home" ? "hidden md:flex" : ""
               } ${
                 active === item.id
-                  ? "bg-[#266210] text-white shadow-xs"
-                  : "text-slate-700 hover:text-[#063B00] hover:bg-[#90B800]/15"
+                  ? "bg-[#2C5745] text-white shadow-xs"
+                  : "text-slate-700 hover:text-[#2E2910] hover:bg-[#EBE3A7]/15"
               }`}
             >
               {item.icon ? (
@@ -110,11 +110,11 @@ export default function Navbar() {
                 onClick={() => {
                   setIsMenuOpen(false);
                 }}
-                className="px-5 py-2 rounded-full text-sm font-bold text-[#063B00] hover:bg-[#90B800]/20 transition-colors relative w-full md:w-auto text-center"
+                className="px-5 py-2 rounded-full text-sm font-bold text-[#2E2910] hover:bg-[#EBE3A7]/20 transition-colors relative w-full md:w-auto text-center"
               >
                 <span className={`inline-block ${
                   active === "login"
-                    ? "border-b-2 border-[#266210]"
+                    ? "border-b-2 border-[#2C5745]"
                     : ""
                 }`}>
                   লগইন
@@ -124,9 +124,9 @@ export default function Navbar() {
           )}
 
           {/* Profile Icon */}
-          <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-[#266210] transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
+          <Link href="/profile" onClick={() => setIsMenuOpen(false)} className="px-3 py-2 text-slate-700 hover:text-[#2C5745] transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0">
             <div className={`scale-120 origin-center rounded-full p-0.5 ${
-              active === "profile" ? "ring-2 ring-[#266210] bg-[#90B800]/20" : ""
+              active === "profile" ? "ring-2 ring-[#2C5745] bg-[#EBE3A7]/20" : ""
             }`}>
               {isSignedIn && isGoogleUser && user?.imageUrl ? (
                 <Image

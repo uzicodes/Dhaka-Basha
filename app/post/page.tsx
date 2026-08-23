@@ -373,9 +373,9 @@ function PostToLetForm() {
 
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12 relative">
-      <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#151717] mb-6 text-center">
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-24 pb-12 relative">
+      <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#EB7D00]">
+        <h1 className="text-2xl md:text-3xl font-bold text-[#2E2910] mb-6 text-center">
           {isEditMode ? "টু-লেট পোস্ট এডিট করুন" : "টু-লেট পোস্ট করুন"}
         </h1>
 
@@ -386,12 +386,12 @@ function PostToLetForm() {
 
             {/* Title */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="title" className="text-[#151717] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
+              <label htmlFor="title" className="text-[#2E2910] text-sm font-semibold">বিজ্ঞাপনের টাইটেল</label>
               <input
                 id="title"
                 {...register("title")}
                 type="text"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
               />
               {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
             </div>
@@ -399,12 +399,12 @@ function PostToLetForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Rent Price */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="rentPrice" className="text-[#151717] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
+                <label htmlFor="rentPrice" className="text-[#2E2910] text-sm font-semibold">ভাড়ার পরিমাণ (টাকা)</label>
                 <input
                   id="rentPrice"
                   {...register("rentPrice")}
                   type="number"
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
                 />
                 {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
               </div>
@@ -449,13 +449,13 @@ function PostToLetForm() {
 
             {/* Exact Address */}
             <div className="flex flex-col gap-1.5">
-              <label htmlFor="address" className="text-[#151717] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
+              <label htmlFor="address" className="text-[#2E2910] text-sm font-semibold">সম্পূর্ণ ঠিকানা</label>
               <input
                 id="address"
                 {...register("address")}
                 type="text"
                 placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
               />
               {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
             </div>
@@ -463,27 +463,27 @@ function PostToLetForm() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {/* Contact Info */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="contactInfo" className="text-[#151717] text-sm font-semibold">যোগাযোগের নম্বর</label>
+                <label htmlFor="contactInfo" className="text-[#2E2910] text-sm font-semibold">যোগাযোগের নম্বর</label>
                 <input
                   id="contactInfo"
                   {...register("contactInfo")}
                   type="text"
                   maxLength={11}
                   placeholder="01XXXXXXXXX"
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
                 />
                 {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
               </div>
 
               {/* Google Maps Link */}
               <div className="flex flex-col gap-1.5">
-                <label htmlFor="mapLink" className="text-[#151717] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
+                <label htmlFor="mapLink" className="text-[#2E2910] text-sm font-semibold">গুগল ম্যাপস লিংক / লোকেশন কোড</label>
                 <input
                   id="mapLink"
                   {...register("mapLink")}
                   type="text"
                   placeholder="লিংক / কোড দিন "
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-blue-600 placeholder:text-blue-600 focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
                 />
                 {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
               </div>
@@ -504,7 +504,7 @@ function PostToLetForm() {
             <button
               type="submit"
               disabled={isSubmitting || isUploading}
-              className="mt-4 bg-blue-900 text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-blue-900 hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-4 bg-[#2C5745] text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-[#2E2910] hover:text-[#EBE3A7] hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isUploading ? "আপলোড হচ্ছে..." : isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
             </button>
@@ -519,7 +519,7 @@ function PostToLetForm() {
 
 export default function PostToLet() {
   return (
-    <Suspense fallback={<div className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-24 pb-12 relative">Loading...</div>}>
+    <Suspense fallback={<div className="grow flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-24 pb-12 relative">Loading...</div>}>
       <PostToLetForm />
     </Suspense>
   );

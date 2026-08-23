@@ -18,21 +18,21 @@
 }
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-  --brand-forest: #063B00;
-  --brand-moss: #266210;
-  --brand-lime: #90B800;
-  --brand-yellow: #E1E100;
+  --background: #EBE3A7;
+  --foreground: #2E2910;
+  --brand-forest: #2E2910;
+  --brand-moss: #2C5745;
+  --brand-lime: #EBE3A7;
+  --brand-yellow: #EB7D00;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --color-brand-forest: #063B00;
-  --color-brand-moss: #266210;
-  --color-brand-lime: #90B800;
-  --color-brand-yellow: #E1E100;
+  --color-brand-forest: #2E2910;
+  --color-brand-moss: #2C5745;
+  --color-brand-lime: #EBE3A7;
+  --color-brand-yellow: #EB7D00;
   --font-sans: var(--font-bengali), sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-ekush: var(--font-ekush);

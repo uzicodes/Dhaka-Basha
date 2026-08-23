@@ -176,7 +176,7 @@ export default function ProfilePage() {
 
   if (!isLoaded || isLoading) {
     return (
-      <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center justify-center pt-28 pb-12">
+      <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center justify-center pt-28 pb-12">
         <Loader />
       </main>
     );
@@ -243,9 +243,9 @@ export default function ProfilePage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center">
+    <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center">
       {/* Background Decorative Accent */}
-      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#90B800]/15 via-[#266210]/5 to-transparent pointer-events-none -z-10" />
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EBE3A7]/15 via-[#2C5745]/5 to-transparent pointer-events-none -z-10" />
 
       <div className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-20 space-y-8">
         
@@ -341,7 +341,7 @@ function ProfileHeader({
       
       {/* Avatar Container */}
       <div className="relative group shrink-0">
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-[#90B800]/20 text-[#063B00] border-2 border-slate-200 shadow-md flex items-center justify-center font-bold text-3xl">
+        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-[#EBE3A7]/20 text-[#2E2910] border-2 border-slate-200 shadow-md flex items-center justify-center font-bold text-3xl">
           {profileImage ? (
             <Image
               src={profileImage}
@@ -363,7 +363,7 @@ function ProfileHeader({
         {/* Change Photo Trigger */}
         <label
           htmlFor="profile-upload"
-          className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-[#063B00] hover:bg-[#266210] text-[#E1E100] shadow-md border-2 border-white transition-all cursor-pointer hover:scale-105 active:scale-95"
+          className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-[#2E2910] hover:bg-[#2C5745] text-[#EB7D00] shadow-md border-2 border-white transition-all cursor-pointer hover:scale-105 active:scale-95"
           title="ছবি পরিবর্তন করুন"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -392,16 +392,16 @@ function ProfileHeader({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="আপনার নাম লিখুন"
-                className="text-lg font-bold text-[#063B00] bg-white border border-slate-300 rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#266210]"
+                className="text-lg font-bold text-[#2E2910] bg-white border border-slate-300 rounded-xl px-3 py-1.5 focus:outline-none focus:border-[#2C5745]"
               />
             ) : (
-              <h1 className="text-xl sm:text-2xl font-extrabold text-[#063B00]">
+              <h1 className="text-xl sm:text-2xl font-extrabold text-[#2E2910]">
                 {name || "ব্যবহারকারী"}
               </h1>
             )}
 
-            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#90B800]/20 text-[#063B00] border border-[#90B800]/40 px-2.5 py-0.5 rounded-full">
-              <svg className="w-3 h-3 text-[#266210]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold bg-[#EBE3A7]/20 text-[#2E2910] border border-[#EBE3A7]/40 px-2.5 py-0.5 rounded-full">
+              <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
               </svg>
               ভেরিফায়েড ইউজার
@@ -417,7 +417,7 @@ function ProfileHeader({
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
           
           {/* Phone */}
-          <div className="p-3 rounded-2xl bg-[#fafcf9] border border-slate-100 text-left space-y-0.5">
+          <div className="p-3 rounded-2xl bg-[#EBE3A7] border border-slate-100 text-left space-y-0.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ফোন নম্বর</span>
             {isEditing ? (
               <input
@@ -427,7 +427,7 @@ function ProfileHeader({
                 value={phone}
                 onChange={(e) => handlePhoneChange(e.target.value)}
                 placeholder="১১ ডিজিট মোবাইল নম্বর"
-                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-[#266210]"
+                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-[#2C5745]"
               />
             ) : (
               <span className="text-xs font-bold text-slate-800 block">
@@ -437,7 +437,7 @@ function ProfileHeader({
           </div>
 
           {/* Address */}
-          <div className="p-3 rounded-2xl bg-[#fafcf9] border border-slate-100 text-left space-y-0.5">
+          <div className="p-3 rounded-2xl bg-[#EBE3A7] border border-slate-100 text-left space-y-0.5">
             <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">ঠিকানা</span>
             {isEditing ? (
               <input
@@ -445,7 +445,7 @@ function ProfileHeader({
                 value={address}
                 onChange={(e) => setAddress(e.target.value)}
                 placeholder="আপনার পূর্ণ ঠিকানা"
-                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-[#266210]"
+                className="w-full text-xs font-semibold text-slate-900 bg-white border border-slate-200 rounded-lg px-2.5 py-1 focus:outline-none focus:border-[#2C5745]"
               />
             ) : (
               <span className="text-xs font-bold text-slate-800 block truncate">
@@ -464,8 +464,8 @@ function ProfileHeader({
             disabled={isSaving}
             className={`px-5 py-2 rounded-xl text-xs font-bold transition-all shadow-2xs cursor-pointer ${
               isEditing
-                ? "bg-[#266210] hover:bg-[#063B00] text-white"
-                : "bg-[#063B00] hover:bg-[#266210] text-[#E1E100]"
+                ? "bg-[#2C5745] hover:bg-[#2E2910] text-white"
+                : "bg-[#2E2910] hover:bg-[#2C5745] text-[#EB7D00]"
             }`}
           >
             {isSaving ? "সেভ হচ্ছে..." : isEditing ? "✓ পরিবর্তন সেভ করুন" : "প্রোফাইল এডিট করুন"}
@@ -482,7 +482,7 @@ function ProfileHeader({
           )}
 
           {memberSince && (
-            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-[#fafcf9] border border-slate-200 px-3 py-1 rounded-full">
+            <span className="inline-flex items-center gap-1 text-xs font-medium text-slate-500 bg-[#EBE3A7] border border-slate-200 px-3 py-1 rounded-full">
               <svg className="w-3.5 h-3.5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
               </svg>
@@ -514,8 +514,8 @@ function ProfileSidebar({
         onClick={() => setActiveSection("my-listings")}
         className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
           activeSection === "my-listings"
-            ? "bg-[#266210] text-white shadow-xs"
-            : "text-slate-700 hover:bg-[#90B800]/15 hover:text-[#063B00]"
+            ? "bg-[#2C5745] text-white shadow-xs"
+            : "text-slate-700 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
         }`}
       >
         <span className="flex items-center gap-2.5">
@@ -525,7 +525,7 @@ function ProfileSidebar({
           আমার বিজ্ঞাপন
         </span>
         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-          activeSection === "my-listings" ? "bg-[#E1E100] text-[#063B00]" : "bg-slate-100 text-slate-600"
+          activeSection === "my-listings" ? "bg-[#EBE3A7] text-[#2E2910]" : "bg-slate-100 text-slate-600"
         }`}>
           {myListingsCount}
         </span>
@@ -537,8 +537,8 @@ function ProfileSidebar({
         onClick={() => setActiveSection("saved-listings")}
         className={`w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold transition-all cursor-pointer ${
           activeSection === "saved-listings"
-            ? "bg-[#266210] text-white shadow-xs"
-            : "text-slate-700 hover:bg-[#90B800]/15 hover:text-[#063B00]"
+            ? "bg-[#2C5745] text-white shadow-xs"
+            : "text-slate-700 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
         }`}
       >
         <span className="flex items-center gap-2.5">
@@ -548,7 +548,7 @@ function ProfileSidebar({
           সংরক্ষিত বিজ্ঞাপন
         </span>
         <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${
-          activeSection === "saved-listings" ? "bg-[#E1E100] text-[#063B00]" : "bg-slate-100 text-slate-600"
+          activeSection === "saved-listings" ? "bg-[#EBE3A7] text-[#2E2910]" : "bg-slate-100 text-slate-600"
         }`}>
           {savedListingsCount}
         </span>
@@ -557,10 +557,10 @@ function ProfileSidebar({
       {/* Messages / Inbox */}
       <Link
         href="/inbox"
-        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold text-slate-700 hover:bg-[#90B800]/15 hover:text-[#063B00] transition-colors"
+        className="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold text-slate-700 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910] transition-colors"
       >
         <span className="flex items-center gap-2.5">
-          <svg className="w-4 h-4 text-[#266210]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
           </svg>
           মেসেজ সমূহ
@@ -578,7 +578,7 @@ function ProfileSidebar({
         {/* Post New Listing Action */}
         <Link
           href="/post"
-          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-[#063B00] bg-[#90B800]/20 hover:bg-[#90B800]/35 border border-[#90B800]/40 transition-colors mb-1.5"
+          className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-2xl text-xs font-bold text-[#2E2910] bg-[#EBE3A7]/20 hover:bg-[#EBE3A7]/35 border border-[#EBE3A7]/40 transition-colors mb-1.5"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4v16m8-8H4" />
@@ -618,9 +618,9 @@ function ProfileListings({
       {/* Title Bar */}
       <div className="flex items-center justify-between pb-2 border-b border-slate-200/80">
         <div className="flex items-center gap-2">
-          <h2 className="text-lg sm:text-xl font-bold text-[#063B00]">{currentSectionTitle}</h2>
+          <h2 className="text-lg sm:text-xl font-bold text-[#2E2910]">{currentSectionTitle}</h2>
           {!isLoadingCurrentListings && (
-            <span className="px-2.5 py-0.5 rounded-full bg-[#90B800]/20 text-[#063B00] text-xs font-bold border border-[#90B800]/40">
+            <span className="px-2.5 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-xs font-bold border border-[#EBE3A7]/40">
               {currentListings.length}টি
             </span>
           )}
@@ -642,7 +642,7 @@ function ProfileListings({
         </div>
       ) : currentListings.length === 0 ? (
         <div className="text-center py-12 px-4 bg-white rounded-3xl border border-slate-200 text-slate-500 space-y-4">
-          <div className="w-12 h-12 rounded-full bg-[#90B800]/20 flex items-center justify-center mx-auto text-[#063B00]">
+          <div className="w-12 h-12 rounded-full bg-[#EBE3A7]/20 flex items-center justify-center mx-auto text-[#2E2910]">
             <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
             </svg>
@@ -654,7 +654,7 @@ function ProfileListings({
           </p>
           <Link
             href={activeSection === "my-listings" ? "/post" : "/listings"}
-            className="inline-block px-5 py-2 bg-[#266210] hover:bg-[#063B00] text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
+            className="inline-block px-5 py-2 bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
           >
             {activeSection === "my-listings" ? "বিজ্ঞাপন পোস্ট করুন" : "টু-লেট খুঁজুন"}
           </Link>
@@ -671,7 +671,7 @@ function ProfileListings({
               return (
                 <div
                   key={listing.id}
-                  className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#90B800] p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                  className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#EBE3A7] p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
                 >
                   <div className="flex items-center gap-3.5 min-w-0">
                     <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
@@ -688,7 +688,7 @@ function ProfileListings({
 
                     <div className="min-w-0 space-y-1">
                       <div className="flex items-center gap-2">
-                        <span className="px-2 py-0.5 rounded-md bg-[#063B00] text-[#E1E100] text-[10px] font-bold">
+                        <span className="px-2 py-0.5 rounded-md bg-[#2E2910] text-[#EB7D00] text-[10px] font-bold">
                           {propType}
                         </span>
                         <span className="text-xs font-bold text-red-600 truncate">
@@ -697,7 +697,7 @@ function ProfileListings({
                       </div>
 
                       <Link href={`/listings/${listing.id}`}>
-                        <h3 className="text-sm font-bold text-[#063B00] group-hover:text-[#266210] transition-colors line-clamp-1">
+                        <h3 className="text-sm font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-1">
                           {listing.title}
                         </h3>
                       </Link>
@@ -714,7 +714,7 @@ function ProfileListings({
                   <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                     <Link
                       href={`/listings/${listing.id}`}
-                      className="px-3.5 py-1.5 rounded-xl bg-[#266210]/15 hover:bg-[#266210]/25 text-[#063B00] text-xs font-bold transition-colors"
+                      className="px-3.5 py-1.5 rounded-xl bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] text-xs font-bold transition-colors"
                     >
                       দেখুন
                     </Link>
@@ -737,7 +737,7 @@ function ProfileListings({
             return (
               <div
                 key={listing.id}
-                className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#90B800] p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
+                className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#EBE3A7] p-4 shadow-xs hover:shadow-md transition-all flex flex-col sm:flex-row sm:items-center justify-between gap-4"
               >
                 <div className="flex items-center gap-3.5 min-w-0">
                   <div className="relative w-16 h-16 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
@@ -754,7 +754,7 @@ function ProfileListings({
 
                   <div className="min-w-0 space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="px-2 py-0.5 rounded-md bg-[#063B00] text-[#E1E100] text-[10px] font-bold">
+                      <span className="px-2 py-0.5 rounded-md bg-[#2E2910] text-[#EB7D00] text-[10px] font-bold">
                         {propType}
                       </span>
                       <span className="text-xs font-bold text-red-600 truncate">
@@ -763,7 +763,7 @@ function ProfileListings({
                     </div>
 
                     <Link href={`/listings/${listing.id}?from=profile`}>
-                      <h3 className="text-sm font-bold text-[#063B00] group-hover:text-[#266210] transition-colors line-clamp-1">
+                      <h3 className="text-sm font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-1">
                         {listing.title}
                       </h3>
                     </Link>
@@ -780,14 +780,14 @@ function ProfileListings({
                 <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
                   <Link
                     href={`/listings/${listing.id}?from=profile`}
-                    className="px-3.5 py-1.5 rounded-xl bg-[#266210]/15 hover:bg-[#266210]/25 text-[#063B00] text-xs font-bold transition-colors"
+                    className="px-3.5 py-1.5 rounded-xl bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] text-xs font-bold transition-colors"
                   >
                     দেখুন
                   </Link>
                   <button
                     type="button"
                     onClick={() => router.push(`/post?listingId=${listing.id}`)}
-                    className="p-1.5 rounded-xl text-slate-500 hover:text-[#266210] hover:bg-[#90B800]/20 transition-colors cursor-pointer"
+                    className="p-1.5 rounded-xl text-slate-500 hover:text-[#2C5745] hover:bg-[#EBE3A7]/20 transition-colors cursor-pointer"
                     title="এডিট"
                   >
                     <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

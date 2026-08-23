@@ -12,7 +12,7 @@ export default function ImageUploadSection({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 mt-2">
-      <label className="text-[#151717] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
+      <label className="text-[#2E2910] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
 
       {existingImages.length > 0 && (
         <div className="mb-2">
@@ -66,7 +66,7 @@ export default function ImageUploadSection({
           tabIndex={0}
           role="button"
           aria-label="Upload Images"
-          className="border-2 border-dashed border-[#ecedec] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#2d79f3] hover:bg-blue-50/40 transition-colors cursor-pointer"
+          className="border-2 border-dashed border-[#EBE3A7] rounded-none h-32 flex flex-col items-center justify-center bg-slate-50 text-slate-400 hover:border-[#EB7D00] hover:bg-[#EBE3A7]/40 transition-colors cursor-pointer"
         >
           <svg className="w-8 h-8 mb-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />

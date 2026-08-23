@@ -177,25 +177,25 @@ function ListingsContent() {
   const hasActiveFilters = Boolean(selectedLocation || selectedSubLocation || selectedType);
 
   return (
-    <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center">
+    <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center">
       {/* Background Decorative Pattern */}
-      <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#90B800]/15 via-[#266210]/5 to-transparent pointer-events-none -z-10" />
+      <div className="absolute inset-x-0 top-0 h-96 bg-gradient-to-b from-[#EBE3A7]/15 via-[#2C5745]/5 to-transparent pointer-events-none -z-10" />
 
       {/* Main Container */}
       <div className="w-full max-w-6xl px-4 sm:px-6 lg:px-8 pt-28 md:pt-32 pb-20 space-y-8">
         
         {/* HERO SECTION */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E1E100]/25 border border-[#90B800]/40 text-[#063B00] text-xs font-bold shadow-xs">
+          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EBE3A7]/25 border border-[#EBE3A7]/40 text-[#2E2910] text-xs font-bold shadow-xs">
             <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#90B800] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#266210]"></span>
+              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EBE3A7] opacity-75"></span>
+              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2C5745]"></span>
             </span>
             ভেরিফায়েড টু-লেট পোর্টাল
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#063B00] tracking-tight leading-tight">
-            আপনার পছন্দের <span className="text-[#266210]">বাসা খুঁজুন</span> সহজে
+          <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#2E2910] tracking-tight leading-tight">
+            আপনার পছন্দের <span className="text-[#2C5745]">বাসা খুঁজুন</span> সহজে
           </h1>
 
           <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto font-normal">
@@ -205,7 +205,7 @@ function ListingsContent() {
 
         {/* UNIFIED SEARCH CARD */}
         <div className="relative z-30 max-w-4xl mx-auto">
-          <div className="bg-white rounded-2xl md:rounded-full shadow-lg shadow-[#063B00]/5 border border-slate-200/90 p-2 md:p-2.5 transition-all focus-within:ring-2 focus-within:ring-[#90B800]/30 focus-within:border-[#266210]">
+          <div className="bg-white rounded-2xl md:rounded-full shadow-lg shadow-[#2E2910]/5 border border-slate-200/90 p-2 md:p-2.5 transition-all focus-within:ring-2 focus-within:ring-[#EBE3A7]/30 focus-within:border-[#2C5745]">
             <div className="grid grid-cols-1 md:grid-cols-12 gap-2 items-center">
               
               {/* Location Input / Dropdown Trigger */}
@@ -216,9 +216,9 @@ function ListingsContent() {
                     setIsLocDropdownOpen(!isLocDropdownOpen);
                     setIsTypeDropdownOpen(false);
                   }}
-                  className="w-full h-13 px-4 rounded-xl md:rounded-full hover:bg-[#fafcf9] text-left flex items-center gap-3 transition-colors border border-transparent focus:border-slate-200 cursor-pointer"
+                  className="w-full h-13 px-4 rounded-xl md:rounded-full hover:bg-[#EBE3A7] text-left flex items-center gap-3 transition-colors border border-transparent focus:border-slate-200 cursor-pointer"
                 >
-                  <div className="w-9 h-9 rounded-full bg-[#90B800]/20 text-[#063B00] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
@@ -226,7 +226,7 @@ function ListingsContent() {
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">এলাকা / লোকেশন</span>
-                    <span className={`block text-sm font-semibold truncate ${selectedLocation ? "text-[#063B00]" : "text-slate-500"}`}>
+                    <span className={`block text-sm font-semibold truncate ${selectedLocation ? "text-[#2E2910]" : "text-slate-500"}`}>
                       {selectedLocationObj
                         ? `${selectedLocationObj.label} ${selectedSubLocationObj ? `(${selectedSubLocationObj.label})` : ""}`
                         : "এলাকা নির্বাচন করুন"}
@@ -246,7 +246,7 @@ function ListingsContent() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </span>
                   )}
-                  <svg className={`w-4 h-4 text-slate-400 transition-transform ${isLocDropdownOpen ? "rotate-180 text-[#266210]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-4 h-4 text-slate-400 transition-transform ${isLocDropdownOpen ? "rotate-180 text-[#2C5745]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -258,14 +258,14 @@ function ListingsContent() {
                     <div className="absolute left-0 top-full mt-2 w-full sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
                       
                       {/* Search box within location dropdown */}
-                      <div className="p-3 border-b border-slate-100 bg-[#fafcf9]">
+                      <div className="p-3 border-b border-slate-100 bg-[#EBE3A7]">
                         <div className="relative">
                           <input
                             type="text"
                             placeholder="এলাকার নাম খুঁজুন (যেমন: ধানমন্ডি)..."
                             value={locationSearchQuery}
                             onChange={(e) => setLocationSearchQuery(e.target.value)}
-                            className="w-full pl-8 pr-3 py-2 text-xs bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-[#266210] text-slate-800 placeholder-slate-400 font-medium"
+                            className="w-full pl-8 pr-3 py-2 text-xs bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-[#2C5745] text-slate-800 placeholder-slate-400 font-medium"
                             autoFocus
                           />
                           <svg className="w-3.5 h-3.5 absolute left-2.5 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -284,10 +284,10 @@ function ListingsContent() {
                             setIsLocDropdownOpen(false);
                             setExpandedLoc("");
                           }}
-                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedLocation ? "bg-[#266210]/10 text-[#063B00]" : "text-slate-700 hover:bg-[#fafcf9]"}`}
+                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedLocation ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
                         >
                           <span>যেকোনো এলাকা (All Locations)</span>
-                          {!selectedLocation && <span className="text-[#266210] font-bold">✓</span>}
+                          {!selectedLocation && <span className="text-[#2C5745] font-bold">✓</span>}
                         </button>
 
                         {filteredLocations.map((loc) => {
@@ -306,26 +306,26 @@ function ListingsContent() {
                                     setIsLocDropdownOpen(false);
                                   }
                                 }}
-                                className={`px-3.5 py-2.5 rounded-xl cursor-pointer text-xs font-semibold transition-colors flex items-center justify-between ${isLocSelected ? "bg-[#266210]/10 text-[#063B00]" : "text-slate-800 hover:bg-[#fafcf9]"}`}
+                                className={`px-3.5 py-2.5 rounded-xl cursor-pointer text-xs font-semibold transition-colors flex items-center justify-between ${isLocSelected ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
                               >
                                 <span>{loc.label}</span>
                                 {loc.subLocations ? (
                                   <div className="flex items-center gap-1.5 text-slate-400">
-                                    <span className="text-[10px] font-semibold bg-[#90B800]/20 px-1.5 py-0.5 rounded-md text-[#063B00]">
+                                    <span className="text-[10px] font-semibold bg-[#EBE3A7]/20 px-1.5 py-0.5 rounded-md text-[#2E2910]">
                                       {loc.subLocations.length}টি সাব-এলাকা
                                     </span>
-                                    <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180 text-[#266210]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180 text-[#2C5745]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                                     </svg>
                                   </div>
                                 ) : (
-                                  isLocSelected && <span className="text-[#266210] font-bold">✓</span>
+                                  isLocSelected && <span className="text-[#2C5745] font-bold">✓</span>
                                 )}
                               </div>
 
                               {/* Sublocations Accordion */}
                               {loc.subLocations && isExpanded && (
-                                <div className="ml-3 pl-2 my-1 border-l-2 border-[#90B800] space-y-1">
+                                <div className="ml-3 pl-2 my-1 border-l-2 border-[#EBE3A7] space-y-1">
                                   <button
                                     type="button"
                                     onClick={() => {
@@ -333,7 +333,7 @@ function ListingsContent() {
                                       setSelectedSubLocation("");
                                       setIsLocDropdownOpen(false);
                                     }}
-                                    className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${selectedLocation === loc.value && !selectedSubLocation ? "bg-[#266210]/10 text-[#063B00] font-bold" : "text-slate-600 hover:bg-slate-100"}`}
+                                    className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${selectedLocation === loc.value && !selectedSubLocation ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-600 hover:bg-slate-100"}`}
                                   >
                                     <span>{loc.label} - পুরো এলাকা</span>
                                   </button>
@@ -349,7 +349,7 @@ function ListingsContent() {
                                           setSelectedSubLocation(sub.value);
                                           setIsLocDropdownOpen(false);
                                         }}
-                                        className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${isSubSelected ? "bg-[#266210] text-white font-bold" : "text-slate-600 hover:bg-slate-100"}`}
+                                        className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${isSubSelected ? "bg-[#2C5745] text-white font-bold" : "text-slate-600 hover:bg-slate-100"}`}
                                       >
                                         <span>{sub.label}</span>
                                         {isSubSelected && <span>✓</span>}
@@ -375,16 +375,16 @@ function ListingsContent() {
                     setIsTypeDropdownOpen(!isTypeDropdownOpen);
                     setIsLocDropdownOpen(false);
                   }}
-                  className="w-full h-13 px-4 rounded-xl md:rounded-full hover:bg-[#fafcf9] text-left flex items-center gap-3 transition-colors border border-transparent focus:border-slate-200 cursor-pointer"
+                  className="w-full h-13 px-4 rounded-xl md:rounded-full hover:bg-[#EBE3A7] text-left flex items-center gap-3 transition-colors border border-transparent focus:border-slate-200 cursor-pointer"
                 >
-                  <div className="w-9 h-9 rounded-full bg-[#266210]/15 text-[#266210] flex items-center justify-center shrink-0">
+                  <div className="w-9 h-9 rounded-full bg-[#2C5745]/15 text-[#2C5745] flex items-center justify-center shrink-0">
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
                     </svg>
                   </div>
                   <div className="flex-1 min-w-0">
                     <span className="block text-[11px] font-semibold uppercase tracking-wider text-slate-400">প্রপার্টির ধরন</span>
-                    <span className={`block text-sm font-semibold truncate ${selectedType ? "text-[#063B00]" : "text-slate-500"}`}>
+                    <span className={`block text-sm font-semibold truncate ${selectedType ? "text-[#2E2910]" : "text-slate-500"}`}>
                       {selectedTypeObj ? selectedTypeObj.label : "কি খুঁজছেন?"}
                     </span>
                   </div>
@@ -400,7 +400,7 @@ function ListingsContent() {
                       <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" /></svg>
                     </span>
                   )}
-                  <svg className={`w-4 h-4 text-slate-400 transition-transform ${isTypeDropdownOpen ? "rotate-180 text-[#266210]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg className={`w-4 h-4 text-slate-400 transition-transform ${isTypeDropdownOpen ? "rotate-180 text-[#2C5745]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
                   </svg>
                 </button>
@@ -416,10 +416,10 @@ function ListingsContent() {
                           setSelectedType("");
                           setIsTypeDropdownOpen(false);
                         }}
-                        className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedType ? "bg-[#266210]/10 text-[#063B00] font-bold" : "text-slate-700 hover:bg-[#fafcf9]"}`}
+                        className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedType ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
                       >
                         <span>যেকোনো ক্যাটাগরি (All Types)</span>
-                        {!selectedType && <span className="text-[#266210]">✓</span>}
+                        {!selectedType && <span className="text-[#2C5745]">✓</span>}
                       </button>
                       <div className="my-1 border-t border-slate-100" />
                       {propertyTypes.map((t) => (
@@ -430,7 +430,7 @@ function ListingsContent() {
                             setSelectedType(t.value);
                             setIsTypeDropdownOpen(false);
                           }}
-                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedType === t.value ? "bg-[#266210] text-white font-bold" : "text-slate-800 hover:bg-[#fafcf9]"}`}
+                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedType === t.value ? "bg-[#2C5745] text-white font-bold" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
                         >
                           <span>{t.label}</span>
                           {selectedType === t.value && <span>✓</span>}
@@ -447,7 +447,7 @@ function ListingsContent() {
                   type="button"
                   disabled={isSearching}
                   onClick={() => handleExecuteSearch()}
-                  className="w-full h-13 px-6 bg-[#266210] hover:bg-[#063B00] active:scale-[0.98] text-white font-bold text-sm rounded-xl md:rounded-full shadow-md shadow-[#266210]/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
+                  className="w-full h-13 px-6 bg-[#2C5745] hover:bg-[#2E2910] active:scale-[0.98] text-white font-bold text-sm rounded-xl md:rounded-full shadow-md shadow-[#2C5745]/25 transition-all flex items-center justify-center gap-2 cursor-pointer disabled:opacity-75 disabled:cursor-not-allowed"
                 >
                   {isSearching ? (
                     <>
@@ -479,8 +479,8 @@ function ListingsContent() {
             onClick={() => handleCategorySelect("")}
             className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
               !selectedType
-                ? "bg-[#063B00] text-[#E1E100] shadow-xs"
-                : "bg-white text-slate-700 border border-slate-200 hover:bg-[#90B800]/15 hover:text-[#063B00]"
+                ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
+                : "bg-white text-slate-700 border border-slate-200 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
             }`}
           >
             সকল টু-লেট
@@ -494,8 +494,8 @@ function ListingsContent() {
                 onClick={() => handleCategorySelect(type.value)}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isSelected
-                    ? "bg-[#063B00] text-[#E1E100] shadow-xs"
-                    : "bg-white text-slate-700 border border-slate-200 hover:bg-[#90B800]/15 hover:text-[#063B00]"
+                    ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
+                    : "bg-white text-slate-700 border border-slate-200 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
                 }`}
               >
                 {type.label}
@@ -511,11 +511,11 @@ function ListingsContent() {
             {/* Title & Results Counter */}
             <div className="space-y-1">
               <div className="flex items-center gap-2">
-                <h2 className="text-xl md:text-2xl font-bold text-[#063B00]">
+                <h2 className="text-xl md:text-2xl font-bold text-[#2E2910]">
                   {hasActiveFilters ? "অনুসন্ধানের ফলাফল" : "সাম্প্রতিক টু-লেট সমূহ"}
                 </h2>
                 {!isLoading && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#90B800]/20 text-[#063B00] text-xs font-bold border border-[#90B800]/40">
+                  <span className="px-2.5 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-xs font-bold border border-[#EBE3A7]/40">
                     {sortedListings.length}টি
                   </span>
                 )}
@@ -539,7 +539,7 @@ function ListingsContent() {
                     setSortBy(e.target.value);
                     updateUrlParams(selectedLocation, selectedSubLocation, selectedType, e.target.value);
                   }}
-                  className="text-xs font-semibold bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-[#266210] cursor-pointer shadow-2xs"
+                  className="text-xs font-semibold bg-white border border-slate-200 rounded-xl px-3 py-2 text-slate-700 focus:outline-none focus:border-[#2C5745] cursor-pointer shadow-2xs"
                 >
                   <option value="newest">সর্বশেষ পোস্ট আগে</option>
                   <option value="price_asc">ভাড়া: কম থেকে বেশি</option>
@@ -553,7 +553,7 @@ function ListingsContent() {
                   type="button"
                   onClick={() => setViewMode("grid")}
                   title="গ্রিড ভিউ"
-                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "grid" ? "bg-[#266210]/15 text-[#266210]" : "text-slate-400 hover:text-slate-700"}`}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "grid" ? "bg-[#2C5745]/15 text-[#2C5745]" : "text-slate-400 hover:text-slate-700"}`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z" />
@@ -563,7 +563,7 @@ function ListingsContent() {
                   type="button"
                   onClick={() => setViewMode("list")}
                   title="লিস্ট ভিউ"
-                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "list" ? "bg-[#266210]/15 text-[#266210]" : "text-slate-400 hover:text-slate-700"}`}
+                  className={`p-1.5 rounded-lg transition-colors cursor-pointer ${viewMode === "list" ? "bg-[#2C5745]/15 text-[#2C5745]" : "text-slate-400 hover:text-slate-700"}`}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
@@ -580,7 +580,7 @@ function ListingsContent() {
             <div className="flex flex-wrap items-center gap-2 mt-4 pt-3 border-t border-slate-100">
               <span className="text-xs text-slate-400 font-medium">সক্রিয় ফিল্টার:</span>
               {selectedLocation && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#90B800]/20 text-[#063B00] border border-[#90B800]/40 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] border border-[#EBE3A7]/40 text-xs font-semibold">
                   এলাকা: {selectedLocationObj?.label || selectedLocation}
                   {selectedSubLocation && ` - ${selectedSubLocationObj?.label || selectedSubLocation}`}
                   <button
@@ -597,7 +597,7 @@ function ListingsContent() {
                 </span>
               )}
               {selectedType && (
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#266210]/15 text-[#063B00] border border-[#266210]/30 text-xs font-semibold">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2C5745]/15 text-[#2E2910] border border-[#2C5745]/30 text-xs font-semibold">
                   ধরন: {selectedTypeObj?.label || selectedType}
                   <button
                     type="button"
@@ -657,7 +657,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
   if (viewMode === "list") {
     return (
-      <div className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#90B800] shadow-xs hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col md:flex-row items-stretch">
+      <div className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#EBE3A7] shadow-xs hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col md:flex-row items-stretch">
         
         {/* List Thumbnail */}
         <div className="relative w-full md:w-64 h-48 md:h-auto shrink-0 bg-slate-100 overflow-hidden">
@@ -678,7 +678,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
             </div>
           )}
           <div className="absolute top-3 left-3">
-            <span className="px-2.5 py-1 rounded-full bg-[#063B00] text-[#E1E100] text-[11px] font-bold border border-white/20 shadow-2xs">
+            <span className="px-2.5 py-1 rounded-full bg-[#2E2910] text-[#EB7D00] text-[11px] font-bold border border-white/20 shadow-2xs">
               {propType}
             </span>
           </div>
@@ -700,7 +700,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
                   {locLabel} {subLocLabel && `(${subLocLabel})`}
                 </span>
                 <span>•</span>
-                <span className="flex items-center gap-1 text-[#266210] font-semibold">
+                <span className="flex items-center gap-1 text-[#2C5745] font-semibold">
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
                   ভাড়া: {listing.rentFrom}
                 </span>
@@ -716,7 +716,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
             </div>
 
             <Link href={`/listings/${listing.id}`}>
-              <h3 className="text-base sm:text-lg font-bold text-[#063B00] group-hover:text-[#266210] transition-colors line-clamp-1">
+              <h3 className="text-base sm:text-lg font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-1">
                 {listing.title}
               </h3>
             </Link>
@@ -726,7 +726,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
           <div className="flex items-center justify-between pt-3 border-t border-slate-100">
             <div className="flex items-center gap-2">
-              <div className="w-6 h-6 rounded-full bg-[#90B800]/20 text-[#063B00] overflow-hidden flex items-center justify-center text-[10px] font-bold">
+              <div className="w-6 h-6 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden flex items-center justify-center text-[10px] font-bold">
                 {listing.user?.profileImage ? (
                   <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={24} height={24} className="object-cover" />
                 ) : (
@@ -740,7 +740,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
               {listing.contactInfo && (
                 <a
                   href={`tel:${listing.contactInfo}`}
-                  className="px-3 py-1.5 rounded-lg bg-[#266210]/15 hover:bg-[#266210]/25 text-[#063B00] text-xs font-bold transition-colors flex items-center gap-1"
+                  className="px-3 py-1.5 rounded-lg bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] text-xs font-bold transition-colors flex items-center gap-1"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                   কল
@@ -748,7 +748,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
               )}
               <Link
                 href={`/listings/${listing.id}`}
-                className="px-4 py-1.5 rounded-lg bg-[#266210] hover:bg-[#063B00] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+                className="px-4 py-1.5 rounded-lg bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
               >
                 বিস্তারিত →
               </Link>
@@ -763,7 +763,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
   // DEFAULT GRID VIEW
   return (
-    <div className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#90B800] shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
+    <div className="group bg-white rounded-2xl border border-slate-200/80 hover:border-[#EBE3A7] shadow-xs hover:shadow-xl hover:-translate-y-1 transition-all duration-300 overflow-hidden flex flex-col">
       
       {/* Thumbnail Banner */}
       <div className="relative w-full h-48 bg-slate-100 overflow-hidden">
@@ -776,8 +776,8 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#fafcf9] via-[#90B800]/10 to-slate-200 text-slate-400">
-            <svg className="w-12 h-12 mb-1.5 opacity-40 text-[#266210]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <div className="w-full h-full flex flex-col items-center justify-center bg-gradient-to-br from-[#EBE3A7] via-[#EBE3A7]/10 to-slate-200 text-slate-400">
+            <svg className="w-12 h-12 mb-1.5 opacity-40 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
             </svg>
             <span className="text-[11px] font-medium text-slate-500">ঢাকা-বাসা ভেরিফাইড প্রপার্টি</span>
@@ -786,7 +786,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
         {/* Top Badges */}
         <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none">
-          <span className="px-2.5 py-1 rounded-full bg-[#063B00] text-[#E1E100] text-[11px] font-bold border border-white/20 shadow-2xs">
+          <span className="px-2.5 py-1 rounded-full bg-[#2E2910] text-[#EB7D00] text-[11px] font-bold border border-white/20 shadow-2xs">
             {propType}
           </span>
           {hasImages && (
@@ -818,15 +818,15 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
               <svg className="w-3.5 h-3.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               <span className="truncate">{locLabel} {subLocLabel && `(${subLocLabel})`}</span>
             </span>
-            <span className="flex items-center gap-1 text-[11px] bg-[#90B800]/20 text-[#063B00] font-semibold px-2 py-0.5 rounded-md shrink-0">
-              <svg className="w-3 h-3 text-[#266210]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+            <span className="flex items-center gap-1 text-[11px] bg-[#EBE3A7]/20 text-[#2E2910] font-semibold px-2 py-0.5 rounded-md shrink-0">
+              <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
               {listing.rentFrom}
             </span>
           </div>
 
           {/* Title */}
           <Link href={`/listings/${listing.id}`}>
-            <h3 className="text-base font-bold text-[#063B00] group-hover:text-[#266210] transition-colors line-clamp-2 leading-snug">
+            <h3 className="text-base font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-2 leading-snug">
               {listing.title}
             </h3>
           </Link>
@@ -842,7 +842,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
           
           {/* User info */}
           <div className="flex items-center gap-2 min-w-0">
-            <div className="w-6 h-6 rounded-full bg-[#90B800]/20 text-[#063B00] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold">
+            <div className="w-6 h-6 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold">
               {listing.user?.profileImage ? (
                 <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={24} height={24} className="object-cover" />
               ) : (
@@ -860,14 +860,14 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
               <a
                 href={`tel:${listing.contactInfo}`}
                 title={`কল করুন: ${listing.contactInfo}`}
-                className="w-8 h-8 rounded-xl bg-[#266210]/15 hover:bg-[#266210]/25 text-[#063B00] flex items-center justify-center transition-colors"
+                className="w-8 h-8 rounded-xl bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] flex items-center justify-center transition-colors"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
               </a>
             )}
             <Link
               href={`/listings/${listing.id}`}
-              className="px-3.5 py-1.5 rounded-xl bg-[#266210] hover:bg-[#063B00] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
+              className="px-3.5 py-1.5 rounded-xl bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
             >
               বিস্তারিত →
             </Link>
@@ -906,14 +906,14 @@ function ListingsLoadingSkeleton() {
 function EmptyListingsState({ onReset }: { onReset: () => void }) {
   return (
     <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-200 shadow-sm max-w-lg mx-auto space-y-5">
-      <div className="w-18 h-18 bg-[#90B800]/20 rounded-full flex items-center justify-center mx-auto text-[#063B00]">
+      <div className="w-18 h-18 bg-[#EBE3A7]/20 rounded-full flex items-center justify-center mx-auto text-[#2E2910]">
         <svg className="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="1.5" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
         </svg>
       </div>
 
       <div className="space-y-1">
-        <h3 className="text-lg font-bold text-[#063B00]">কোনো ফলাফল পাওয়া যায়নি</h3>
+        <h3 className="text-lg font-bold text-[#2E2910]">কোনো ফলাফল পাওয়া যায়নি</h3>
         <p className="text-slate-500 text-xs sm:text-sm">
           আপনার নির্বাচিত ফিল্টারে কোনো বাসা পাওয়া যায়নি। এলাকা বা প্রপার্টির ধরন পরিবর্তন করে পুনরায় চেষ্টা করুন।
         </p>
@@ -922,7 +922,7 @@ function EmptyListingsState({ onReset }: { onReset: () => void }) {
       <button
         type="button"
         onClick={onReset}
-        className="px-5 py-2.5 bg-[#266210] hover:bg-[#063B00] text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer"
+        className="px-5 py-2.5 bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold rounded-xl shadow-sm transition-all cursor-pointer"
       >
         সকল ফিল্টার রিসেট করুন
       </button>

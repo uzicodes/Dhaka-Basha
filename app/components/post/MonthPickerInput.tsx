@@ -10,16 +10,16 @@ export default function MonthPickerInput({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
-      <label id="rentFrom-label" className="text-[#151717] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
+      <label id="rentFrom-label" className="text-[#2E2910] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
       <div
         role="button"
         tabIndex={0}
         aria-labelledby="rentFrom-label"
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setIsMonthPickerOpen(!isMonthPickerOpen); }}
         onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
-        className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}
+        className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#EBE3A7] focus-within:border-[#EB7D00]"}`}
       >
-        <span className={watch("rentFrom") ? "text-blue-600 font-medium" : "text-slate-400"}>
+        <span className={watch("rentFrom") ? "text-[#2C5745] font-medium" : "text-slate-400"}>
           {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
         </span>
         <svg className="w-5 h-5 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -69,10 +69,10 @@ export default function MonthPickerInput({
                     setIsMonthPickerOpen(false);
                   }}
                   className={`py-2 text-sm rounded-md transition-all ${isSelected
-                    ? "bg-[#2d79f3] text-white font-bold"
+                    ? "bg-[#EB7D00] text-white font-bold"
                     : isPast
                       ? "text-slate-300 cursor-not-allowed"
-                      : "text-slate-600 hover:bg-blue-50 hover:text-[#2d79f3]"
+                      : "text-slate-600 hover:bg-[#EBE3A7] hover:text-[#EB7D00]"
                     }`}
                 >
                   {name}

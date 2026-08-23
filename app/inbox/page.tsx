@@ -71,16 +71,16 @@ export default function InboxPage() {
 
   if (!isLoaded || isLoading) {
     return (
-      <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center justify-center pt-28 pb-12">
+      <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center justify-center pt-28 pb-12">
         <Loader />
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#fafcf9] flex flex-col items-center">
+    <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center">
       {/* Background Decorative Accent */}
-      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#90B800]/15 via-[#266210]/5 to-transparent pointer-events-none -z-10" />
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EBE3A7]/15 via-[#2C5745]/5 to-transparent pointer-events-none -z-10" />
 
       <div className="w-full max-w-3xl px-4 sm:px-6 pt-28 md:pt-32 pb-20 space-y-6">
         
@@ -89,7 +89,7 @@ export default function InboxPage() {
           <div className="space-y-1">
             <Link
               href="/profile"
-              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#266210] transition-colors mb-1"
+              className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-[#2C5745] transition-colors mb-1"
             >
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -97,10 +97,10 @@ export default function InboxPage() {
               <span>প্রোফাইলে ফিরে যান</span>
             </Link>
             <div className="flex items-center gap-2">
-              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#063B00]">
+              <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2E2910]">
                 ম্যাসেজ ইনবক্স
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#90B800]/20 text-[#063B00] text-xs font-bold border border-[#90B800]/40">
+              <span className="px-2.5 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-xs font-bold border border-[#EBE3A7]/40">
                 {conversations.length}টি
               </span>
             </div>
@@ -108,7 +108,7 @@ export default function InboxPage() {
 
           <Link
             href="/listings"
-            className="inline-flex items-center gap-1 text-xs font-bold text-[#266210] hover:text-[#063B00] self-start sm:self-auto"
+            className="inline-flex items-center gap-1 text-xs font-bold text-[#2C5745] hover:text-[#2E2910] self-start sm:self-auto"
           >
             টু-লেট খুঁজুন →
           </Link>
@@ -117,20 +117,20 @@ export default function InboxPage() {
         {/* CONVERSATION LIST */}
         {conversations.length === 0 ? (
           <div className="text-center py-16 px-4 bg-white rounded-3xl border border-slate-200/80 shadow-xs space-y-4 max-w-md mx-auto">
-            <div className="w-16 h-16 rounded-full bg-[#90B800]/20 text-[#063B00] flex items-center justify-center mx-auto">
+            <div className="w-16 h-16 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] flex items-center justify-center mx-auto">
               <svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
               </svg>
             </div>
             <div className="space-y-1">
-              <h3 className="text-base font-bold text-[#063B00]">আপনার কোনো কথোপকথন নেই</h3>
+              <h3 className="text-base font-bold text-[#2E2910]">আপনার কোনো কথোপকথন নেই</h3>
               <p className="text-xs text-slate-500 leading-relaxed">
                 পছন্দের টু-লেট পোস্টে গিয়ে &quot;মেসেজ দিন&quot; বাটনে ক্লিক করে সরাসরি মালিকের সাথে কথোপকথন শুরু করুন।
               </p>
             </div>
             <Link
               href="/listings"
-              className="inline-block px-5 py-2.5 bg-[#266210] hover:bg-[#063B00] text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
+              className="inline-block px-5 py-2.5 bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold rounded-xl shadow-xs transition-colors"
             >
               টু-লেট সমূহ দেখুন
             </Link>
@@ -151,12 +151,12 @@ export default function InboxPage() {
                 <div key={convo.id} className="relative group">
                   <Link
                     href={`/inbox/${convo.id}`}
-                    className="block bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 hover:border-[#90B800] shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                    className="block bg-white p-4 sm:p-5 rounded-2xl border border-slate-200/80 hover:border-[#EBE3A7] shadow-xs hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
                   >
                     <div className="flex items-center gap-3.5">
                       
                       {/* Avatar */}
-                      <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-[#90B800]/20 text-[#063B00] border border-slate-200/80 shrink-0 flex items-center justify-center font-bold text-base">
+                      <div className="relative w-12 h-12 rounded-2xl overflow-hidden bg-[#EBE3A7]/20 text-[#2E2910] border border-slate-200/80 shrink-0 flex items-center justify-center font-bold text-base">
                         {otherUser.profileImage ? (
                           <Image
                             src={otherUser.profileImage}
@@ -173,7 +173,7 @@ export default function InboxPage() {
                       {/* Info */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-center justify-between gap-2">
-                          <h3 className="text-sm font-bold text-[#063B00] group-hover:text-[#266210] transition-colors truncate">
+                          <h3 className="text-sm font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors truncate">
                             {otherUser.name || "ব্যবহারকারী"}
                           </h3>
 
@@ -203,7 +203,7 @@ export default function InboxPage() {
                             {lastMessage?.content || "কথোপকথন শুরু হয়েছে..."}
                           </p>
                           {convo._count?.messages > 0 && (
-                            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-[#063B00] bg-[#E1E100] rounded-full shrink-0">
+                            <span className="flex items-center justify-center min-w-[18px] h-[18px] px-1 text-[10px] font-bold text-[#2E2910] bg-[#EBE3A7] rounded-full shrink-0">
                               {convo._count.messages}
                             </span>
                           )}

@@ -1,10 +1,10 @@
-/* Modern Dhaka-Basha Chatbox Styling - Custom Palette (#063B00, #266210, #90B800, #E1E100) */
+/* Modern Dhaka-Basha Chatbox Styling - Custom Palette (#2E2910, #2C5745, #EBE3A7, #EB7D00) */
 
 .chat-root {
   display: flex;
   flex-direction: column;
   height: 100%;
-  background: #fafcf9;
+  background: #EBE3A7;
   position: relative;
   overflow: hidden;
   width: 100%;
@@ -15,7 +15,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: radial-gradient(#90B800 0.75px, transparent 0.75px);
+  background-image: radial-gradient(#EBE3A7 0.75px, transparent 0.75px);
   background-size: 16px 16px;
   opacity: 0.15;
   pointer-events: none;
@@ -44,16 +44,16 @@
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: #fafcf9;
+  background: #EBE3A7;
   border: 1px solid #e2e8f0;
-  color: #063B00;
+  color: #2E2910;
   transition: all 0.2s ease;
   flex-shrink: 0;
   text-decoration: none;
 }
 .back-btn:hover {
-  background: #90B800;
-  color: #063B00;
+  background: #EBE3A7;
+  color: #2E2910;
   transform: translateX(-1px);
 }
 
@@ -72,15 +72,15 @@
   width: 42px;
   height: 42px;
   border-radius: 14px;
-  background: linear-gradient(135deg, #063B00 0%, #266210 100%);
+  background: linear-gradient(135deg, #2E2910 0%, #2C5745 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   font-size: 16px;
   font-weight: 700;
-  color: #E1E100;
+  color: #EBE3A7;
   border: 2px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(6, 59, 0, 0.2);
+  box-shadow: 0 2px 6px rgba(46, 41, 16, 0.2);
 }
 .online-dot {
   position: absolute;
@@ -88,7 +88,7 @@
   right: -1px;
   width: 10px;
   height: 10px;
-  background: #90B800;
+  background: #EBE3A7;
   border-radius: 50%;
   border: 2px solid white;
 }
@@ -100,7 +100,7 @@
 .header-name {
   font-size: 15px;
   font-weight: 700;
-  color: #063B00;
+  color: #2E2910;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -108,7 +108,7 @@
 }
 .header-status {
   font-size: 11.5px;
-  color: #266210;
+  color: #2C5745;
   margin-top: 1px;
   font-weight: 600;
   display: flex;
@@ -121,7 +121,7 @@
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #90B800;
+  background: #EBE3A7;
 }
 
 .header-actions {
@@ -137,17 +137,17 @@
   width: 36px;
   height: 36px;
   border-radius: 12px;
-  background: #fafcf9;
+  background: #EBE3A7;
   border: 1px solid #e2e8f0;
-  color: #063B00;
+  color: #2E2910;
   cursor: pointer;
   transition: all 0.18s ease;
   text-decoration: none;
 }
 .icon-btn:hover {
-  background: #90B800;
-  color: #063B00;
-  border-color: #90B800;
+  background: #EBE3A7;
+  color: #2E2910;
+  border-color: #EBE3A7;
 }
 
 .dropdown-menu {
@@ -160,7 +160,7 @@
   border-radius: 16px;
   padding: 6px;
   z-index: 50;
-  box-shadow: 0 12px 36px rgba(6, 59, 0, 0.12);
+  box-shadow: 0 12px 36px rgba(46, 41, 16, 0.12);
   animation: dropIn 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 @keyframes dropIn {
@@ -212,7 +212,7 @@
   background: transparent;
 }
 .messages-scroll::-webkit-scrollbar-thumb {
-  background: rgba(38, 98, 16, 0.2);
+  background: rgba(44, 87, 69, 0.2);
   border-radius: 5px;
 }
 
@@ -230,7 +230,7 @@
 .date-separator-label {
   font-size: 11px;
   font-weight: 600;
-  color: #063B00;
+  color: #2E2910;
   letter-spacing: 0.2px;
   background: #f1f7ee;
   padding: 3px 10px;
@@ -262,10 +262,10 @@
 
 /* Own Message Bubble */
 .bubble.own {
-  background: linear-gradient(135deg, #266210 0%, #063B00 100%);
+  background: linear-gradient(135deg, #2C5745 0%, #2E2910 100%);
   color: #ffffff;
   border-radius: 18px 18px 4px 18px;
-  box-shadow: 0 4px 12px rgba(6, 59, 0, 0.22);
+  box-shadow: 0 4px 12px rgba(46, 41, 16, 0.22);
 }
 /* Other Message Bubble */
 .bubble.other {
@@ -273,7 +273,7 @@
   color: #1e293b;
   border-radius: 18px 18px 18px 4px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 2px 6px rgba(6, 59, 0, 0.04);
+  box-shadow: 0 2px 6px rgba(46, 41, 16, 0.04);
 }
 
 .bubble.grouped.own {
@@ -304,7 +304,7 @@
 .bubble.own .bubble-time { color: rgba(255, 255, 255, 0.75); }
 .bubble.other .bubble-time { color: #94a3b8; }
 
-.tick-icon { color: #E1E100; }
+.tick-icon { color: #EBE3A7; }
 
 /* Empty state */
 .empty-state {
@@ -321,16 +321,16 @@
   width: 64px;
   height: 64px;
   border-radius: 20px;
-  background: rgba(144, 184, 0, 0.2);
-  border: 1px solid rgba(144, 184, 0, 0.4);
+  background: rgba(235, 125, 0, 0.2);
+  border: 1px solid rgba(235, 125, 0, 0.4);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #063B00;
+  color: #2E2910;
 }
 .empty-label {
   font-size: 14px;
-  color: #063B00;
+  color: #2E2910;
   font-weight: 700;
 }
 .empty-subtext {
@@ -361,7 +361,7 @@
 .input-wrap {
   flex: 1;
   position: relative;
-  background: #fafcf9;
+  background: #EBE3A7;
   border: 1.5px solid #e2e8f0;
   border-radius: 20px;
   transition: all 0.2s ease;
@@ -369,8 +369,8 @@
 }
 .input-wrap:focus-within {
   background: #ffffff;
-  border-color: #266210;
-  box-shadow: 0 0 0 3px rgba(144, 184, 0, 0.2);
+  border-color: #2C5745;
+  box-shadow: 0 0 0 3px rgba(235, 125, 0, 0.2);
 }
 .chat-textarea {
   width: 100%;
@@ -379,7 +379,7 @@
   outline: none;
   padding: 11px 16px;
   font-size: 13.5px;
-  color: #063B00;
+  color: #2E2910;
   font-family: inherit;
   font-weight: 500;
   resize: none;
@@ -407,13 +407,13 @@
   font-family: inherit;
 }
 .send-btn.active {
-  background: linear-gradient(135deg, #266210 0%, #063B00 100%);
-  color: #E1E100;
-  box-shadow: 0 4px 14px rgba(6, 59, 0, 0.35);
+  background: linear-gradient(135deg, #2C5745 0%, #2E2910 100%);
+  color: #EBE3A7;
+  box-shadow: 0 4px 14px rgba(46, 41, 16, 0.35);
 }
 .send-btn.active:hover {
   transform: scale(1.05);
-  box-shadow: 0 6px 18px rgba(6, 59, 0, 0.45);
+  box-shadow: 0 6px 18px rgba(46, 41, 16, 0.45);
 }
 .send-btn.active:active {
   transform: scale(0.96);

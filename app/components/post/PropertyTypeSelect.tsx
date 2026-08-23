@@ -6,17 +6,17 @@ export default function PropertyTypeSelect({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
-      <label id="propertyType-label" className="text-[#151717] text-sm font-semibold">প্রপার্টির ধরন</label>
+      <label id="propertyType-label" className="text-[#2E2910] text-sm font-semibold">প্রপার্টির ধরন</label>
       <input type="hidden" {...register("propertyType")} />
 
       <button
         type="button"
         aria-labelledby="propertyType-label"
-        className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#ecedec] focus:border-[#2d79f3]"}`}
+        className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
         onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
         onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}
       >
-        <span className="text-blue-600 truncate pr-4">
+        <span className="text-[#2C5745] truncate pr-4">
           {watch("propertyType") ? propertyTypes.find(p => p.value === watch("propertyType"))?.label : "-- নির্বাচন করুন --"}
         </span>
         <svg className={`w-5 h-5 text-slate-400 transition-transform ${isPropertyTypeOpen ? 'rotate-180' : ''}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
@@ -30,7 +30,7 @@ export default function PropertyTypeSelect({
           {propertyTypes.map((type) => (
             <li
               key={type.value}
-              className="px-4 py-2.5 text-slate-700 hover:bg-[#2d79f3] hover:text-white cursor-pointer text-sm transition-colors"
+              className="px-4 py-2.5 text-slate-700 hover:bg-[#EB7D00] hover:text-white cursor-pointer text-sm transition-colors"
               onClick={() => {
                 setValue("propertyType", type.value, { shouldValidate: true });
                 setIsPropertyTypeOpen(false);
