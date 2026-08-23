@@ -215,30 +215,39 @@ export default function SignUp() {
 
 function VerificationForm({ onPressVerify, code, setCode, isLoaded, clerkError }: any) {
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
-      <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">ইমেইল যাচাই করুন</h1>
-      <form onSubmit={onPressVerify} className="flex flex-col gap-1.5 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
-        <p className="text-center text-sm mb-4">আপনার ইমেইলে একটি কোড পাঠানো হয়েছে।</p>
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-28 pb-16 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EB7D00]/10 via-[#EBE3A7]/20 to-transparent pointer-events-none" />
+      <div className="w-full max-w-md relative">
+      <div className="text-center mb-6">
+        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE3A7] text-[#2C5745] text-xs font-bold">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#EB7D00]" />
+          নিরাপদ অ্যাকাউন্ট
+        </span>
+        <h1 className="text-3xl font-bold text-[#2E2910] mt-3">ইমেইল যাচাই করুন</h1>
+      </div>
+      <form onSubmit={onPressVerify} className="flex flex-col gap-1.5 bg-white/95 p-6 sm:p-8 w-full rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20">
+        <p className="text-center text-sm text-slate-500 mb-4">আপনার ইমেইলে একটি কোড পাঠানো হয়েছে।</p>
         {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
 
         <div className="flex flex-col">
-          <label htmlFor="verification-code" className="text-[#151717] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
+          <label htmlFor="verification-code" className="text-[#2E2910] font-semibold mb-1.5">ভেরিফিকেশন কোড</label>
         </div>
-        <div className="border-[1.5px] border-[#ecedec] rounded-none h-12.5 flex items-center pl-2.5 transition-colors duration-200 focus-within:border-[#2d79f3]">
+        <div className="border border-[#2C5745]/20 rounded-xl h-12 flex items-center pl-3 transition-colors duration-200 focus-within:border-[#EB7D00] focus-within:ring-2 focus-within:ring-[#EB7D00]/20 bg-[#EBE3A7]/20">
           <input
             id="verification-code"
             type="text"
             value={code}
             onChange={(e) => setCode(e.target.value)}
             placeholder="কোড দিন"
-            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#151717]"
+            className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-sm text-[#2E2910]"
           />
         </div>
 
-        <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#151717] text-white text-[15px] font-medium rounded-none h-12.5 w-50 mx-auto cursor-pointer hover:bg-black hover:text-green-500 hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50">
+        <button disabled={!isLoaded} type="submit" className="mt-4 my-3 bg-[#2C5745] text-white text-[15px] font-bold rounded-xl h-12 w-full mx-auto cursor-pointer hover:bg-[#2E2910] hover:shadow-lg hover:shadow-[#2C5745]/20 transition-all duration-200 disabled:opacity-50">
           যাচাই করুন
         </button>
       </form>
+      </div>
     </main>
   );
 }
@@ -247,17 +256,22 @@ function SignUpForm({
   handleSubmit, clerkError, formData, handleChange, submitted, errors, showPassword, setShowPassword, isLoaded, signUpWithGoogle, searchQuery
 }: any) {
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
-      <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">সাইন আপ</h1>
-      <form onSubmit={handleSubmit} className="flex flex-col gap-1 bg-white p-4 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]">
+    <main className="grow flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-28 pb-16 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EB7D00]/10 via-[#EBE3A7]/20 to-transparent pointer-events-none" />
+      <div className="w-full max-w-md relative">
+      <div className="text-center mb-6">
+        <h1 className="text-3xl font-bold text-[#2E2910] mt-3">সাইন আপ</h1>
+        <p className="text-sm text-slate-500 mt-1">আপনার অ্যাকাউন্ট তৈরি করুন</p>
+      </div>
+      <form onSubmit={handleSubmit} className="flex flex-col gap-1.5 bg-white/95 p-6 sm:p-8 w-full rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20">
         {clerkError && <div className="text-red-500 text-sm mb-2 text-center bg-red-50 p-2 rounded">{clerkError}</div>}
         <div id="clerk-captcha" />
 
         {/* Name Input */}
         <div className="flex flex-col">
-          <label htmlFor="name" className="text-[#151717] text-sm font-semibold mb-1">আপনার নাম</label>
+          <label htmlFor="name" className="text-[#2E2910] text-sm font-semibold mb-1">আপনার নাম</label>
         </div>
-        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.name ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border rounded-xl h-12 flex items-center pl-3 transition-colors duration-200 focus-within:ring-2 focus-within:ring-[#EB7D00]/20 bg-[#EBE3A7]/20 ${submitted && errors.name ? "border-red-500" : "border-[#2C5745]/20 focus-within:border-[#EB7D00]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
@@ -267,16 +281,16 @@ function SignUpForm({
             placeholder="আপনার পুরো নাম দিন"
             value={formData.name}
             onChange={(e) => handleChange("name", e.target.value)}
-            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
           />
         </div>
         {submitted && errors.name && <p className="text-red-500 text-xs mt-1 mb-2">{errors.name}</p>}
 
         {/* Email Input */}
         <div className="flex flex-col mt-0.5">
-          <label htmlFor="email" className="text-[#151717] text-sm font-semibold mb-1">ইমেইল</label>
+          <label htmlFor="email" className="text-[#2E2910] text-sm font-semibold mb-1">ইমেইল</label>
         </div>
-        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.email ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border rounded-xl h-12 flex items-center pl-3 transition-colors duration-200 focus-within:ring-2 focus-within:ring-[#EB7D00]/20 bg-[#EBE3A7]/20 ${submitted && errors.email ? "border-red-500" : "border-[#2C5745]/20 focus-within:border-[#EB7D00]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
           </svg>
@@ -286,16 +300,16 @@ function SignUpForm({
             placeholder="আপনার ইমেইল দিন"
             value={formData.email}
             onChange={(e) => handleChange("email", e.target.value)}
-            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
           />
         </div>
         {submitted && errors.email && <p className="text-red-500 text-xs mt-1 mb-2">{errors.email}</p>}
 
         {/* Phone Input */}
         <div className="flex flex-col mt-0.5">
-          <label htmlFor="phone" className="text-[#151717] text-sm font-semibold mb-1">ফোন নম্বর</label>
+          <label htmlFor="phone" className="text-[#2E2910] text-sm font-semibold mb-1">ফোন নম্বর</label>
         </div>
-        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${submitted && errors.phone ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border rounded-xl h-12 flex items-center pl-3 transition-colors duration-200 focus-within:ring-2 focus-within:ring-[#EB7D00]/20 bg-[#EBE3A7]/20 ${submitted && errors.phone ? "border-red-500" : "border-[#2C5745]/20 focus-within:border-[#EB7D00]"}`}>
           <svg className="w-4 h-4 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
           </svg>
@@ -305,16 +319,16 @@ function SignUpForm({
             placeholder="আপনার ফোন নম্বর দিন"
             value={formData.phone}
             onChange={(e) => handleChange("phone", e.target.value)}
-            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
           />
         </div>
         {submitted && errors.phone && <p className="text-red-500 text-xs mt-1 mb-2">{errors.phone}</p>}
 
         {/* Password Input */}
         <div className="flex flex-col mt-0.5">
-          <label htmlFor="password" className="text-[#151717] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
+          <label htmlFor="password" className="text-[#2E2910] text-sm font-semibold mb-1">পাসওয়ার্ড</label>
         </div>
-        <div className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${submitted && errors.password ? "border-red-500" : "border-[#ecedec] focus-within:border-[#2d79f3]"}`}>
+        <div className={`border rounded-xl h-12 flex items-center pl-3 pr-3 transition-colors duration-200 focus-within:ring-2 focus-within:ring-[#EB7D00]/20 bg-[#EBE3A7]/20 ${submitted && errors.password ? "border-red-500" : "border-[#2C5745]/20 focus-within:border-[#EB7D00]"}`}>
           <svg className="w-4 h-4 text-slate-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
           </svg>
@@ -324,12 +338,12 @@ function SignUpForm({
             placeholder="নতুন পাসওয়ার্ড দিন"
             value={formData.password}
             onChange={(e) => handleChange("password", e.target.value)}
-            className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+            className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
           />
           <button
             type="button"
             onClick={() => setShowPassword(!showPassword)}
-            className="text-slate-400 hover:text-[#2d79f3] focus:outline-none shrink-0"
+            className="text-slate-400 hover:text-[#EB7D00] focus:outline-none shrink-0"
             aria-label={showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
           >
             {showPassword ? (
@@ -349,19 +363,19 @@ function SignUpForm({
         <button
           disabled={!isLoaded}
           type="submit"
-          className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-50 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:scale-105 transition-all duration-200"
+          className="mt-6 mb-2 bg-[#2C5745] text-white text-[14px] font-bold rounded-xl h-12 w-full mx-auto cursor-pointer hover:bg-[#2E2910] hover:shadow-lg hover:shadow-[#2C5745]/20 transition-all duration-200 disabled:opacity-50"
         >
           সাইন আপ
         </button>
 
-        <p className="text-center text-black text-[13px] my-1">
+        <p className="text-center text-slate-600 text-[13px] my-1">
           অ্যাকাউন্ট আছে?
-          <Link href={`/login${searchQuery}`} className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline">
+          <Link href={`/login${searchQuery}`} className="text-[13px] ml-1 text-[#EB7D00] font-semibold cursor-pointer hover:underline">
             লগইন করুন
           </Link>
         </p>
 
-        <button type="button" onClick={signUpWithGoogle} className="mt-1 w-30 h-11 mx-auto rounded-none flex justify-center items-center font-medium text-[14px] text-black gap-2 border border-[#2d79f3] bg-white cursor-pointer transition-all duration-200 hover:bg-green-200 hover:shadow-lg hover:scale-105">
+        <button type="button" onClick={signUpWithGoogle} className="mt-3 w-full h-12 mx-auto rounded-xl flex justify-center items-center font-semibold text-[14px] text-[#2E2910] gap-2 border border-[#2C5745]/25 bg-white cursor-pointer transition-all duration-200 hover:bg-[#EBE3A7] hover:border-[#EB7D00] hover:shadow-md">
           <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4" />
             <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853" />
@@ -371,6 +385,7 @@ function SignUpForm({
           Google
         </button>
       </form>
+      </div>
     </main>
   );
 }

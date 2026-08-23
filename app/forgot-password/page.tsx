@@ -114,10 +114,19 @@ export default function ForgotPassword() {
   };
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#daf2e0] pt-32 pb-12">
-      <h1 className="text-3xl font-bold text-[#151717] mb-4 text-center">
+    <main className="grow min-h-screen flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-28 pb-16 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EB7D00]/10 via-[#EBE3A7]/20 to-transparent pointer-events-none" />
+      <div className="w-full max-w-md relative">
+      <div className="text-center mb-6">
+        <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE3A7] text-[#2C5745] text-xs font-bold">
+          <span className="w-1.5 h-1.5 rounded-full bg-[#EB7D00]" />
+          অ্যাকাউন্ট পুনরুদ্ধার
+        </span>
+      <h1 className="text-3xl font-bold text-[#2E2910] mt-3">
         পাসওয়ার্ড রিসেট
       </h1>
+      <p className="text-sm text-slate-500 mt-1">আপনার অ্যাকাউন্টে আবার প্রবেশ করুন</p>
+      </div>
 
       {!successfulCreation ? (
         <ResetRequestForm
@@ -143,6 +152,7 @@ export default function ForgotPassword() {
           setError={setError}
         />
       )}
+      </div>
     </main>
   );
 }
@@ -153,7 +163,7 @@ function ResetRequestForm({
   return (
     <form
       onSubmit={handlePasswordResetRequest}
-      className="flex flex-col gap-1 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]"
+    className="flex flex-col gap-1.5 bg-white/95 p-6 sm:p-8 w-full rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20"
     >
       <p className="text-slate-500 text-sm text-center mb-4">
         আপনার অ্যাকাউন্টের ইমেইল দিন। আমরা একটি রিসেট কোড পাঠাবো।
@@ -166,18 +176,18 @@ function ResetRequestForm({
       )}
 
       <div className="flex flex-col mt-0.5">
-        <label htmlFor="email" className="text-[#151717] text-sm font-semibold mb-1">
+        <label htmlFor="email" className="text-[#2E2910] text-sm font-semibold mb-1">
           ইমেইল
         </label>
       </div>
       <div
         className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${error && !email
             ? "border-red-500"
-            : "border-[#ecedec] focus-within:border-[#2d79f3]"
+            : "border-[#2C5745]/20 focus-within:border-[#EB7D00] focus-within:ring-2 focus-within:ring-[#EB7D00]/20"
           }`}
       >
         <svg
-          className="w-4 h-4 text-slate-400"
+          className="w-4 h-4 text-[#2C5745]"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -195,14 +205,14 @@ function ResetRequestForm({
           placeholder="আপনার ইমেইল দিন"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+          className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
         />
       </div>
 
       <button
         disabled={isProcessing}
         type="submit"
-        className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-full max-w-56 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="mt-6 mb-2 bg-[#2C5745] text-white text-[14px] font-bold rounded-xl h-12 w-full mx-auto cursor-pointer hover:bg-[#2E2910] hover:shadow-lg hover:shadow-[#2C5745]/20 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isProcessing ? (
           <>
@@ -232,11 +242,11 @@ function ResetRequestForm({
         )}
       </button>
 
-      <p className="text-center text-black text-[13px] my-2">
+      <p className="text-center text-slate-600 text-[13px] my-2">
         মনে পড়েছে?
         <Link
           href="/login"
-          className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline"
+          className="text-[13px] ml-1 text-[#EB7D00] font-semibold cursor-pointer hover:underline"
         >
           লগইন করুন
         </Link>
@@ -252,10 +262,10 @@ function ResetPasswordForm({
   return (
     <form
       onSubmit={handlePasswordReset}
-      className="flex flex-col gap-1 bg-white p-5 w-full max-w-112.5 rounded-[20px] shadow-sm border-2 border-[#2d79f3]"
+      className="flex flex-col gap-1.5 bg-white/95 p-6 sm:p-8 w-full rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20"
     >
       <p className="text-slate-500 text-sm text-center mb-4">
-        <span className="font-semibold text-[#151717]">{email}</span> এ
+        <span className="font-semibold text-[#2E2910]">{email}</span> এ
         পাঠানো কোডটি এবং আপনার নতুন পাসওয়ার্ড দিন।
       </p>
 
@@ -267,18 +277,18 @@ function ResetPasswordForm({
 
       {/* Code Input */}
       <div className="flex flex-col mt-0.5">
-        <label htmlFor="code" className="text-[#151717] text-sm font-semibold mb-1">
+        <label htmlFor="code" className="text-[#2E2910] text-sm font-semibold mb-1">
           রিসেট কোড
         </label>
       </div>
       <div
         className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 transition-colors duration-200 ${error && !code
             ? "border-red-500"
-            : "border-[#ecedec] focus-within:border-[#2d79f3]"
+            : "border-[#2C5745]/20 focus-within:border-[#EB7D00] focus-within:ring-2 focus-within:ring-[#EB7D00]/20"
           }`}
       >
         <svg
-          className="w-4 h-4 text-slate-400"
+          className="w-4 h-4 text-[#2C5745]"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -297,24 +307,24 @@ function ResetPasswordForm({
           placeholder="ইমেইলে পাঠানো কোডটি দিন"
           value={code}
           onChange={(e) => setCode(e.target.value)}
-          className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+          className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
         />
       </div>
 
       {/* New Password Input */}
       <div className="flex flex-col mt-3">
-        <label htmlFor="password" className="text-[#151717] text-sm font-semibold mb-1">
+        <label htmlFor="password" className="text-[#2E2910] text-sm font-semibold mb-1">
           নতুন পাসওয়ার্ড
         </label>
       </div>
       <div
         className={`border-[1.5px] rounded-none h-11 flex items-center pl-2.5 pr-3 transition-colors duration-200 ${error && !password
             ? "border-red-500"
-            : "border-[#ecedec] focus-within:border-[#2d79f3]"
+            : "border-[#2C5745]/20 focus-within:border-[#EB7D00] focus-within:ring-2 focus-within:ring-[#EB7D00]/20"
           }`}
       >
         <svg
-          className="w-4 h-4 text-slate-400 shrink-0"
+          className="w-4 h-4 text-[#2C5745] shrink-0"
           viewBox="0 0 24 24"
           fill="none"
           stroke="currentColor"
@@ -332,12 +342,12 @@ function ResetPasswordForm({
           placeholder="নতুন পাসওয়ার্ড দিন"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="ml-2.5 rounded-none border-none w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#151717]"
+          className="ml-2.5 border-none bg-transparent w-full h-full focus:outline-none placeholder:text-slate-400 placeholder:text-xs text-[#2E2910]"
         />
         <button
           type="button"
           onClick={() => setShowPassword(!showPassword)}
-          className="text-slate-400 hover:text-[#2d79f3] focus:outline-none shrink-0"
+          className="text-slate-400 hover:text-[#EB7D00] focus:outline-none shrink-0"
           aria-label={showPassword ? "পাসওয়ার্ড লুকান" : "পাসওয়ার্ড দেখুন"}
         >
           {showPassword ? (
@@ -381,7 +391,7 @@ function ResetPasswordForm({
       <button
         disabled={isProcessing}
         type="submit"
-        className="mt-6 mb-2 bg-blue-900 text-white text-[14px] font-medium rounded-none h-11 w-full max-w-56 mx-auto cursor-pointer hover:bg-blue-900 hover:text-green-400 hover:scale-105 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
+        className="mt-6 mb-2 bg-[#2C5745] text-white text-[14px] font-bold rounded-xl h-12 w-full mx-auto cursor-pointer hover:bg-[#2E2910] hover:shadow-lg hover:shadow-[#2C5745]/20 transition-all duration-200 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {isProcessing ? (
           <>
@@ -411,7 +421,7 @@ function ResetPasswordForm({
         )}
       </button>
 
-      <p className="text-center text-black text-[13px] my-2">
+      <p className="text-center text-slate-600 text-[13px] my-2">
         কোড পাননি?
         <button
           type="button"
@@ -421,17 +431,17 @@ function ResetPasswordForm({
             setPassword("");
             setError("");
           }}
-          className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline"
+          className="text-[13px] ml-1 text-[#EB7D00] font-semibold cursor-pointer hover:underline"
         >
           আবার পাঠান
         </button>
       </p>
 
-      <p className="text-center text-black text-[13px] mb-1">
+      <p className="text-center text-slate-600 text-[13px] mb-1">
         মনে পড়েছে?
         <Link
           href="/login"
-          className="text-[13px] ml-1 text-[#2d79f3] font-medium cursor-pointer hover:underline"
+          className="text-[13px] ml-1 text-[#EB7D00] font-semibold cursor-pointer hover:underline"
         >
           লগইন করুন
         </Link>
