@@ -22,6 +22,7 @@ const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5MB
 // --- ZOD SCHEMA ---
 const formSchema = z.object({
   title: z.string().min(5, "টাইটেল কমপক্ষে ৫ অক্ষরের হতে হবে").max(100, "টাইটেল ১০০ অক্ষরের বেশি হতে পারবে না"),
+  description: z.string().max(1000, "বিবরণ ১০০০ অক্ষরের বেশি হতে পারবে না").optional(),
   rentPrice: z.string().min(3, "ভাড়ার পরিমাণ দিন"),
   propertyType: z.string().min(1, "প্রপার্টির ধরন নির্বাচন করুন"),
   location: z.string().min(1, "লোকেশন নির্বাচন করুন"),
@@ -92,6 +93,7 @@ function PostToLetForm() {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: "",
+      description: "",
       rentPrice: "",
       propertyType: "",
       location: "",
@@ -151,6 +153,7 @@ function PostToLetForm() {
 
         reset({
           title: listing.title,
+          description: listing.description ?? "",
           rentPrice: String(listing.rentPrice),
           propertyType: listing.propertyType,
           location: listing.location,
@@ -232,6 +235,7 @@ function PostToLetForm() {
       if (isEditMode && listingId) {
         await updateUserListing(listingId, {
           title: watch("title"),
+          description: watch("description"),
           rentPrice: Number(watch("rentPrice")),
           propertyType: watch("propertyType"),
           location: watch("location"),
@@ -330,6 +334,7 @@ function PostToLetForm() {
       // --- Save to database ---
       const finalDataForDatabase = {
         ...data,
+        description: data.description || "",
         rentPrice: Number(data.rentPrice),
         images: uploadedImageUrls,
       };
@@ -404,6 +409,19 @@ function PostToLetForm() {
                 className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
               />
               {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
+            </div>
+
+            {/* Description */}
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="description" className="text-[#2E2910] text-sm font-semibold">বাসার বিস্তারিত বিবরণ</label>
+              <textarea
+                id="description"
+                {...register("description")}
+                rows={4}
+                placeholder="রুম, সুবিধা, পরিবেশ ও অন্যান্য গুরুত্বপূর্ণ তথ্য লিখুন"
+                className={`border rounded-xl min-h-28 px-3.5 py-3 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 resize-y ${errors.description ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
+              />
+              {errors.description && <span className="text-red-500 text-xs">{errors.description.message}</span>}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

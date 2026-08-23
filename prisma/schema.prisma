@@ -63,6 +63,7 @@ model Message {
 model Listing {
   id           String   @id @default(cuid())
   title        String
+  description  String?
   rentPrice    Int
   propertyType String
   location     String

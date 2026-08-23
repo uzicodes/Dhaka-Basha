@@ -307,7 +307,7 @@ export default async function ListingDetailsPage({
               </h3>
               
               <div className="text-slate-700 text-sm sm:text-base leading-relaxed whitespace-pre-line font-normal bg-[#EBE3A7] p-5 rounded-2xl border border-slate-100">
-                {listing.description}
+                {listing.description || "এই বিজ্ঞাপনের জন্য কোনো বিস্তারিত বিবরণ দেওয়া হয়নি।"}
               </div>
             </div>
 

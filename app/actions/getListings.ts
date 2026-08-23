@@ -273,6 +273,7 @@ export async function updateUserListing(
   listingId: string,
   data: {
     title: string;
+    description?: string;
     rentPrice: number;
     propertyType: string;
     location: string;
@@ -311,6 +312,7 @@ export async function updateUserListing(
       },
       data: {
         title: data.title,
+        description: data.description || null,
         rentPrice: data.rentPrice,
         propertyType: data.propertyType,
         location: data.location,
