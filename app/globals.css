@@ -18,6 +18,7 @@
 }
 
 :root {
+  scrollbar-gutter: stable;
   --background: #EBE3A7;
   --foreground: #2E2910;
   --brand-forest: #2E2910;

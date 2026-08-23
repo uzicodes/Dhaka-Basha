@@ -38,7 +38,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 w-[calc(100%-2rem)] left-4 md:top-6 md:left-1/2 md:w-auto md:transform md:-translate-x-1/2 z-50">
-      <div className={`bg-white/85 backdrop-blur-md shadow-lg border border-slate-200/80 flex flex-col md:flex-row md:items-center gap-1 transition-all duration-50 ${isMenuOpen ? "rounded-2xl p-4" : "rounded-full px-4 py-2.5"}`}>
+      <div className={`bg-white/85 backdrop-blur-md shadow-lg border border-slate-200/80 flex flex-col md:flex-row md:items-center md:justify-center md:min-w-[430px] gap-1 ${isMenuOpen ? "rounded-2xl p-4" : "rounded-full px-4 py-2.5"}`}>
         
         {/* Mobile Header (Logo & Hamburger) */}
         <div className={`relative flex items-center justify-between md:hidden w-full ${isMenuOpen ? "mb-4" : ""}`}>
