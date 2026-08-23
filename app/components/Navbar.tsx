@@ -25,13 +25,14 @@ export default function Navbar() {
   
   // Map pathname to active nav item
   const getActiveId = () => {
-    if (pathname === "/") return "home";
+    if (pathname === "/") return null;
     if (pathname === "/listings") return "properties";
     if (pathname === "/post") return "post";
     if (pathname === "/contact") return "contact";
     if (pathname === "/login") return "login";
     if (pathname === "/profile") return "profile";
-    return "home";
+    if (pathname.startsWith("/inbox")) return "profile";
+    return null;
   };
   
   const active = getActiveId();
