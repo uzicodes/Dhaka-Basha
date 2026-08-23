@@ -15,7 +15,7 @@ export default function LocationSelect({
       <button
         type="button"
         aria-labelledby="location-label"
-        className={`w-full border-[1.5px] bg-white rounded-none h-11 px-3 focus:outline-none transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+        className={`w-full border bg-[#EBE3A7]/20 rounded-xl h-12 px-3.5 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
         onClick={() => setIsSelectOpen(!isSelectOpen)}
         onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}
       >
@@ -43,13 +43,13 @@ export default function LocationSelect({
 
       {isSelectOpen && (
         <ul
-          className="absolute left-0 top-full mt-1 w-full bg-white border border-gray-200 shadow-xl rounded-none max-h-60 overflow-y-auto z-50 py-1"
+          className="absolute left-0 top-full mt-1 w-full bg-white border border-[#2C5745]/15 shadow-xl rounded-xl max-h-60 overflow-y-auto z-50 py-1"
           onMouseDown={(e) => e.preventDefault()}
         >
           {locations.map((loc) => (
             <div key={loc.value}>
               <li
-                className={`px-4 py-2.5 text-slate-900 hover:bg-[#EB7D00] hover:text-white cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-slate-100 font-semibold' : ''}`}
+                className={`px-4 py-2.5 text-slate-900 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-[#EBE3A7] font-semibold' : ''}`}
                 onClick={(e) => {
                   if (loc.subLocations) {
                     e.stopPropagation();
@@ -85,9 +85,9 @@ export default function LocationSelect({
               </li>
 
               {loc.subLocations && expandedLoc === loc.value && (
-                <ul className="bg-slate-50 border-y border-gray-100">
+                <ul className="bg-[#EBE3A7]/30 border-y border-[#2C5745]/10">
                   <li
-                    className="px-8 py-2.5 text-slate-700 hover:bg-[#EB7D00] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                    className="px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors border-b border-[#2C5745]/10 last:border-0"
                     onClick={() => {
                       setValue("location", loc.value, { shouldValidate: true });
                       setValue("subLocation", "");
@@ -111,7 +111,7 @@ export default function LocationSelect({
                   {loc.subLocations.map((sub) => (
                     <li
                       key={sub.value}
-                      className="px-8 py-2.5 text-slate-700 hover:bg-[#EB7D00] hover:text-white cursor-pointer text-sm transition-colors border-b border-gray-100 last:border-0"
+                      className="px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors border-b border-[#2C5745]/10 last:border-0"
                       onClick={() => {
                         setValue("location", loc.value, { shouldValidate: true });
                         setValue("subLocation", sub.value, { shouldValidate: true });

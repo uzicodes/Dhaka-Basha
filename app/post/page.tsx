@@ -373,11 +373,21 @@ function PostToLetForm() {
 
 
   return (
-    <main className="grow flex flex-col items-center justify-center px-4 bg-[#EBE3A7] pt-24 pb-12 relative">
-      <div className="w-full max-w-2xl bg-white p-6 md:p-8 rounded-[20px] shadow-sm border-2 border-[#EB7D00]">
-        <h1 className="text-2xl md:text-3xl font-bold text-[#2E2910] mb-6 text-center">
+    <main className="grow flex flex-col items-center px-4 bg-[#EBE3A7] pt-28 pb-16 relative overflow-hidden">
+      <div className="absolute inset-x-0 top-0 h-80 bg-gradient-to-b from-[#EB7D00]/10 via-[#EBE3A7]/20 to-transparent pointer-events-none" />
+      <div className="w-full max-w-3xl bg-white/95 p-6 sm:p-8 md:p-10 rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20 relative">
+        <div className="mb-8 text-center">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE3A7] text-[#2C5745] text-xs font-bold">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#EB7D00]" />
+            ঢাকা-বাসা বিজ্ঞাপন ফর্ম
+          </span>
+          <h1 className="text-2xl md:text-3xl font-bold text-[#2E2910] mt-3">
           {isEditMode ? "টু-লেট পোস্ট এডিট করুন" : "টু-লেট পোস্ট করুন"}
-        </h1>
+          </h1>
+          <p className="text-sm text-slate-500 mt-2 max-w-lg mx-auto">
+            আপনার বাসা সম্পর্কে সঠিক তথ্য দিন, যাতে ভাড়াটিয়ারা সহজেই খুঁজে পেতে পারেন।
+          </p>
+        </div>
 
         {isEditMode && isLoadingListing ? (
           <p className="text-center text-slate-500 py-10">পোস্টের তথ্য লোড হচ্ছে...</p>
@@ -391,7 +401,7 @@ function PostToLetForm() {
                 id="title"
                 {...register("title")}
                 type="text"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+                className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.title ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
               />
               {errors.title && <span className="text-red-500 text-xs">{errors.title.message}</span>}
             </div>
@@ -404,7 +414,7 @@ function PostToLetForm() {
                   id="rentPrice"
                   {...register("rentPrice")}
                   type="number"
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+                  className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.rentPrice ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
                 />
                 {errors.rentPrice && <span className="text-red-500 text-xs">{errors.rentPrice.message}</span>}
               </div>
@@ -455,7 +465,7 @@ function PostToLetForm() {
                 {...register("address")}
                 type="text"
                 placeholder="বাড়ি নং, ব্লক, রাস্তা নং"
-                className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+                className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.address ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
               />
               {errors.address && <span className="text-red-500 text-xs">{errors.address.message}</span>}
             </div>
@@ -470,7 +480,7 @@ function PostToLetForm() {
                   type="text"
                   maxLength={11}
                   placeholder="01XXXXXXXXX"
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+                  className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.contactInfo ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
                 />
                 {errors.contactInfo && <span className="text-red-500 text-xs">{errors.contactInfo.message}</span>}
               </div>
@@ -483,7 +493,7 @@ function PostToLetForm() {
                   {...register("mapLink")}
                   type="text"
                   placeholder="লিংক / কোড দিন "
-                  className={`border-[1.5px] rounded-none h-11 px-3 text-[#2C5745] placeholder:text-[#2C5745] focus:outline-none transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#EBE3A7] focus:border-[#EB7D00]"}`}
+                  className={`border rounded-xl h-12 px-3.5 bg-[#EBE3A7]/20 text-[#2C5745] placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.mapLink ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
                 />
                 {errors.mapLink && <span className="text-red-500 text-xs">{errors.mapLink.message}</span>}
               </div>
@@ -504,7 +514,7 @@ function PostToLetForm() {
             <button
               type="submit"
               disabled={isSubmitting || isUploading}
-              className="mt-4 bg-[#2C5745] text-white text-[15px] font-medium rounded-none h-12 w-full cursor-pointer hover:bg-[#2E2910] hover:text-[#EBE3A7] hover:shadow-lg hover:scale-105 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="mt-4 bg-[#2C5745] text-white text-[15px] font-bold rounded-xl h-12 w-full cursor-pointer hover:bg-[#2E2910] hover:shadow-lg hover:shadow-[#2C5745]/20 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isUploading ? "আপলোড হচ্ছে..." : isSubmitting ? "প্রসেস হচ্ছে..." : isEditMode ? "আপডেট সেভ করুন" : "বিজ্ঞাপন পোস্ট করুন"}
             </button>

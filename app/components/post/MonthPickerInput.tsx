@@ -17,7 +17,7 @@ export default function MonthPickerInput({
         aria-labelledby="rentFrom-label"
         onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") setIsMonthPickerOpen(!isMonthPickerOpen); }}
         onClick={() => setIsMonthPickerOpen(!isMonthPickerOpen)}
-        className={`border-[1.5px] rounded-none h-11 px-3 flex items-center justify-between cursor-pointer bg-white transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#EBE3A7] focus-within:border-[#EB7D00]"}`}
+        className={`border rounded-xl h-12 px-3.5 flex items-center justify-between cursor-pointer bg-[#EBE3A7]/20 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 ${errors.rentFrom ? "border-red-500" : "border-[#2C5745]/20 focus-within:border-[#EB7D00]"}`}
       >
         <span className={watch("rentFrom") ? "text-[#2C5745] font-medium" : "text-slate-400"}>
           {watch("rentFrom") || "মাস / বছর নির্বাচন করুন"}
@@ -29,8 +29,8 @@ export default function MonthPickerInput({
       <input type="hidden" {...register("rentFrom")} />
 
       {isMonthPickerOpen && (
-        <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 shadow-2xl z-60 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
-          <div className="flex items-center justify-between mb-4 border-b pb-2">
+        <div className="absolute top-full left-0 mt-1 w-full bg-white border border-[#2C5745]/15 shadow-2xl rounded-xl z-60 p-4 animate-in fade-in slide-in-from-top-2 duration-200">
+          <div className="flex items-center justify-between mb-4 border-b border-[#2C5745]/10 pb-2">
             <button
               type="button"
               onClick={() => setViewYear((prev: number) => Math.max(currentDate.year, prev - 1))}
@@ -69,7 +69,7 @@ export default function MonthPickerInput({
                     setIsMonthPickerOpen(false);
                   }}
                   className={`py-2 text-sm rounded-md transition-all ${isSelected
-                    ? "bg-[#EB7D00] text-white font-bold"
+                    ? "bg-[#EB7D00] text-white font-bold shadow-sm"
                     : isPast
                       ? "text-slate-300 cursor-not-allowed"
                       : "text-slate-600 hover:bg-[#EBE3A7] hover:text-[#EB7D00]"
