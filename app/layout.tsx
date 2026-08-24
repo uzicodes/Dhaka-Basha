@@ -3,6 +3,7 @@ import { Hind_Siliguri, Geist_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css";
 import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 import GlobalLoader from "./components/GlobalLoader";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ReactLenis } from "lenis/react";
@@ -80,6 +81,7 @@ export default function RootLayout({
             <Navbar />
             <Toaster position="bottom-right" richColors />
             {children}
+            <Footer />
           </ReactLenis>
         </body>
       </html>

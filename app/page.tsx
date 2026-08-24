@@ -39,11 +39,6 @@ export default function Home() {
           </Link>
         </div>
       </div>
-
-      {/* Footer */}
-      <footer className="fixed bottom-2 text-slate-500 font-medium text-sm z-10">
-        © ২০২৬  <span className="font-ekush text-base">ঢাকা-বাসা</span> প্ল্যাটফর্ম
-      </footer>
     </main>
   );
 }
