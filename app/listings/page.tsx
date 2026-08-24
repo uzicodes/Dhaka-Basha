@@ -255,8 +255,10 @@ function ListingsContent() {
                 {isLocDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsLocDropdownOpen(false)} />
-                    <div className="absolute left-0 top-full mt-2 w-full sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150">
-                      
+                    <div
+                      data-lenis-prevent="true"
+                      className="absolute left-0 top-full mt-2 w-full sm:w-96 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+                    >
                       {/* Search box within location dropdown */}
                       <div className="p-3 border-b border-slate-100 bg-[#EBE3A7]">
                         <div className="relative">
@@ -275,7 +277,11 @@ function ListingsContent() {
                       </div>
 
                       {/* Dropdown Items List */}
-                      <div className="max-h-72 overflow-y-auto p-1.5 divide-y divide-slate-100/60">
+                      <div
+                        data-lenis-prevent="true"
+                        onWheel={(e) => e.stopPropagation()}
+                        className="max-h-72 overflow-y-auto overscroll-contain p-1.5 divide-y divide-slate-100/60"
+                      >
                         <button
                           type="button"
                           onClick={() => {
@@ -409,7 +415,11 @@ function ListingsContent() {
                 {isTypeDropdownOpen && (
                   <>
                     <div className="fixed inset-0 z-40" onClick={() => setIsTypeDropdownOpen(false)} />
-                    <div className="absolute left-0 top-full mt-2 w-full sm:w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden p-2 animate-in fade-in zoom-in-95 duration-150">
+                    <div
+                      data-lenis-prevent="true"
+                      onWheel={(e) => e.stopPropagation()}
+                      className="absolute left-0 top-full mt-2 w-full sm:w-72 bg-white rounded-2xl shadow-2xl border border-slate-200 z-50 overflow-hidden max-h-80 overflow-y-auto overscroll-contain p-2 animate-in fade-in zoom-in-95 duration-150"
+                    >
                       <button
                         type="button"
                         onClick={() => {
@@ -473,14 +483,14 @@ function ListingsContent() {
         </div>
 
         {/* QUICK CATEGORY FILTER PILLS */}
-        <section className="flex items-center gap-1.5 overflow-x-auto pb-1 scrollbar-none justify-start md:justify-center pt-2">
+        <section className="flex items-center gap-2 overflow-x-auto pb-1.5 pt-1.5 scrollbar-none justify-start md:justify-center">
           <button
             type="button"
             onClick={() => handleCategorySelect("")}
-            className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+            className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
               !selectedType
                 ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
-                : "bg-white text-slate-700 border border-slate-200 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
+                : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-[#EBE3A7]/20 hover:text-[#2E2910]"
             }`}
           >
             সকল টু-লেট
@@ -492,10 +502,10 @@ function ListingsContent() {
                 key={type.value}
                 type="button"
                 onClick={() => handleCategorySelect(type.value)}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
+                className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isSelected
                     ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
-                    : "bg-white text-slate-700 border border-slate-200 hover:bg-[#EBE3A7]/15 hover:text-[#2E2910]"
+                    : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-[#EBE3A7]/20 hover:text-[#2E2910]"
                 }`}
               >
                 {type.label}
@@ -812,16 +822,32 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
       <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
         
         <div className="space-y-2.5">
-          {/* Location & Rent Date */}
-          <div className="flex items-center justify-between text-xs text-slate-500">
-            <span className="flex items-center gap-1 font-medium text-slate-600 truncate max-w-[60%]">
+          {/* Location & Rent Date / Call Action */}
+          <div className="flex items-start justify-between text-xs text-slate-500 gap-2">
+            <span className="flex items-center gap-1 font-medium text-slate-600 truncate max-w-[58%] pt-0.5">
               <svg className="w-3.5 h-3.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
               <span className="truncate">{locLabel} {subLocLabel && `(${subLocLabel})`}</span>
             </span>
-            <span className="flex items-center gap-1 text-[11px] bg-[#EBE3A7]/20 text-[#2E2910] font-semibold px-2 py-0.5 rounded-md shrink-0">
-              <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-              {listing.rentFrom}
-            </span>
+
+            {/* Date & Call Button */}
+            <div className="flex flex-col items-end gap-1.5 shrink-0">
+              <span className="flex items-center gap-1 text-[11px] bg-[#EBE3A7]/20 text-[#2E2910] font-semibold px-2 py-0.5 rounded-md">
+                <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                {listing.rentFrom}
+              </span>
+              {listing.contactInfo && (
+                <a
+                  href={`tel:${listing.contactInfo}`}
+                  title={`কল করুন: ${listing.contactInfo}`}
+                  className="px-2.5 py-0.5 rounded-md bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] text-[11px] font-bold transition-colors flex items-center gap-1"
+                >
+                  <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                  </svg>
+                  কল
+                </a>
+              )}
+            </div>
           </div>
 
           {/* Title */}
@@ -838,10 +864,10 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
         </div>
 
         {/* Card Footer */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-2">
+        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
           
           {/* User info */}
-          <div className="flex items-center gap-2 min-w-0">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
             <div className="w-6 h-6 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold">
               {listing.user?.profileImage ? (
                 <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={24} height={24} className="object-cover" />
@@ -849,22 +875,13 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
                 listing.user?.name?.[0] || "U"
               )}
             </div>
-            <span className="text-xs font-semibold text-slate-700 truncate">
+            <span className="text-xs font-semibold text-slate-700 truncate" title={listing.user?.name || "ইউজার"}>
               {listing.user?.name || "ইউজার"}
             </span>
           </div>
 
           {/* Actions */}
-          <div className="flex items-center gap-1.5 shrink-0">
-            {listing.contactInfo && (
-              <a
-                href={`tel:${listing.contactInfo}`}
-                title={`কল করুন: ${listing.contactInfo}`}
-                className="w-8 h-8 rounded-xl bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] flex items-center justify-center transition-colors"
-              >
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
-              </a>
-            )}
+          <div className="shrink-0">
             <Link
               href={`/listings/${listing.id}`}
               className="px-3.5 py-1.5 rounded-xl bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"

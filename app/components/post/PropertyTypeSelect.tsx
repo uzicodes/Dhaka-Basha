@@ -24,7 +24,9 @@ export default function PropertyTypeSelect({
 
       {isPropertyTypeOpen && (
         <ul
-          className="absolute left-0 top-full mt-1 w-full bg-white border border-[#2C5745]/15 shadow-xl rounded-xl max-h-60 overflow-y-auto z-50 py-1"
+          data-lenis-prevent="true"
+          onWheel={(e) => e.stopPropagation()}
+          className="absolute left-0 top-full mt-1 w-full bg-white border border-[#2C5745]/15 shadow-xl rounded-xl max-h-60 overflow-y-auto overscroll-contain z-50 py-1"
           onMouseDown={(e) => e.preventDefault()}
         >
           {propertyTypes.map((type) => (
