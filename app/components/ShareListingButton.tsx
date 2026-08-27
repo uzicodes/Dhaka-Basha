@@ -35,7 +35,7 @@ export default function ShareListingButton({ title }: { title: string }) {
     <button
       type="button"
       onClick={handleShare}
-      className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-blue-600 text-xs font-semibold border border-slate-200 shadow-2xs transition-all cursor-pointer"
+      className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full bg-white/80 hover:bg-white text-slate-700 hover:text-blue-600 text-sm font-semibold border border-slate-200 shadow-2xs transition-all cursor-pointer"
       title="শেয়ার করুন"
     >
       {copied ? (

@@ -31,17 +31,17 @@ export default function StartChatButton({
       type="button"
       onClick={handleClick}
       disabled={isLoading}
-      className="w-full flex items-center justify-center gap-2 py-3 px-4 rounded-xl font-bold border-2 border-[#2C5745]/30 bg-[#EBE3A7]/10 text-[#2E2910] hover:border-[#2C5745] hover:bg-[#EBE3A7]/20 transition-all active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-sm shadow-2xs"
+      className="w-full flex items-center justify-center gap-2 py-3.5 px-4 rounded-xl font-bold border-2 border-[#2C5745]/30 bg-[#EBE3A7]/10 text-[#2E2910] hover:border-[#2C5745] hover:bg-[#EBE3A7]/20 transition-all active:scale-[0.98] cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed text-base shadow-2xs"
     >
       {isLoading ? (
         <>
-          <div className="w-4 h-4 border-2 border-[#2C5745] border-t-transparent rounded-full animate-spin" />
+          <div className="w-5 h-5 border-2 border-[#2C5745] border-t-transparent rounded-full animate-spin" />
           <span>লোড হচ্ছে...</span>
         </>
       ) : (
         <>
           <svg
-            className="w-4 h-4 text-[#2C5745]"
+            className="w-5 h-5 text-[#2C5745]"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
