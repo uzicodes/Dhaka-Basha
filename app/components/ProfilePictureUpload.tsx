@@ -83,6 +83,13 @@ export default function ProfilePictureUpload({
         throw new Error(result.error || "Failed to update profile picture");
       }
 
+      // Broadcast event so Navbar and other components update immediately without a full reload
+      if (typeof window !== "undefined") {
+        window.dispatchEvent(
+          new CustomEvent("profile-updated", { detail: { profileImage: publicUrl } })
+        );
+      }
+
       toast.success("প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!");
       onUploaded?.(publicUrl);
     } catch (error) {

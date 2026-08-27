@@ -17,6 +17,7 @@ export async function updateProfileImage(imageUrl: string) {
     });
 
     revalidatePath("/profile");
+    revalidatePath("/", "layout");
     return { success: true };
   } catch (error) {
     console.error("Failed to update profile image:", error);

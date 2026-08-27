@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useAuth, useUser } from "@clerk/nextjs";
+import { getUserProfile } from "@/app/actions/user";
 
 const navItems = [
   { id: "home", label: "হোম", href: "/", icon: true },
@@ -18,10 +19,46 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isSignedIn } = useAuth();
   const { user } = useUser();
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
-  const isGoogleUser = user?.externalAccounts?.some(
-    (account: any) => account.provider === "oauth_google" || account.provider === "google",
-  );
+  useEffect(() => {
+    if (!isSignedIn) {
+      setAvatarUrl(null);
+      return;
+    }
+
+    let isMounted = true;
+
+    // Use Clerk user image initially as instant fallback
+    if (user?.imageUrl) {
+      setAvatarUrl(user.imageUrl);
+    }
+
+    // Fetch custom profile picture from database
+    getUserProfile()
+      .then((profile) => {
+        if (isMounted && profile?.profileImage) {
+          setAvatarUrl(profile.profileImage);
+        }
+      })
+      .catch(() => {
+        // keep fallback
+      });
+
+    // Listen for live profile updates
+    const handleProfileUpdate = (e: Event) => {
+      const customEvent = e as CustomEvent<{ profileImage: string }>;
+      if (customEvent.detail?.profileImage && isMounted) {
+        setAvatarUrl(customEvent.detail.profileImage);
+      }
+    };
+
+    window.addEventListener("profile-updated", handleProfileUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("profile-updated", handleProfileUpdate);
+    };
+  }, [isSignedIn, user?.imageUrl]);
   
   // Map pathname to active nav item
   const getActiveId = () => {
@@ -112,14 +149,17 @@ export default function Navbar() {
             <div className={`scale-120 origin-center rounded-full p-0.5 ${
               active === "profile" ? "ring-2 ring-[#2C5745] bg-[#EBE3A7]/20" : ""
             }`}>
-              {isSignedIn && isGoogleUser && user?.imageUrl ? (
-                <Image
-                  src={user.imageUrl}
-                  alt="Profile"
-                  width={22}
-                  height={22}
-                  className="rounded-full object-cover"
-                />
+              {isSignedIn && avatarUrl ? (
+                <div className="relative w-[22px] h-[22px] rounded-full overflow-hidden">
+                  <Image
+                    src={avatarUrl}
+                    alt="Profile"
+                    fill
+                    sizes="22px"
+                    className="rounded-full object-cover"
+                    unoptimized={avatarUrl.startsWith("blob:")}
+                  />
+                </div>
               ) : (
                 <svg
                   className="w-5 h-5"
