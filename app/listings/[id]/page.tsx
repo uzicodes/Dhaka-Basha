@@ -233,23 +233,61 @@ export default async function ListingDetailsPage({
                 </h1>
               </div>
 
-              {/* KEY HIGHLIGHTS 4-GRID */}
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-2">
-                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 space-y-1">
-                  <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">প্রপার্টি ধরন</span>
-                  <span className="block text-sm sm:text-base font-bold text-slate-900 truncate">{propTypeLabel}</span>
+              {/* KEY HIGHLIGHTS REDESIGNED (2-COL RESPONSIVE WITH ICONS, NO CUT-OFFS) */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
+                {/* Property Type */}
+                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 flex items-start gap-3.5 shadow-2xs">
+                  <div className="w-10 h-10 rounded-xl bg-white text-[#2C5745] flex items-center justify-center shrink-0 shadow-2xs">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">প্রপার্টি ধরন</span>
+                    <span className="block text-base font-bold text-slate-900 break-words">{propTypeLabel}</span>
+                  </div>
                 </div>
-                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 space-y-1">
-                  <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">এলাকা</span>
-                  <span className="block text-sm sm:text-base font-bold text-slate-900 truncate">{locLabel}</span>
+
+                {/* Area / Location */}
+                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 flex items-start gap-3.5 shadow-2xs">
+                  <div className="w-10 h-10 rounded-xl bg-white text-red-500 flex items-center justify-center shrink-0 shadow-2xs">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">এলাকা</span>
+                    <span className="block text-base font-bold text-slate-900 break-words">
+                      {locLabel}
+                    </span>
+                  </div>
                 </div>
-                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 space-y-1">
-                  <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">ভাড়া শুরু</span>
-                  <span className="block text-sm sm:text-base font-bold text-slate-900 truncate">{listing.rentFrom}</span>
+
+                {/* Rent Start Date */}
+                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 flex items-start gap-3.5 shadow-2xs">
+                  <div className="w-10 h-10 rounded-xl bg-white text-[#2E2910] flex items-center justify-center shrink-0 shadow-2xs">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">ভাড়া শুরু</span>
+                    <span className="block text-base font-bold text-slate-900 break-words">{listing.rentFrom}</span>
+                  </div>
                 </div>
-                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 space-y-1">
-                  <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">মাসিক ভাড়া</span>
-                  <span className="block text-base sm:text-lg font-extrabold text-red-600">৳{listing.rentPrice.toLocaleString("en-IN")}</span>
+
+                {/* Monthly Rent */}
+                <div className="bg-[#EBE3A7] p-4 rounded-2xl border border-slate-100 flex items-start gap-3.5 shadow-2xs">
+                  <div className="w-10 h-10 rounded-xl bg-white text-red-600 flex items-center justify-center shrink-0 shadow-2xs font-extrabold text-lg">
+                    ৳
+                  </div>
+                  <div className="min-w-0 flex-1 space-y-0.5">
+                    <span className="block text-xs font-bold text-slate-500 uppercase tracking-wide">মাসিক ভাড়া</span>
+                    <span className="block text-lg font-extrabold text-red-600 break-words">
+                      ৳{listing.rentPrice.toLocaleString("en-IN")} <span className="text-xs font-semibold text-slate-600">/ মাস</span>
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -385,8 +423,8 @@ export default async function ListingDetailsPage({
             <div className="bg-white p-5 sm:p-6 rounded-3xl border border-slate-200/80 shadow-xs space-y-4">
               <span className="text-xs sm:text-sm font-bold text-slate-500 uppercase tracking-wider block">বিজ্ঞাপনদাতা</span>
               
-              <div className="flex items-center gap-3.5">
-                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden border border-slate-200 shrink-0 flex items-center justify-center font-bold text-lg">
+              <div className="flex items-start gap-3.5">
+                <div className="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden border border-slate-200 shrink-0 flex items-center justify-center font-bold text-lg mt-0.5">
                   {listing.user.profileImage ? (
                     <Image src={listing.user.profileImage} alt={listing.user.name || ""} width={56} height={56} className="object-cover" />
                   ) : authorClerkImage ? (
@@ -396,15 +434,15 @@ export default async function ListingDetailsPage({
                   )}
                 </div>
 
-                <div className="min-w-0">
-                  <h4 className="text-base sm:text-lg font-bold text-[#2E2910] truncate">
+                <div className="min-w-0 flex-1">
+                  <h4 className="text-base sm:text-lg font-bold text-[#2E2910] break-words leading-snug">
                     {listing.user.name || "নাম পাওয়া যায়নি"}
                   </h4>
-                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#2C5745] font-semibold mt-0.5">
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <div className="flex items-center gap-1.5 text-xs sm:text-sm text-[#2C5745] font-semibold mt-1">
+                    <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                     </svg>
-                    ভেরিফায়েড বিজ্ঞাপনদাতা
+                    <span>ভেরিফায়েড বিজ্ঞাপনদাতা</span>
                   </div>
                 </div>
               </div>
