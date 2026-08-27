@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
 import { Loader } from "@/app/components/GlobalLoader";
+import ProfilePictureUpload from "@/app/components/ProfilePictureUpload";
 import { getUserProfile, updateUserProfile } from "@/app/actions/user";
 import {
   getUserListings,
@@ -30,7 +31,6 @@ export default function ProfilePage() {
   // Status & Control states
   const [isEditing, setIsEditing] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
-  const [isUploading, setIsUploading] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [activeSection, setActiveSection] = useState<"my-listings" | "saved-listings">("my-listings");
 
@@ -139,34 +139,6 @@ export default function ProfilePage() {
     }
   };
 
-  // Upload profile photo
-  const handleImageChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append("file", file);
-
-      const res = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
-      });
-
-      if (!res.ok) throw new Error("Upload failed");
-
-      const data = await res.json();
-      const imageUrl = data.url;
-
-      setProfileImage(imageUrl);
-    } catch (error) {
-      console.error("Failed to upload image:", error);
-    } finally {
-      setIsUploading(false);
-    }
-  };
-
   const handlePhoneChange = (val: string) => {
     const numeric = val.replace(/\D/g, "");
     if (numeric.length <= 11) {
@@ -252,8 +224,8 @@ export default function ProfilePage() {
         {/* PROFILE HEADER CARD */}
         <ProfileHeader
           user={user}
-          isGoogleUser={isGoogleUser}
           profileImage={profileImage}
+          setProfileImage={setProfileImage}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           name={name}
@@ -262,8 +234,6 @@ export default function ProfilePage() {
           handlePhoneChange={handlePhoneChange}
           address={address}
           setAddress={setAddress}
-          isUploading={isUploading}
-          handleImageChange={handleImageChange}
           isSaving={isSaving}
           handleSave={handleSave}
           memberSince={memberSince}
@@ -322,6 +292,7 @@ export default function ProfilePage() {
 function ProfileHeader({
   user,
   profileImage,
+  setProfileImage,
   isEditing,
   setIsEditing,
   name,
@@ -330,8 +301,6 @@ function ProfileHeader({
   handlePhoneChange,
   address,
   setAddress,
-  isUploading,
-  handleImageChange,
   isSaving,
   handleSave,
   memberSince,
@@ -339,47 +308,12 @@ function ProfileHeader({
   return (
     <div className="bg-white p-6 sm:p-8 rounded-3xl border border-slate-200/80 shadow-xs flex flex-col md:flex-row items-center md:items-start gap-6">
       
-      {/* Avatar Container */}
-      <div className="relative group shrink-0">
-        <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-[#EBE3A7]/20 text-[#2E2910] border-2 border-slate-200 shadow-md flex items-center justify-center font-bold text-3xl">
-          {profileImage ? (
-            <Image
-              src={profileImage}
-              alt={name || "User"}
-              fill
-              className="object-cover"
-            />
-          ) : (
-            name?.[0]?.toUpperCase() || "U"
-          )}
-
-          {isUploading && (
-            <div className="absolute inset-0 bg-black/50 backdrop-blur-xs flex items-center justify-center text-white">
-              <div className="w-6 h-6 border-2 border-white border-t-transparent rounded-full animate-spin" />
-            </div>
-          )}
-        </div>
-
-        {/* Change Photo Trigger */}
-        <label
-          htmlFor="profile-upload"
-          className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-[#2E2910] hover:bg-[#2C5745] text-[#EB7D00] shadow-md border-2 border-white transition-all cursor-pointer hover:scale-105 active:scale-95"
-          title="ছবি পরিবর্তন করুন"
-        >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z" />
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z" />
-          </svg>
-          <input
-            id="profile-upload"
-            type="file"
-            accept="image/*"
-            onChange={handleImageChange}
-            disabled={isUploading}
-            className="hidden"
-          />
-        </label>
-      </div>
+      {/* Avatar Container with R2 Upload */}
+      <ProfilePictureUpload
+        currentImageUrl={profileImage}
+        name={name}
+        onUploaded={(url) => setProfileImage(url)}
+      />
 
       {/* User Information Details */}
       <div className="flex-1 space-y-4 text-center md:text-left w-full">
