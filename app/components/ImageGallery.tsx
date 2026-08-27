@@ -1,30 +1,75 @@
 "use client";
 
-import { useState, useCallback, useEffect } from "react";
+import { useReducer, useEffect } from "react";
 import Image from "next/image";
 
 interface ImageGalleryProps {
   images: string[];
 }
 
-export default function ImageGallery({ images }: ImageGalleryProps) {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [fullscreenIndex, setFullscreenIndex] = useState<number | null>(null);
+type GalleryState = {
+  activeIndex: number;
+  fullscreenIndex: number | null;
+};
 
-  // Close fullscreen on Escape key
+type GalleryAction =
+  | { type: "SET_ACTIVE"; index: number }
+  | { type: "OPEN_FULLSCREEN"; index: number }
+  | { type: "CLOSE_FULLSCREEN" }
+  | { type: "NEXT"; total: number }
+  | { type: "PREV"; total: number }
+  | { type: "FULLSCREEN_NEXT"; total: number }
+  | { type: "FULLSCREEN_PREV"; total: number };
+
+function galleryReducer(state: GalleryState, action: GalleryAction): GalleryState {
+  switch (action.type) {
+    case "SET_ACTIVE":
+      return { ...state, activeIndex: action.index };
+    case "OPEN_FULLSCREEN":
+      return { ...state, fullscreenIndex: action.index };
+    case "CLOSE_FULLSCREEN":
+      return { ...state, fullscreenIndex: null };
+    case "NEXT":
+      return { ...state, activeIndex: (state.activeIndex + 1) % action.total };
+    case "PREV":
+      return { ...state, activeIndex: (state.activeIndex - 1 + action.total) % action.total };
+    case "FULLSCREEN_NEXT":
+      return {
+        ...state,
+        fullscreenIndex:
+          state.fullscreenIndex !== null ? (state.fullscreenIndex + 1) % action.total : null,
+      };
+    case "FULLSCREEN_PREV":
+      return {
+        ...state,
+        fullscreenIndex:
+          state.fullscreenIndex !== null ? (state.fullscreenIndex - 1 + action.total) % action.total : null,
+      };
+    default:
+      return state;
+  }
+}
+
+export default function ImageGallery({ images }: ImageGalleryProps) {
+  const [{ activeIndex, fullscreenIndex }, dispatch] = useReducer(galleryReducer, {
+    activeIndex: 0,
+    fullscreenIndex: null,
+  });
+
+  // Handle keyboard navigation in fullscreen
   useEffect(() => {
+    if (fullscreenIndex === null) return;
+
     const handleKey = (e: KeyboardEvent) => {
-      if (fullscreenIndex === null) return;
-      if (e.key === "Escape") setFullscreenIndex(null);
-      if (e.key === "ArrowRight")
-        setFullscreenIndex((prev) =>
-          prev !== null ? (prev + 1) % images.length : null
-        );
-      if (e.key === "ArrowLeft")
-        setFullscreenIndex((prev) =>
-          prev !== null ? (prev - 1 + images.length) % images.length : null
-        );
+      if (e.key === "Escape") {
+        dispatch({ type: "CLOSE_FULLSCREEN" });
+      } else if (e.key === "ArrowRight") {
+        dispatch({ type: "FULLSCREEN_NEXT", total: images.length });
+      } else if (e.key === "ArrowLeft") {
+        dispatch({ type: "FULLSCREEN_PREV", total: images.length });
+      }
     };
+
     window.addEventListener("keydown", handleKey);
     return () => window.removeEventListener("keydown", handleKey);
   }, [fullscreenIndex, images.length]);
@@ -41,25 +86,13 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     };
   }, [fullscreenIndex]);
 
-  const goNext = useCallback(() => {
-    setActiveIndex((prev) => (prev + 1) % images.length);
-  }, [images.length]);
-
-  const goPrev = useCallback(() => {
-    setActiveIndex((prev) => (prev - 1 + images.length) % images.length);
-  }, [images.length]);
-
-  const goFullscreenNext = useCallback(() => {
-    setFullscreenIndex((prev) =>
-      prev !== null ? (prev + 1) % images.length : null
-    );
-  }, [images.length]);
-
-  const goFullscreenPrev = useCallback(() => {
-    setFullscreenIndex((prev) =>
-      prev !== null ? (prev - 1 + images.length) % images.length : null
-    );
-  }, [images.length]);
+  const goNext = () => dispatch({ type: "NEXT", total: images.length });
+  const goPrev = () => dispatch({ type: "PREV", total: images.length });
+  const goFullscreenNext = () => dispatch({ type: "FULLSCREEN_NEXT", total: images.length });
+  const goFullscreenPrev = () => dispatch({ type: "FULLSCREEN_PREV", total: images.length });
+  const openFullscreen = (index: number) => dispatch({ type: "OPEN_FULLSCREEN", index });
+  const closeFullscreen = () => dispatch({ type: "CLOSE_FULLSCREEN" });
+  const setActiveIndex = (index: number) => dispatch({ type: "SET_ACTIVE", index });
 
   if (!images || images.length === 0) {
     return (
@@ -85,11 +118,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
             priority
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
             className="object-cover cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]"
-            onClick={() => setFullscreenIndex(activeIndex)}
+            onClick={() => openFullscreen(activeIndex)}
             onKeyDown={(e) => {
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
-                setFullscreenIndex(activeIndex);
+                openFullscreen(activeIndex);
               }
             }}
             tabIndex={0}
@@ -99,7 +132,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           {/* Fullscreen hint */}
           <button
             type="button"
-            onClick={() => setFullscreenIndex(activeIndex)}
+            onClick={() => openFullscreen(activeIndex)}
             className="absolute top-3 right-3 bg-slate-900/60 hover:bg-slate-900/80 text-white p-2.5 rounded-xl transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer shadow-xs"
             title="ফুলস্ক্রিনে দেখুন"
             aria-label="Open fullscreen"
@@ -172,11 +205,11 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
       {fullscreenIndex !== null && (
         <div
           className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-200"
-          onClick={() => setFullscreenIndex(null)}
+          onClick={closeFullscreen}
           onKeyDown={(e) => {
             if (e.key === "Enter" || e.key === " ") {
               e.preventDefault();
-              setFullscreenIndex(null);
+              closeFullscreen();
             }
           }}
           tabIndex={0}
@@ -185,7 +218,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           {/* Close button */}
           <button
             type="button"
-            onClick={() => setFullscreenIndex(null)}
+            onClick={closeFullscreen}
             className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
             aria-label="Close fullscreen"
           >

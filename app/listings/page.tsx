@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useMemo, Suspense } from "react";
+import { useState, useEffect, useMemo, useReducer, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import Link from "next/link";
@@ -15,6 +15,116 @@ export default function ListingsPage() {
   );
 }
 
+type FilterState = {
+  selectedLocation: string;
+  selectedSubLocation: string;
+  selectedType: string;
+  sortBy: string;
+  viewMode: "grid" | "list";
+  isLocDropdownOpen: boolean;
+  isTypeDropdownOpen: boolean;
+  locationSearchQuery: string;
+  expandedLoc: string;
+};
+
+type FilterAction =
+  | {
+      type: "SYNC_FROM_URL";
+      location: string;
+      subLocation: string;
+      propertyType: string;
+      sort: string;
+    }
+  | { type: "SET_LOCATION"; location: string; subLocation?: string }
+  | { type: "SET_SUB_LOCATION"; subLocation: string }
+  | { type: "SET_TYPE"; propertyType: string }
+  | { type: "SET_SORT_BY"; sortBy: string }
+  | { type: "SET_VIEW_MODE"; viewMode: "grid" | "list" }
+  | { type: "SET_LOC_DROPDOWN"; open: boolean }
+  | { type: "SET_TYPE_DROPDOWN"; open: boolean }
+  | { type: "SET_LOC_SEARCH_QUERY"; query: string }
+  | { type: "SET_EXPANDED_LOC"; loc: string }
+  | { type: "RESET_FILTERS" };
+
+function filterReducer(state: FilterState, action: FilterAction): FilterState {
+  switch (action.type) {
+    case "SYNC_FROM_URL":
+      return {
+        ...state,
+        selectedLocation: action.location,
+        selectedSubLocation: action.subLocation,
+        selectedType: action.propertyType,
+        sortBy: action.sort || state.sortBy,
+        expandedLoc: action.location ? action.location : state.expandedLoc,
+      };
+    case "SET_LOCATION":
+      return {
+        ...state,
+        selectedLocation: action.location,
+        selectedSubLocation: action.subLocation ?? "",
+        isLocDropdownOpen: false,
+        expandedLoc: action.location ? action.location : "",
+      };
+    case "SET_SUB_LOCATION":
+      return {
+        ...state,
+        selectedSubLocation: action.subLocation,
+        isLocDropdownOpen: false,
+      };
+    case "SET_TYPE":
+      return {
+        ...state,
+        selectedType: action.propertyType,
+        isTypeDropdownOpen: false,
+      };
+    case "SET_SORT_BY":
+      return {
+        ...state,
+        sortBy: action.sortBy,
+      };
+    case "SET_VIEW_MODE":
+      return {
+        ...state,
+        viewMode: action.viewMode,
+      };
+    case "SET_LOC_DROPDOWN":
+      return {
+        ...state,
+        isLocDropdownOpen: action.open,
+        ...(action.open ? { isTypeDropdownOpen: false } : {}),
+      };
+    case "SET_TYPE_DROPDOWN":
+      return {
+        ...state,
+        isTypeDropdownOpen: action.open,
+        ...(action.open ? { isLocDropdownOpen: false } : {}),
+      };
+    case "SET_LOC_SEARCH_QUERY":
+      return {
+        ...state,
+        locationSearchQuery: action.query,
+      };
+    case "SET_EXPANDED_LOC":
+      return {
+        ...state,
+        expandedLoc: action.loc,
+      };
+    case "RESET_FILTERS":
+      return {
+        ...state,
+        selectedLocation: "",
+        selectedSubLocation: "",
+        selectedType: "",
+        expandedLoc: "",
+        isLocDropdownOpen: false,
+        isTypeDropdownOpen: false,
+        locationSearchQuery: "",
+      };
+    default:
+      return state;
+  }
+}
+
 function ListingsContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -25,31 +135,67 @@ function ListingsContent() {
   const urlType = searchParams.get("type") || "";
   const urlSort = searchParams.get("sort") || "newest";
 
-  // Filter States
-  const [selectedLocation, setSelectedLocation] = useState<string>(urlLocation);
-  const [selectedSubLocation, setSelectedSubLocation] = useState<string>(urlSubLocation);
-  const [selectedType, setSelectedType] = useState<string>(urlType);
-  const [sortBy, setSortBy] = useState<string>(urlSort);
-  const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
+  // Filter & UI States via useReducer (combines 8 interrelated states and avoids multi-setState redraws)
+  const [
+    {
+      selectedLocation,
+      selectedSubLocation,
+      selectedType,
+      sortBy,
+      viewMode,
+      isLocDropdownOpen,
+      isTypeDropdownOpen,
+      locationSearchQuery,
+      expandedLoc,
+    },
+    dispatchFilter,
+  ] = useReducer(filterReducer, {
+    selectedLocation: urlLocation,
+    selectedSubLocation: urlSubLocation,
+    selectedType: urlType,
+    sortBy: urlSort,
+    viewMode: "grid",
+    isLocDropdownOpen: false,
+    isTypeDropdownOpen: false,
+    locationSearchQuery: "",
+    expandedLoc: urlLocation,
+  });
 
-  // Dropdown States
-  const [isLocDropdownOpen, setIsLocDropdownOpen] = useState<boolean>(false);
-  const [isTypeDropdownOpen, setIsTypeDropdownOpen] = useState<boolean>(false);
-  const [locationSearchQuery, setLocationSearchQuery] = useState<string>("");
-  const [expandedLoc, setExpandedLoc] = useState<string>("");
+  // State update helper functions
+  const setSelectedLocation = (loc: string, sub: string = "") =>
+    dispatchFilter({ type: "SET_LOCATION", location: loc, subLocation: sub });
+  const setSelectedSubLocation = (sub: string) =>
+    dispatchFilter({ type: "SET_SUB_LOCATION", subLocation: sub });
+  const setSelectedType = (type: string) =>
+    dispatchFilter({ type: "SET_TYPE", propertyType: type });
+  const setSortBy = (sort: string) =>
+    dispatchFilter({ type: "SET_SORT_BY", sortBy: sort });
+  const setViewMode = (mode: "grid" | "list") =>
+    dispatchFilter({ type: "SET_VIEW_MODE", viewMode: mode });
+  const setIsLocDropdownOpen = (open: boolean) =>
+    dispatchFilter({ type: "SET_LOC_DROPDOWN", open });
+  const setIsTypeDropdownOpen = (open: boolean) =>
+    dispatchFilter({ type: "SET_TYPE_DROPDOWN", open });
+  const setLocationSearchQuery = (query: string) =>
+    dispatchFilter({ type: "SET_LOC_SEARCH_QUERY", query });
+  const setExpandedLoc = (loc: string) =>
+    dispatchFilter({ type: "SET_EXPANDED_LOC", loc });
 
   // Data States
   const [listings, setListings] = useState<any[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [isSearching, setIsSearching] = useState<boolean>(false);
 
-  // Sync state when URL params change
+  // Sync state when URL params change (Single atomic dispatch)
   useEffect(() => {
-    setSelectedLocation(urlLocation);
-    setSelectedSubLocation(urlSubLocation);
-    setSelectedType(urlType);
-    if (urlLocation) setExpandedLoc(urlLocation);
-  }, [urlLocation, urlSubLocation, urlType]);
+    dispatchFilter({
+      type: "SYNC_FROM_URL",
+      location: urlLocation,
+      subLocation: urlSubLocation,
+      propertyType: urlType,
+      sort: urlSort,
+    });
+  }, [urlLocation, urlSubLocation, urlType, urlSort]);
 
   // Fetch initial listings or search query
   useEffect(() => {
@@ -117,10 +263,7 @@ function ListingsContent() {
 
   // Reset all filters
   const handleResetFilters = async () => {
-    setSelectedLocation("");
-    setSelectedSubLocation("");
-    setSelectedType("");
-    setExpandedLoc("");
+    dispatchFilter({ type: "RESET_FILTERS" });
     updateUrlParams("", "", "", "newest");
     setIsLoading(true);
     try {
