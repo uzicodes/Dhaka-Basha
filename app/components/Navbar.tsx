@@ -21,28 +21,42 @@ export default function Navbar() {
   const { user } = useUser();
   const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
 
+  const userId = user?.id;
+  const userImageUrl = user?.imageUrl;
+
   useEffect(() => {
-    if (!isSignedIn) {
+    if (!isSignedIn || !userId) {
       setAvatarUrl(null);
       return;
     }
 
     let isMounted = true;
+    const cacheKey = `dhaka_basha_avatar_${userId}`;
 
-    // Use Clerk user image initially as instant fallback
-    if (user?.imageUrl) {
-      setAvatarUrl(user.imageUrl);
+    // Read cached avatar to avoid visual jump on page load
+    const cachedAvatar = typeof window !== "undefined" ? localStorage.getItem(cacheKey) : null;
+    if (cachedAvatar) {
+      setAvatarUrl(cachedAvatar);
     }
 
     // Fetch custom profile picture from database
     getUserProfile()
       .then((profile) => {
-        if (isMounted && profile?.profileImage) {
+        if (!isMounted) return;
+        if (profile?.profileImage) {
+          // Custom profile image takes priority
           setAvatarUrl(profile.profileImage);
+          localStorage.setItem(cacheKey, profile.profileImage);
+        } else if (userImageUrl) {
+          // Fallback to Google / Clerk OAuth image only if no custom image is set
+          setAvatarUrl(userImageUrl);
+          localStorage.setItem(cacheKey, userImageUrl);
         }
       })
       .catch(() => {
-        // keep fallback
+        if (isMounted && !cachedAvatar && userImageUrl) {
+          setAvatarUrl(userImageUrl);
+        }
       });
 
     // Listen for live profile updates
@@ -50,6 +64,7 @@ export default function Navbar() {
       const customEvent = e as CustomEvent<{ profileImage: string }>;
       if (customEvent.detail?.profileImage && isMounted) {
         setAvatarUrl(customEvent.detail.profileImage);
+        localStorage.setItem(cacheKey, customEvent.detail.profileImage);
       }
     };
 
@@ -58,14 +73,13 @@ export default function Navbar() {
       isMounted = false;
       window.removeEventListener("profile-updated", handleProfileUpdate);
     };
-  }, [isSignedIn, user?.imageUrl]);
+  }, [isSignedIn, userId, userImageUrl]);
   
   // Map pathname to active nav item
   const getActiveId = () => {
     if (pathname === "/") return null;
     if (pathname === "/listings") return "properties";
     if (pathname === "/post") return "post";
-    if (pathname === "/contact") return "contact";
     if (pathname === "/profile") return "profile";
     if (pathname.startsWith("/inbox")) return "profile";
     return null;
