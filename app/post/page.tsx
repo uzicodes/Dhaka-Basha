@@ -9,7 +9,7 @@ import Image from "next/image";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
-import { useRouter, useSearchParams, redirect } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useUser } from "@clerk/nextjs";
 import { locations, propertyTypes } from "@/src/lib/constants";
 import { createListing } from "@/app/actions/createListing";
@@ -63,7 +63,6 @@ function PostToLetForm() {
     const now = new Date();
     return { year: now.getFullYear(), month: now.getMonth() + 1 };
   });
-  const [listingError, setListingError] = useState(false);
   const monthPickerRef = useRef<HTMLDivElement>(null);
   const propertyTypeRef = useRef<HTMLDivElement>(null);
 
@@ -109,10 +108,6 @@ function PostToLetForm() {
   const selectedLocation = watch("location");
   const selectedSubLocation = watch("subLocation");
 
-  if (listingError) {
-    redirect("/profile");
-  }
-
   useEffect(() => {
     if (isEditMode) {
       return;
@@ -147,7 +142,7 @@ function PostToLetForm() {
 
         if (!listing) {
           toast.error("এই পোস্টটি খুঁজে পাওয়া যায়নি বা আপনার নয়।");
-          setListingError(true);
+          router.replace("/profile");
           return;
         }
 
@@ -168,7 +163,7 @@ function PostToLetForm() {
       } catch (error) {
         console.error("Failed to load listing for edit:", error);
         toast.error("পোস্টের তথ্য লোড করতে সমস্যা হয়েছে।");
-        setListingError(true);
+        router.replace("/profile");
       } finally {
         if (isMounted) {
           setIsLoadingListing(false);
