@@ -111,23 +111,21 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
       <div className="mb-6 space-y-3">
         {/* Hero image */}
         <div className="relative w-full aspect-video rounded-2xl overflow-hidden bg-slate-100 border border-slate-200/80 group shadow-xs">
-          <Image
-            src={images[activeIndex]}
-            alt={`ছবি ${activeIndex + 1}`}
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
-            className="object-cover cursor-pointer transition-transform duration-500 group-hover:scale-[1.02]"
+          <button
+            type="button"
             onClick={() => openFullscreen(activeIndex)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter" || e.key === " ") {
-                e.preventDefault();
-                openFullscreen(activeIndex);
-              }
-            }}
-            tabIndex={0}
-            role="button"
-          />
+            className="w-full h-full text-left cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#2C5745]"
+            aria-label={`ছবি ${activeIndex + 1} ফুলস্ক্রিনে দেখুন`}
+          >
+            <Image
+              src={images[activeIndex]}
+              alt={`ছবি ${activeIndex + 1}`}
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 70vw, 800px"
+              className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            />
+          </button>
 
           {/* Fullscreen hint */}
           <button
@@ -143,7 +141,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
           </button>
 
           {/* Image counter badge */}
-          <span className="absolute bottom-3 right-3 bg-slate-950/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10 shadow-xs">
+          <span className="absolute bottom-3 right-3 bg-slate-950/70 text-white text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-md border border-white/10 shadow-xs pointer-events-none">
             {activeIndex + 1} / {images.length}
           </span>
 
@@ -153,7 +151,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               <button
                 type="button"
                 onClick={goPrev}
-                className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer"
+                className="absolute left-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer z-10"
                 aria-label="Previous image"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -163,7 +161,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               <button
                 type="button"
                 onClick={goNext}
-                className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer"
+                className="absolute right-3 top-1/2 -translate-y-1/2 bg-slate-900/50 hover:bg-slate-900/80 text-white w-9 h-9 rounded-full flex items-center justify-center transition-all opacity-0 group-hover:opacity-100 backdrop-blur-md cursor-pointer z-10"
                 aria-label="Next image"
               >
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -204,17 +202,19 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
       {/* Fullscreen Lightbox */}
       {fullscreenIndex !== null && (
         <div
+          role="dialog"
+          aria-modal="true"
+          aria-label="Image gallery lightbox"
           className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-200"
-          onClick={closeFullscreen}
-          onKeyDown={(e) => {
-            if (e.key === "Enter" || e.key === " ") {
-              e.preventDefault();
-              closeFullscreen();
-            }
-          }}
-          tabIndex={0}
-          role="button"
         >
+          {/* Backdrop button for outside click dismiss */}
+          <button
+            type="button"
+            onClick={closeFullscreen}
+            className="absolute inset-0 w-full h-full cursor-default"
+            aria-label="Close fullscreen view"
+            tabIndex={-1}
+          />
           {/* Close button */}
           <button
             type="button"
