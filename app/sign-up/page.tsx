@@ -1,9 +1,9 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSignUp } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 // --- VALIDATION LOGIC ---
 const validateName = (value: string) => {
@@ -36,6 +36,14 @@ const validatePassword = (value: string) => {
 };
 
 export default function SignUp() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#EBE3A7]" />}>
+      <SignUpContent />
+    </Suspense>
+  );
+}
+
+function SignUpContent() {
   const [showPassword, setShowPassword] = useState(false);
 
   const [formData, setFormData] = useState({
@@ -57,14 +65,14 @@ export default function SignUp() {
 
   const [pendingVerification, setPendingVerification] = useState(false);
   const [code, setCode] = useState("");
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirectUrl") || "/";
+  const searchParamString = searchParams.toString();
+  const searchQuery = searchParamString ? `?${searchParamString}` : "";
 
   const { isLoaded, signUp, setActive } = useSignUp() as any;
   const router = useRouter();
-
-  useEffect(() => {
-    setSearchQuery(window.location.search);
-  }, []);
 
   const handleChange = (field: string, value: string) => {
     let filteredValue = value;
@@ -146,8 +154,6 @@ export default function SignUp() {
       });
       if (completeSignUp.status === "complete") {
         await setActive({ session: completeSignUp.createdSessionId });
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirectUrl') || "/";
         router.push(redirectUrl);
       } else {
         setClerkError("যাচাইকরণ ব্যর্থ হয়েছে।");
@@ -161,8 +167,6 @@ export default function SignUp() {
     if (!signUp) return;
 
     const signUpResource = signUp as any;
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirectUrl') || "/";
 
     if (typeof signUpResource.authenticateWithRedirect === "function") {
       await signUpResource.authenticateWithRedirect({

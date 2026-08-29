@@ -1,24 +1,32 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, Suspense } from "react";
 import Link from "next/link";
 import { useSignIn } from "@clerk/nextjs";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 
 export default function Login() {
+  return (
+    <Suspense fallback={<div className="min-h-screen bg-[#EBE3A7]" />}>
+      <LoginContent />
+    </Suspense>
+  );
+}
+
+function LoginContent() {
   const [showPassword, setShowPassword] = useState(false);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [clerkError, setClerkError] = useState("");
   const [submitted, setSubmitted] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const searchParams = useSearchParams();
+  const redirectUrl = searchParams.get("redirectUrl") || "/";
+  const searchParamString = searchParams.toString();
+  const searchQuery = searchParamString ? `?${searchParamString}` : "";
 
   const { isLoaded, signIn, setActive } = useSignIn() as any;
   const router = useRouter();
-
-  useEffect(() => {
-    setSearchQuery(window.location.search);
-  }, []);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,8 +48,6 @@ export default function Login() {
 
       if (result.status === "complete") {
         await setActive({ session: result.createdSessionId });
-        const urlParams = new URLSearchParams(window.location.search);
-        const redirectUrl = urlParams.get('redirectUrl') || "/";
         router.push(redirectUrl);
       } else {
         console.log(result);
@@ -56,8 +62,6 @@ export default function Login() {
     if (!signIn) return;
 
     const signInResource = signIn as any;
-    const urlParams = new URLSearchParams(window.location.search);
-    const redirectUrl = urlParams.get('redirectUrl') || "/";
 
     if (typeof signInResource.authenticateWithRedirect === "function") {
       await signInResource.authenticateWithRedirect({

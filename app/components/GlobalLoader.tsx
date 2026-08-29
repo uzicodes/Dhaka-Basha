@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useSyncExternalStore } from "react";
 
 export function Loader() {
   return (
@@ -16,21 +16,22 @@ export function Loader() {
   );
 }
 
+function subscribe(onStoreChange: () => void) {
+  if (typeof window === "undefined") return () => {};
+  window.addEventListener("load", onStoreChange);
+  return () => window.removeEventListener("load", onStoreChange);
+}
+
+function getSnapshot() {
+  return document.readyState !== "complete";
+}
+
+function getServerSnapshot() {
+  return false;
+}
+
 export default function GlobalLoader() {
-  const [isLoading, setIsLoading] = useState(true);
-
-  // Handle initial page load
-  useEffect(() => {
-    const handleLoad = () => setIsLoading(false);
-
-    if (document.readyState === "complete") {
-      setIsLoading(false);
-    } else {
-      window.addEventListener("load", handleLoad);
-    }
-
-    return () => window.removeEventListener("load", handleLoad);
-  }, []);
+  const isLoading = useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 
   if (!isLoading) return null;
 
