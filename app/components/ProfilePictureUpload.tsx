@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Image from "next/image";
 import { toast } from "sonner";
 import imageCompression from "browser-image-compression";
@@ -18,11 +18,10 @@ export default function ProfilePictureUpload({
   onUploaded,
 }: ProfilePictureUploadProps) {
   const [isUploading, setIsUploading] = useState(false);
-  const [previewUrl, setPreviewUrl] = useState<string | null>(currentImageUrl ?? null);
+  const [localPreviewUrl, setLocalPreviewUrl] = useState<string | null>(null);
 
-  useEffect(() => {
-    setPreviewUrl(currentImageUrl ?? null);
-  }, [currentImageUrl]);
+  // Derive display image directly during render — no useEffect prop copying
+  const displayUrl = localPreviewUrl ?? currentImageUrl ?? null;
 
   const handleAvatarChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -49,7 +48,7 @@ export default function ProfilePictureUpload({
 
       // Immediate local preview
       blobUrl = URL.createObjectURL(compressedFile);
-      setPreviewUrl(blobUrl);
+      setLocalPreviewUrl(blobUrl);
 
       // 2. Request presigned URL from Cloudflare R2
       const res = await fetch("/api/upload", {
@@ -91,11 +90,12 @@ export default function ProfilePictureUpload({
       }
 
       toast.success("প্রোফাইল ছবি সফলভাবে আপডেট হয়েছে!");
+      setLocalPreviewUrl(publicUrl);
       onUploaded?.(publicUrl);
     } catch (error) {
       console.error("Upload error:", error);
       toast.error("ছবি আপলোড করতে সমস্যা হয়েছে। (Upload failed)");
-      setPreviewUrl(currentImageUrl ?? null);
+      setLocalPreviewUrl(null);
     } finally {
       if (blobUrl) {
         URL.revokeObjectURL(blobUrl);
@@ -107,14 +107,14 @@ export default function ProfilePictureUpload({
   return (
     <div className="relative group shrink-0">
       <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-3xl overflow-hidden bg-[#EBE3A7]/20 text-[#2E2910] border-2 border-slate-200 shadow-md flex items-center justify-center font-bold text-3xl">
-        {previewUrl ? (
+        {displayUrl ? (
           <Image
-            src={previewUrl}
+            src={displayUrl}
             alt={name || "User"}
             fill
             sizes="(max-width: 640px) 96px, 112px"
             className="object-cover"
-            unoptimized={previewUrl.startsWith("blob:")}
+            unoptimized={displayUrl.startsWith("blob:")}
           />
         ) : (
           name?.[0]?.toUpperCase() || "U"

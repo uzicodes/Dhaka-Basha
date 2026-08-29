@@ -1,6 +1,6 @@
 "use client";
 
-import { useUser, useClerk } from "@clerk/nextjs";
+import { useUser, useClerk, RedirectToSignIn } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
@@ -59,13 +59,6 @@ export default function ProfilePage() {
       month: "long",
     })
     : "";
-
-  // Auth redirect check
-  useEffect(() => {
-    if (isLoaded && !isSignedIn) {
-      router.push("/login?redirectUrl=/profile");
-    }
-  }, [isLoaded, isSignedIn, router]);
 
   // Load user data and listings
   useEffect(() => {
@@ -146,7 +139,7 @@ export default function ProfilePage() {
     }
   };
 
-  if (!isLoaded || isLoading) {
+  if (!isLoaded) {
     return (
       <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center justify-center pt-28 pb-12">
         <Loader />
@@ -155,7 +148,15 @@ export default function ProfilePage() {
   }
 
   if (!isSignedIn) {
-    return null;
+    return <RedirectToSignIn />;
+  }
+
+  if (isLoading) {
+    return (
+      <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center justify-center pt-28 pb-12">
+        <Loader />
+      </main>
+    );
   }
 
   const currentListings = activeSection === "my-listings" ? myListings : savedListings;
