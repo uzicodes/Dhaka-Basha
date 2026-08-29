@@ -10,8 +10,11 @@ export default function MonthPickerInput({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 relative" ref={monthPickerRef}>
-      <label id="rentFrom-label" className="text-[#2E2910] text-sm font-semibold">ভাড়া শুরু (মাস/বছর)</label>
+      <label id="rentFrom-label" htmlFor="rentFrom-button" className="text-[#2E2910] text-sm font-semibold">
+        ভাড়া শুরু (মাস/বছর)
+      </label>
       <button
+        id="rentFrom-button"
         type="button"
         aria-labelledby="rentFrom-label"
         aria-haspopup="dialog"

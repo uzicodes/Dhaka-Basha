@@ -130,10 +130,12 @@ export default function ProfilePictureUpload({
       {/* Change Photo Trigger */}
       <label
         htmlFor="avatar-upload-input"
+        aria-label="প্রোফাইল ছবি পরিবর্তন করুন"
         className="absolute -bottom-2 -right-2 p-2 rounded-2xl bg-[#2E2910] hover:bg-[#2C5745] text-[#EB7D00] shadow-md border-2 border-white transition-all cursor-pointer hover:scale-105 active:scale-95"
         title="ছবি পরিবর্তন করুন"
       >
-        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <span className="sr-only">প্রোফাইল ছবি পরিবর্তন করুন</span>
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
           <path
             strokeLinecap="round"
             strokeLinejoin="round"

@@ -6,12 +6,17 @@ export default function PropertyTypeSelect({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 relative" ref={propertyTypeRef}>
-      <label id="propertyType-label" className="text-[#2E2910] text-sm font-semibold">প্রপার্টির ধরন</label>
+      <label id="propertyType-label" htmlFor="propertyType-select-button" className="text-[#2E2910] text-sm font-semibold">
+        প্রপার্টির ধরন
+      </label>
       <input type="hidden" {...register("propertyType")} />
 
       <button
+        id="propertyType-select-button"
         type="button"
         aria-labelledby="propertyType-label"
+        aria-haspopup="listbox"
+        aria-expanded={isPropertyTypeOpen}
         className={`w-full border bg-[#EBE3A7]/20 rounded-xl h-12 px-3.5 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 flex items-center justify-between text-left ${errors.propertyType ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
         onClick={() => setIsPropertyTypeOpen(!isPropertyTypeOpen)}
         onBlur={() => setTimeout(() => setIsPropertyTypeOpen(false), 200)}

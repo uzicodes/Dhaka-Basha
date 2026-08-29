@@ -8,13 +8,18 @@ export default function LocationSelect({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 relative">
-      <label id="location-label" className="text-[#2E2910] text-sm font-semibold">এলাকা / লোকেশন</label>
+      <label id="location-label" htmlFor="location-select-button" className="text-[#2E2910] text-sm font-semibold">
+        এলাকা / লোকেশন
+      </label>
       <input type="hidden" {...register("location")} />
       <input type="hidden" {...register("subLocation")} />
 
       <button
+        id="location-select-button"
         type="button"
         aria-labelledby="location-label"
+        aria-haspopup="listbox"
+        aria-expanded={isSelectOpen}
         className={`w-full border bg-[#EBE3A7]/20 rounded-xl h-12 px-3.5 focus:outline-none focus:ring-2 focus:ring-[#EB7D00]/20 transition-colors duration-200 flex items-center justify-between text-left ${errors.location ? "border-red-500" : "border-[#2C5745]/20 focus:border-[#EB7D00]"}`}
         onClick={() => setIsSelectOpen(!isSelectOpen)}
         onBlur={() => setTimeout(() => setIsSelectOpen(false), 200)}

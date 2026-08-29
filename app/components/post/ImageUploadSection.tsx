@@ -12,7 +12,9 @@ export default function ImageUploadSection({
 }: any) {
   return (
     <div className="flex flex-col gap-1.5 mt-2">
-      <label className="text-[#2E2910] text-sm font-semibold">ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)</label>
+      <label htmlFor="listing-images-upload" className="text-[#2E2910] text-sm font-semibold">
+        ছবি আপলোড (সর্বোচ্চ ৫টি, প্রতিটি সর্বোচ্চ ৫MB)
+      </label>
 
       {existingImages.length > 0 && (
         <div className="mb-2">
@@ -47,6 +49,7 @@ export default function ImageUploadSection({
 
       <input
         ref={fileInputRef}
+        id="listing-images-upload"
         type="file"
         multiple
         accept="image/*"
