@@ -342,7 +342,7 @@ function ListingsContent() {
           </h1>
 
           <p className="text-slate-600 text-sm sm:text-base max-w-xl mx-auto font-normal">
-            মেস, ফ্ল্যাট, সিঙ্গেল রুম ও অফিস স্পেস—ঢাকা শহরের যে কোনো এলাকার বাসা খুঁজে নিন সরাসরি মালিকের সাথে যোগাযোগ করে।
+      ঢাকা শহরের যে কোনো এলাকার বাসা খুঁজে নিন সরাসরি মালিকের সাথে যোগাযোগ করে।
           </p>
         </section>
 
@@ -410,7 +410,7 @@ function ListingsContent() {
                             placeholder="এলাকার নাম খুঁজুন (যেমন: ধানমন্ডি)..."
                             value={locationSearchQuery}
                             onChange={(e) => setLocationSearchQuery(e.target.value)}
-                            className="w-full pl-8 pr-3 py-2 text-xs bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-[#2C5745] text-slate-800 placeholder-slate-400 font-medium"
+                            className="w-full pl-8 pr-3 py-2 text-sm bg-white rounded-lg border border-slate-200 focus:outline-none focus:border-[#2C5745] text-slate-800 placeholder-slate-400 font-medium"
                             autoFocus
                           />
                           <svg className="w-3.5 h-3.5 absolute left-2.5 top-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -433,7 +433,7 @@ function ListingsContent() {
                             setIsLocDropdownOpen(false);
                             setExpandedLoc("");
                           }}
-                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedLocation ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
+                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedLocation ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
                         >
                           <span>যেকোনো এলাকা (All Locations)</span>
                           {!selectedLocation && <span className="text-[#2C5745] font-bold">✓</span>}
@@ -455,12 +455,12 @@ function ListingsContent() {
                                     setIsLocDropdownOpen(false);
                                   }
                                 }}
-                                className={`px-3.5 py-2.5 rounded-xl cursor-pointer text-xs font-semibold transition-colors flex items-center justify-between ${isLocSelected ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
+                                className={`px-3.5 py-2.5 rounded-xl cursor-pointer text-sm font-semibold transition-colors flex items-center justify-between ${isLocSelected ? "bg-[#2C5745]/10 text-[#2E2910]" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
                               >
                                 <span>{loc.label}</span>
                                 {loc.subLocations ? (
                                   <div className="flex items-center gap-1.5 text-slate-400">
-                                    <span className="text-[10px] font-semibold bg-[#EBE3A7]/20 px-1.5 py-0.5 rounded-md text-[#2E2910]">
+                                    <span className="text-xs font-semibold bg-[#EBE3A7]/20 px-2 py-0.5 rounded-md text-[#2E2910]">
                                       {loc.subLocations.length}টি সাব-এলাকা
                                     </span>
                                     <svg className={`w-3.5 h-3.5 transition-transform ${isExpanded ? "rotate-180 text-[#2C5745]" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -482,7 +482,7 @@ function ListingsContent() {
                                       setSelectedSubLocation("");
                                       setIsLocDropdownOpen(false);
                                     }}
-                                    className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${selectedLocation === loc.value && !selectedSubLocation ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-600 hover:bg-slate-100"}`}
+                                    className={`w-full px-3 py-2 rounded-lg text-left text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${selectedLocation === loc.value && !selectedSubLocation ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-600 hover:bg-slate-100"}`}
                                   >
                                     <span>{loc.label} - পুরো এলাকা</span>
                                   </button>
@@ -498,7 +498,7 @@ function ListingsContent() {
                                           setSelectedSubLocation(sub.value);
                                           setIsLocDropdownOpen(false);
                                         }}
-                                        className={`w-full px-3 py-1.5 rounded-lg text-left text-xs font-medium transition-colors flex items-center justify-between cursor-pointer ${isSubSelected ? "bg-[#2C5745] text-white font-bold" : "text-slate-600 hover:bg-slate-100"}`}
+                                        className={`w-full px-3 py-2 rounded-lg text-left text-sm font-medium transition-colors flex items-center justify-between cursor-pointer ${isSubSelected ? "bg-[#2C5745] text-white font-bold" : "text-slate-600 hover:bg-slate-100"}`}
                                       >
                                         <span>{sub.label}</span>
                                         {isSubSelected && <span>✓</span>}
@@ -569,7 +569,7 @@ function ListingsContent() {
                           setSelectedType("");
                           setIsTypeDropdownOpen(false);
                         }}
-                        className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedType ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
+                        className={`w-full px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold transition-colors flex items-center justify-between cursor-pointer ${!selectedType ? "bg-[#2C5745]/10 text-[#2E2910] font-bold" : "text-slate-700 hover:bg-[#EBE3A7]"}`}
                       >
                         <span>যেকোনো ক্যাটাগরি (All Types)</span>
                         {!selectedType && <span className="text-[#2C5745]">✓</span>}
@@ -583,7 +583,7 @@ function ListingsContent() {
                             setSelectedType(t.value);
                             setIsTypeDropdownOpen(false);
                           }}
-                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-xs font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedType === t.value ? "bg-[#2C5745] text-white font-bold" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
+                          className={`w-full px-3.5 py-2.5 rounded-xl text-left text-sm font-semibold transition-colors flex items-center justify-between cursor-pointer ${selectedType === t.value ? "bg-[#2C5745] text-white font-bold" : "text-slate-800 hover:bg-[#EBE3A7]"}`}
                         >
                           <span>{t.label}</span>
                           {selectedType === t.value && <span>✓</span>}
@@ -663,16 +663,9 @@ function ListingsContent() {
             
             {/* Title & Results Counter */}
             <div className="space-y-1">
-              <div className="flex items-center gap-2">
-                <h2 className="text-xl md:text-2xl font-bold text-[#2E2910]">
-                  {hasActiveFilters ? "অনুসন্ধানের ফলাফল" : "সাম্প্রতিক টু-লেট সমূহ"}
-                </h2>
-                {!isLoading && (
-                  <span className="px-2.5 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-xs font-bold border border-[#EBE3A7]/40">
-                    {sortedListings.length}টি
-                  </span>
-                )}
-              </div>
+              <h2 className="text-xl md:text-2xl font-bold text-[#2E2910]">
+                {hasActiveFilters ? "অনুসন্ধানের ফলাফল" : "সাম্প্রতিক টু-লেট সমূহ"}
+              </h2>
               <p className="text-xs text-slate-500 font-normal">
                 {hasActiveFilters
                   ? `${selectedLocationObj?.label || ""} ${selectedSubLocationObj ? `(${selectedSubLocationObj.label})` : ""} ${selectedTypeObj ? `• ${selectedTypeObj.label}` : ""} ফিল্টারকৃত প্রপার্টি`
@@ -869,7 +862,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
             </div>
 
             <Link href={`/listings/${listing.id}`}>
-              <h3 className="text-base sm:text-lg font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-1">
+              <h3 className="text-base sm:text-lg font-bold text-[#2C5745] hover:text-[#1e3d30] transition-colors line-clamp-1">
                 {listing.title}
               </h3>
             </Link>
@@ -883,7 +876,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
                 {listing.user?.profileImage ? (
                   <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={24} height={24} className="object-cover" />
                 ) : (
-                  listing.user?.name?.[0] || "U"
+                  listing.user?.name ? listing.user.name.charAt(0).toUpperCase() : "U"
                 )}
               </div>
               <span className="text-xs font-semibold text-slate-700">{listing.user?.name || "ইউজার"}</span>
@@ -962,77 +955,83 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
       </div>
 
       {/* Card Body */}
-      <div className="p-5 flex-1 flex flex-col justify-between space-y-4">
+      <div className="p-4 sm:p-5 flex-1 flex flex-col justify-between space-y-4">
         
         <div className="space-y-2.5">
-          {/* Location & Rent Date / Call Action */}
-          <div className="flex items-start justify-between text-xs text-slate-500 gap-2">
-            <span className="flex items-center gap-1 font-medium text-slate-600 truncate max-w-[58%] pt-0.5">
-              <svg className="w-3.5 h-3.5 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" /><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" /></svg>
-              <span className="truncate">{locLabel} {subLocLabel && `(${subLocLabel})`}</span>
-            </span>
-
-            {/* Date & Call Button */}
-            <div className="flex flex-col items-end gap-1.5 shrink-0">
-              <span className="flex items-center gap-1 text-[11px] bg-[#EBE3A7]/20 text-[#2E2910] font-semibold px-2 py-0.5 rounded-md">
-                <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
-                {listing.rentFrom}
-              </span>
-              {listing.contactInfo && (
-                <a
-                  href={`tel:${listing.contactInfo}`}
-                  title={`কল করুন: ${listing.contactInfo}`}
-                  className="px-2.5 py-0.5 rounded-md bg-[#2C5745]/15 hover:bg-[#2C5745]/25 text-[#2E2910] text-[11px] font-bold transition-colors flex items-center gap-1"
-                >
-                  <svg className="w-3 h-3 text-[#2C5745]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
-                  কল
-                </a>
-              )}
-            </div>
+          {/* Location */}
+          <div className="flex items-center text-xs text-slate-500 gap-1.5 font-medium text-slate-600 truncate">
+            <svg className="w-4 h-4 text-red-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+            <span className="truncate">{locLabel} {subLocLabel && `(${subLocLabel})`}</span>
           </div>
 
           {/* Title */}
           <Link href={`/listings/${listing.id}`}>
-            <h3 className="text-base font-bold text-[#2E2910] group-hover:text-[#2C5745] transition-colors line-clamp-2 leading-snug">
+            <h3 className="text-base sm:text-[17px] font-bold text-[#2C5745] hover:text-[#1e3d30] transition-colors line-clamp-2 leading-snug">
               {listing.title}
             </h3>
           </Link>
 
           {/* Address */}
-          <p className="text-xs text-slate-500 line-clamp-1 font-normal">
-            {listing.address}
-          </p>
-        </div>
+          {listing.address && (
+            <p className="text-xs text-slate-500 line-clamp-1 font-normal">
+              {listing.address}
+            </p>
+          )}
 
-        {/* Card Footer */}
-        <div className="pt-3 border-t border-slate-100 flex items-center justify-between gap-3">
-          
-          {/* User info */}
-          <div className="flex items-center gap-2 min-w-0 flex-1">
-            <div className="w-6 h-6 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold">
+          {/* User Info (Full Width - never clipped) */}
+          <div className="flex items-center gap-2 pt-0.5">
+            <div className="w-5 h-5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] overflow-hidden shrink-0 flex items-center justify-center text-[10px] font-bold">
               {listing.user?.profileImage ? (
-                <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={24} height={24} className="object-cover" />
+                <Image src={listing.user.profileImage} alt={listing.user?.name || ""} width={20} height={20} className="object-cover" />
               ) : (
-                listing.user?.name?.[0] || "U"
+                listing.user?.name ? listing.user.name.charAt(0).toUpperCase() : "U"
               )}
             </div>
             <span className="text-xs font-semibold text-slate-700 truncate" title={listing.user?.name || "ইউজার"}>
               {listing.user?.name || "ইউজার"}
             </span>
           </div>
+        </div>
 
-          {/* Actions */}
-          <div className="shrink-0">
-            <Link
-              href={`/listings/${listing.id}`}
-              className="px-3.5 py-1.5 rounded-xl bg-[#2C5745] hover:bg-[#2E2910] text-white text-xs font-bold transition-all flex items-center gap-1 shadow-2xs"
-            >
-              বিস্তারিত →
-            </Link>
+        {/* Card Footer Actions (Date, Call, Details balanced equally) */}
+        <div className="pt-3 border-t border-slate-100 flex items-center gap-1.5">
+          {/* 1. Date Pill (Left - Light Warm Color) */}
+          <div
+            title={`ভাড়া শুরু: ${listing.rentFrom}`}
+            className="flex-1 py-2 px-1 rounded-xl bg-amber-50/80 text-amber-900 border border-amber-200/70 text-[11px] font-semibold flex items-center justify-center gap-1 text-center whitespace-nowrap overflow-hidden"
+          >
+            <svg className="w-3.5 h-3.5 text-[#EB7D00] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+            </svg>
+            <span className="truncate">{listing.rentFrom}</span>
           </div>
 
+          {/* 2. Call Button (Middle) */}
+          {listing.contactInfo && (
+            <a
+              href={`tel:${listing.contactInfo}`}
+              title={`কল করুন: ${listing.contactInfo}`}
+              className="flex-1 py-2 px-1 rounded-xl bg-emerald-50 hover:bg-emerald-100 text-[#2C5745] border border-emerald-200/70 text-xs font-bold transition-all flex items-center justify-center gap-1 cursor-pointer hover:scale-102 active:scale-95 text-center whitespace-nowrap"
+            >
+              <svg className="w-3.5 h-3.5 text-[#2C5745] shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+              </svg>
+              <span>কল</span>
+            </a>
+          )}
+
+          {/* 3. Details Button (Right) */}
+          <Link
+            href={`/listings/${listing.id}`}
+            title="বিস্তারিত দেখুন"
+            className="flex-1 py-2 px-1 rounded-xl bg-[#2C5745] hover:bg-[#203f32] text-white text-xs font-bold transition-all flex items-center justify-center gap-1 shadow-2xs hover:scale-102 active:scale-95 text-center whitespace-nowrap"
+          >
+            <span>বিস্তারিত</span>
+            <span>→</span>
+          </Link>
         </div>
 
       </div>
