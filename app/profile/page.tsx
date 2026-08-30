@@ -399,8 +399,8 @@ function ProfileHeader({
             disabled={isSaving}
             className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-2xs cursor-pointer ${
               isEditing
-                ? "bg-[#2C5745] hover:bg-[#2E2910] text-white"
-                : "bg-[#2E2910] hover:bg-[#2C5745] text-[#EB7D00]"
+                ? "bg-[#EB7D00] hover:bg-[#d67200] text-white"
+                : "bg-[#2C5745] hover:bg-[#203f32] text-white"
             }`}
           >
             {isSaving ? "সেভ হচ্ছে..." : isEditing ? "✓ পরিবর্তন সেভ করুন" : "প্রোফাইল এডিট করুন"}
@@ -623,7 +623,7 @@ function ProfileListings({
 
                     <div className="min-w-0 space-y-1.5">
                       <div className="flex items-center gap-2.5">
-                        <span className="px-2.5 py-0.5 rounded-md bg-[#2E2910] text-[#EB7D00] text-xs font-bold">
+                        <span className="px-2.5 py-0.5 rounded-md bg-[#2C5745]/10 text-[#2C5745] border border-[#2C5745]/20 text-xs font-bold">
                           {propType}
                         </span>
                         <span className="text-sm sm:text-base font-bold text-red-600 truncate">
@@ -689,7 +689,7 @@ function ProfileListings({
 
                   <div className="min-w-0 space-y-1.5">
                     <div className="flex items-center gap-2.5">
-                      <span className="px-2.5 py-0.5 rounded-md bg-[#2E2910] text-[#EB7D00] text-xs font-bold">
+                      <span className="px-2.5 py-0.5 rounded-md bg-[#2C5745]/10 text-[#2C5745] border border-[#2C5745]/20 text-xs font-bold">
                         {propType}
                       </span>
                       <span className="text-sm sm:text-base font-bold text-red-600 truncate">

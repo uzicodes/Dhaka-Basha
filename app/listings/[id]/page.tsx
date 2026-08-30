@@ -211,7 +211,7 @@ export default async function ListingDetailsPage({
               {/* Badges & Title */}
               <div className="space-y-3.5">
                 <div className="flex flex-wrap items-center gap-2.5">
-                  <span className="px-3.5 py-1.5 rounded-full bg-[#2E2910] text-[#EB7D00] text-sm font-bold shadow-2xs">
+                  <span className="px-3.5 py-1.5 rounded-full bg-[#2C5745] text-white text-sm font-bold shadow-2xs">
                     {propTypeLabel}
                   </span>
                   <span className="px-3.5 py-1.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] border border-[#EBE3A7]/40 text-sm font-bold flex items-center gap-1.5">

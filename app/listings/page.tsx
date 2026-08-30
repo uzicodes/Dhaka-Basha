@@ -632,7 +632,7 @@ function ListingsContent() {
             onClick={() => handleCategorySelect("")}
             className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
               !selectedType
-                ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
+                ? "bg-[#2C5745] text-white shadow-xs"
                 : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-[#EBE3A7]/20 hover:text-[#2E2910]"
             }`}
           >
@@ -647,7 +647,7 @@ function ListingsContent() {
                 onClick={() => handleCategorySelect(type.value)}
                 className={`px-4 py-2 rounded-full text-xs sm:text-sm font-semibold whitespace-nowrap transition-all shrink-0 cursor-pointer ${
                   isSelected
-                    ? "bg-[#2E2910] text-[#EB7D00] shadow-xs"
+                    ? "bg-[#2C5745] text-white shadow-xs"
                     : "bg-white text-slate-700 border border-slate-200/90 shadow-2xs hover:bg-[#EBE3A7]/20 hover:text-[#2E2910]"
                 }`}
               >
@@ -831,7 +831,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
             </div>
           )}
           <div className="absolute top-3 left-3">
-            <span className="px-2.5 py-1 rounded-full bg-[#2E2910] text-[#EB7D00] text-[11px] font-bold border border-white/20 shadow-2xs">
+            <span className="px-2.5 py-1 rounded-full bg-[#2C5745] text-white text-[11px] font-bold border border-white/20 shadow-2xs">
               {propType}
             </span>
           </div>
@@ -939,7 +939,7 @@ function ModernListingCard({ listing, viewMode = "grid" }: { listing: any; viewM
 
         {/* Top Badges */}
         <div className="absolute top-3 inset-x-3 flex items-center justify-between pointer-events-none">
-          <span className="px-2.5 py-1 rounded-full bg-[#2E2910] text-[#EB7D00] text-[11px] font-bold border border-white/20 shadow-2xs">
+          <span className="px-2.5 py-1 rounded-full bg-[#2C5745] text-white text-[11px] font-bold border border-white/20 shadow-2xs">
             {propType}
           </span>
           {hasImages && (
