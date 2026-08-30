@@ -77,11 +77,11 @@ export default function Navbar() {
   
   // Map pathname to active nav item
   const getActiveId = () => {
-    if (pathname === "/") return null;
-    if (pathname === "/listings") return "properties";
-    if (pathname === "/post") return "post";
-    if (pathname === "/profile") return "profile";
-    if (pathname.startsWith("/inbox")) return "profile";
+    if (pathname === "/") return "home";
+    if (pathname === "/listings" || pathname.startsWith("/listings")) return "properties";
+    if (pathname === "/post" || pathname.startsWith("/post")) return "post";
+    if (pathname === "/contact" || pathname.startsWith("/contact")) return "contact";
+    if (pathname === "/profile" || pathname.startsWith("/profile") || pathname.startsWith("/inbox")) return "profile";
     return null;
   };
   
@@ -89,7 +89,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-4 w-[calc(100%-2rem)] left-4 md:top-6 md:left-1/2 md:w-auto md:transform md:-translate-x-1/2 z-50">
-      <div className={`bg-white/85 backdrop-blur-md shadow-lg border border-slate-200/80 flex flex-col md:flex-row md:items-center md:justify-center md:min-w-[430px] gap-1 ${isMenuOpen ? "rounded-2xl p-4" : "rounded-full px-4 py-2.5"}`}>
+      <div className={`bg-white/45 backdrop-blur-2xl backdrop-saturate-200 border border-white/80 shadow-[0_12px_40px_0_rgba(0,0,0,0.1),inset_0_1.5px_2px_0_rgba(255,255,255,1),inset_0_-1px_1px_0_rgba(255,255,255,0.4)] flex flex-col md:flex-row md:items-center md:justify-center md:min-w-[430px] gap-1 transition-all duration-300 ${isMenuOpen ? "rounded-3xl p-4 bg-white/75" : "rounded-full px-4 py-2"}`}>
         
         {/* Mobile Header (Logo & Hamburger) */}
         <div className={`relative flex items-center justify-between md:hidden w-full ${isMenuOpen ? "mb-4" : ""}`}>
@@ -129,8 +129,8 @@ export default function Navbar() {
                 item.id === "home" ? "hidden md:flex" : ""
               } ${
                 active === item.id
-                  ? "bg-[#2C5745] text-white shadow-xs"
-                  : "text-slate-700 hover:text-[#2E2910] hover:bg-[#EBE3A7]/15"
+                  ? "bg-[#2C5745]/95 backdrop-blur-md text-white shadow-[0_4px_14px_rgba(44,87,69,0.35),inset_0_1px_1.5px_rgba(255,255,255,0.4)]"
+                  : "text-slate-800 hover:text-[#2E2910] hover:bg-white/60 hover:shadow-[inset_0_1px_1px_rgba(255,255,255,0.8)] active:scale-95"
               }`}
             >
               {item.icon ? (
@@ -150,8 +150,8 @@ export default function Navbar() {
           ))}
 
           {/* Divider */}
-          <div className="hidden md:block h-6 w-px bg-slate-200 mx-1"></div>
-          <div className="md:hidden w-full h-px bg-slate-100 my-2"></div>
+          <div className="hidden md:block h-5 w-px bg-slate-400/35 mx-1"></div>
+          <div className="md:hidden w-full h-px bg-slate-300/40 my-2"></div>
 
           {/* Profile Icon */}
           <Link
@@ -160,8 +160,8 @@ export default function Navbar() {
             className="px-3 py-2 text-slate-700 hover:text-[#2C5745] transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0"
             aria-label={isSignedIn ? "প্রোফাইল" : "লগইন"}
           >
-            <div className={`scale-120 origin-center rounded-full p-0.5 ${
-              active === "profile" ? "ring-2 ring-[#2C5745] bg-[#EBE3A7]/20" : ""
+            <div className={`scale-120 origin-center rounded-full p-0.5 transition-all ${
+              active === "profile" ? "ring-2 ring-[#2C5745] bg-white/70 shadow-xs" : "hover:bg-white/50"
             }`}>
               {isSignedIn && avatarUrl ? (
                 <div className="relative w-[22px] h-[22px] rounded-full overflow-hidden">

@@ -379,7 +379,7 @@ function PostToLetForm() {
         <div className="mb-8 text-center">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE3A7] text-[#2C5745] text-xs font-bold">
             <span className="w-1.5 h-1.5 rounded-full bg-[#EB7D00]" />
-            ঢাকা-বাসা বিজ্ঞাপন ফর্ম
+            বিজ্ঞাপন ফর্ম
           </span>
           <h1 className="text-2xl md:text-3xl font-bold text-[#2E2910] mt-3">
           {isEditMode ? "টু-লেট পোস্ট এডিট করুন" : "টু-লেট পোস্ট করুন"}
