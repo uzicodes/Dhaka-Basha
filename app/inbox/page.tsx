@@ -4,8 +4,7 @@ import { getConversations, deleteConversation } from "@/app/actions/chat";
 import { Loader } from "@/app/components/GlobalLoader";
 import Link from "next/link";
 import Image from "next/image";
-import { useAuth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
+import { useAuth, RedirectToSignIn } from "@clerk/nextjs";
 import { useEffect, useState, useTransition } from "react";
 import { toast } from "sonner";
 
@@ -15,12 +14,6 @@ export default function InboxPage() {
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isPending, startTransition] = useTransition();
-
-  useEffect(() => {
-    if (isLoaded && !userId) {
-      redirect("/login?redirectUrl=/inbox");
-    }
-  }, [isLoaded, userId]);
 
   const loadConversations = async () => {
     try {
@@ -69,12 +62,16 @@ export default function InboxPage() {
     });
   };
 
-  if (!isLoaded || isLoading) {
+  if (!isLoaded || (userId && isLoading)) {
     return (
       <main className="min-h-screen bg-[#EBE3A7] flex flex-col items-center justify-center pt-28 pb-12">
         <Loader />
       </main>
     );
+  }
+
+  if (!userId) {
+    return <RedirectToSignIn />;
   }
 
   return (
@@ -85,7 +82,7 @@ export default function InboxPage() {
       <div className="w-full max-w-3xl px-4 sm:px-6 pt-28 md:pt-32 pb-20 space-y-6">
         
         {/* TOP HEADER */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-slate-200/80">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-2 border-b border-black">
           <div className="space-y-1">
             <Link
               href="/profile"
@@ -100,9 +97,6 @@ export default function InboxPage() {
               <h1 className="text-2xl sm:text-3xl font-extrabold text-[#2E2910]">
                 ম্যাসেজ ইনবক্স
               </h1>
-              <span className="px-2.5 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-xs font-bold border border-[#EBE3A7]/40">
-                {conversations.length}টি
-              </span>
             </div>
           </div>
 

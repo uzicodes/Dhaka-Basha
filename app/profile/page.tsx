@@ -397,13 +397,29 @@ function ProfileHeader({
             type="button"
             onClick={handleSave}
             disabled={isSaving}
-            className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-2xs cursor-pointer ${
+            className={`px-5 py-2.5 rounded-xl text-sm font-bold transition-all shadow-2xs cursor-pointer flex items-center justify-center gap-2 ${
               isEditing
                 ? "bg-[#EB7D00] hover:bg-[#d67200] text-white"
                 : "bg-[#2C5745] hover:bg-[#203f32] text-white"
             }`}
           >
-            {isSaving ? "সেভ হচ্ছে..." : isEditing ? "✓ পরিবর্তন সেভ করুন" : "প্রোফাইল এডিট করুন"}
+            {isSaving ? (
+              "সেভ হচ্ছে..."
+            ) : isEditing ? (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M5 13l4 4L19 7" />
+                </svg>
+                <span>পরিবর্তন সেভ করুন</span>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                </svg>
+                <span>প্রোফাইল এডিট</span>
+              </>
+            )}
           </button>
 
           {isEditing && (
@@ -551,15 +567,8 @@ function ProfileListings({
     <div className="space-y-4">
       
       {/* Title Bar */}
-      <div className="flex items-center justify-between pb-3 border-b border-slate-200/80">
-        <div className="flex items-center gap-2.5">
-          <h2 className="text-xl sm:text-2xl font-bold text-[#2E2910]">{currentSectionTitle}</h2>
-          {!isLoadingCurrentListings && (
-            <span className="px-3 py-0.5 rounded-full bg-[#EBE3A7]/20 text-[#2E2910] text-sm font-bold border border-[#EBE3A7]/40">
-              {currentListings.length}টি
-            </span>
-          )}
-        </div>
+      <div className="flex items-center justify-between pb-3 border-b border-black">
+        <h2 className="text-xl sm:text-2xl font-bold text-[#2E2910]">{currentSectionTitle}</h2>
       </div>
 
       {/* Listings List */}
