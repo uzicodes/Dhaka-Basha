@@ -378,7 +378,6 @@ function PostToLetForm() {
       <div className="w-full max-w-3xl bg-white/95 p-6 sm:p-8 md:p-10 rounded-3xl shadow-xl shadow-[#2E2910]/10 border border-[#2C5745]/20 relative">
         <div className="mb-8 text-center">
           <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#EBE3A7] text-[#2C5745] text-xs font-bold">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#EB7D00]" />
             বিজ্ঞাপন ফর্ম
           </span>
           <h1 className="text-2xl md:text-3xl font-bold text-[#2E2910] mt-3">

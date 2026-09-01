@@ -100,8 +100,8 @@ export default function Navbar() {
           </Link>
           
           <div className="absolute left-1/2 -translate-x-1/2 pointer-events-none">
-            <span className="text-xl font-bold text-[#2E2910] font-ekush mt-1 inline-block">
-              ঢাকা-<span className="text-[#2C5745]">বাসা</span>
+            <span className="text-xl font-bold text-slate-900 font-ekush mt-1 inline-block">
+              ঢাকা-<span className="text-blue-600">বাসা</span>
             </span>
           </div>
 

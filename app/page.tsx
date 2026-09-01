@@ -7,7 +7,7 @@ export default function Home() {
       <div className="absolute inset-0 bg-white/50"></div>
 
       {/* Hero Section */}
-      <div className="relative z-10 max-w-3xl w-full text-center space-y-8">
+      <div className="relative z-10 max-w-3xl w-full text-center space-y-8 -mt-12 md:-mt-16">
         <Image
           src="/logo.png"
           alt="ঢাকা-বাসা"

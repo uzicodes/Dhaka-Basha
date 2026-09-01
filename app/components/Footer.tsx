@@ -16,8 +16,8 @@ export default function Footer() {
       <div className="mx-auto w-full max-w-6xl rounded-3xl md:rounded-[36px] bg-white/85 backdrop-blur-md border border-slate-200/80 shadow-lg shadow-[#2E2910]/5 p-6 sm:p-8 md:p-10">
         <div className="grid grid-cols-1 gap-8 md:grid-cols-4">
           <div className="md:col-span-2 space-y-3">
-            <h3 className="text-xl font-extrabold text-[#2E2910] font-ekush">
-              ঢাকা-<span className="text-[#2C5745]">বাসা</span>
+            <h3 className="text-xl font-extrabold text-slate-900 font-ekush">
+              ঢাকা-<span className="text-blue-600">বাসা</span>
             </h3>
             <p className="max-w-md text-sm text-slate-600 leading-relaxed">
               ঢাকা শহরে বাসা, ফ্ল্যাট এবং মেস খোঁজার বিশ্বস্ত ডিজিটাল প্ল্যাটফর্ম। সহজ অনুসন্ধান, দ্রুত যোগাযোগ, এবং ঝামেলাহীন অভিজ্ঞতা।

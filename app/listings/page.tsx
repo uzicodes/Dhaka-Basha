@@ -329,13 +329,6 @@ function ListingsContent() {
         
         {/* HERO SECTION */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#EBE3A7]/25 border border-[#EBE3A7]/40 text-[#2E2910] text-xs font-bold shadow-xs">
-            <span className="relative flex h-2 w-2">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#EBE3A7] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2 w-2 bg-[#2C5745]"></span>
-            </span>
-            ভেরিফায়েড টু-লেট পোর্টাল
-          </div>
 
           <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-[#2E2910] tracking-tight leading-tight">
             আপনার পছন্দের <span className="text-[#2C5745]">বাসা খুঁজুন</span> সহজে
