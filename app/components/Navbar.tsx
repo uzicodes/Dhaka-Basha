@@ -19,23 +19,31 @@ export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isSignedIn } = useAuth();
   const { user } = useUser();
-  const [avatarUrl, setAvatarUrl] = useState<string | null>(null);
+  const [avatarUrl, setAvatarUrl] = useState<string | null>(() => {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem("dhaka_basha_last_avatar");
+    }
+    return null;
+  });
 
   const userId = user?.id;
   const userImageUrl = user?.imageUrl;
 
   useEffect(() => {
-    if (!isSignedIn || !userId) {
+    if (!isSignedIn) {
       setAvatarUrl(null);
+      if (typeof window !== "undefined") {
+        localStorage.removeItem("dhaka_basha_last_avatar");
+      }
       return;
     }
 
     let isMounted = true;
-    const cacheKey = `dhaka_basha_avatar_${userId}`;
+    const cacheKey = userId ? `dhaka_basha_avatar_${userId}` : "dhaka_basha_last_avatar";
 
-    // Read cached avatar to avoid visual jump on page load
-    const cachedAvatar = typeof window !== "undefined" ? localStorage.getItem(cacheKey) : null;
-    if (cachedAvatar) {
+    // Read cached avatar immediately
+    const cachedAvatar = typeof window !== "undefined" ? (localStorage.getItem(cacheKey) || localStorage.getItem("dhaka_basha_last_avatar")) : null;
+    if (cachedAvatar && cachedAvatar !== avatarUrl) {
       setAvatarUrl(cachedAvatar);
     }
 
@@ -46,11 +54,17 @@ export default function Navbar() {
         if (profile?.profileImage) {
           // Custom profile image takes priority
           setAvatarUrl(profile.profileImage);
-          localStorage.setItem(cacheKey, profile.profileImage);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(cacheKey, profile.profileImage);
+            localStorage.setItem("dhaka_basha_last_avatar", profile.profileImage);
+          }
         } else if (userImageUrl) {
           // Fallback to Google / Clerk OAuth image only if no custom image is set
           setAvatarUrl(userImageUrl);
-          localStorage.setItem(cacheKey, userImageUrl);
+          if (typeof window !== "undefined") {
+            localStorage.setItem(cacheKey, userImageUrl);
+            localStorage.setItem("dhaka_basha_last_avatar", userImageUrl);
+          }
         }
       })
       .catch(() => {
@@ -64,7 +78,10 @@ export default function Navbar() {
       const customEvent = e as CustomEvent<{ profileImage: string }>;
       if (customEvent.detail?.profileImage && isMounted) {
         setAvatarUrl(customEvent.detail.profileImage);
-        localStorage.setItem(cacheKey, customEvent.detail.profileImage);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(cacheKey, customEvent.detail.profileImage);
+          localStorage.setItem("dhaka_basha_last_avatar", customEvent.detail.profileImage);
+        }
       }
     };
 
@@ -77,7 +94,7 @@ export default function Navbar() {
   
   // Map pathname to active nav item
   const getActiveId = () => {
-    if (pathname === "/") return "home";
+    if (pathname === "/") return null;
     if (pathname === "/listings" || pathname.startsWith("/listings")) return "properties";
     if (pathname === "/post" || pathname.startsWith("/post")) return "post";
     if (pathname === "/contact" || pathname.startsWith("/contact")) return "contact";
@@ -86,6 +103,7 @@ export default function Navbar() {
   };
   
   const active = getActiveId();
+  const avatarToRender = (isSignedIn || avatarUrl) ? (avatarUrl || userImageUrl || null) : null;
 
   return (
     <nav className="fixed top-4 w-[calc(100%-2rem)] left-4 md:top-6 md:left-1/2 md:w-auto md:transform md:-translate-x-1/2 z-50">
@@ -150,33 +168,33 @@ export default function Navbar() {
           ))}
 
           {/* Divider */}
-          <div className="hidden md:block h-5 w-px bg-slate-400/35 mx-1"></div>
+          <div className="hidden md:block h-5 w-px bg-slate-400/35 mx-1 shrink-0"></div>
           <div className="md:hidden w-full h-px bg-slate-300/40 my-2"></div>
 
           {/* Profile Icon */}
           <Link
             href={isSignedIn ? "/profile" : pathname === "/" ? "/login" : `/login?redirectUrl=${encodeURIComponent(pathname)}`}
             onClick={() => setIsMenuOpen(false)}
-            className="px-3 py-2 text-slate-700 hover:text-[#2C5745] transition-colors w-full md:w-auto flex justify-center mt-1 md:mt-0"
+            className="w-full md:w-9 md:h-9 py-2 md:py-0 text-slate-700 hover:text-[#2C5745] transition-colors flex items-center justify-center shrink-0 mt-1 md:mt-0 rounded-full"
             aria-label={isSignedIn ? "প্রোফাইল" : "লগইন"}
           >
-            <div className={`scale-120 origin-center rounded-full p-0.5 transition-all ${
+            <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all shrink-0 ${
               active === "profile" ? "ring-2 ring-[#2C5745] bg-white/70 shadow-xs" : "hover:bg-white/50"
             }`}>
-              {isSignedIn && avatarUrl ? (
-                <div className="relative w-[22px] h-[22px] rounded-full overflow-hidden">
+              {avatarToRender ? (
+                <div className="relative w-6 h-6 rounded-full overflow-hidden shrink-0">
                   <Image
-                    src={avatarUrl}
+                    src={avatarToRender}
                     alt="Profile"
                     fill
-                    sizes="22px"
+                    sizes="24px"
                     className="rounded-full object-cover"
-                    unoptimized={avatarUrl.startsWith("blob:")}
+                    unoptimized={avatarToRender.startsWith("blob:")}
                   />
                 </div>
               ) : (
                 <svg
-                  className="w-5 h-5"
+                  className="w-5 h-5 shrink-0"
                   fill="currentColor"
                   viewBox="0 0 24 24"
                   xmlns="http://www.w3.org/2000/svg"
