@@ -2,14 +2,6 @@
 @import "lenis/dist/lenis.css";
 
 @font-face {
-  font-family: 'FN Baraka';
-  src: url('/fonts/FN Baraka Bangla Unicode.ttf') format('truetype');
-  font-weight: normal;
-  font-style: normal;
-  font-display: swap;
-}
-
-@font-face {
   font-family: 'Ekush';
   src: url('/fonts/Ekush-Regular.ttf') format('truetype');
   font-weight: normal;
@@ -36,7 +28,6 @@
   --font-sans: var(--font-bengali), sans-serif;
   --font-mono: var(--font-geist-mono);
   --font-ekush: var(--font-ekush);
-  --font-baraka: 'FN Baraka', var(--font-baraka);
 }
 
 html {
@@ -75,13 +66,13 @@ body {
   background: rgba(44, 87, 69, 0.45);
 }
 
+h1,
 h2,
 h3,
 h4,
 h5,
 h6 {
-  font-family: 'FN Baraka', var(--font-baraka), sans-serif;
-  font-weight: 550 !important;
+  font-family: var(--font-bengali), sans-serif;
 }
 
 .font-ekush {

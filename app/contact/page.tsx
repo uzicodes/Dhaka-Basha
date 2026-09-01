@@ -166,7 +166,6 @@ export default function ContactPage() {
         {/* HERO HEADER */}
         <section className="text-center space-y-4 max-w-3xl mx-auto">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/70 border border-slate-200/80 text-[#2E2910] text-sm font-bold shadow-2xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-[#2C5745] animate-pulse" />
             সহায়তা ও যোগাযোগ কেন্দ্র
           </div>
 

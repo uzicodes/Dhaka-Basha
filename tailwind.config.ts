@@ -12,7 +12,6 @@ const config: Config = {
             fontFamily: {
                 sans: ["var(--font-bengali)", "sans-serif"],
                 ekush: ["var(--font-ekush)", "sans-serif"],
-                baraka: ["var(--font-baraka)", "sans-serif"],
             },
         },
     },
