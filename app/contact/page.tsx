@@ -114,20 +114,17 @@ export default function ContactPage() {
     setErrorMessage("");
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
+      const response = await fetch("/api/contact", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Accept: "application/json",
         },
         body: JSON.stringify({
-          access_key: "a648aa15-1561-4a04-a5e7-327b33777587",
           name: formData.name,
           email: formData.email,
           phone: formData.phone || "দেওয়া হয়নি",
-          subject: `[ঢাকা-বাসা মেসেজ] ${formData.subject} - ${formData.name}`,
+          subject: formData.subject,
           message: formData.message,
-          from_name: "ঢাকা-বাসা প্ল্যাটফর্ম",
         }),
       });
 
