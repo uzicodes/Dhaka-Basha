@@ -620,7 +620,13 @@ function ProfileListings({
                   <div className="flex items-center gap-4 min-w-0">
                     <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
                       {hasImages ? (
-                        <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
+                        <Image
+                          src={listing.images[0]}
+                          alt={listing.title}
+                          fill
+                          sizes="(max-width: 640px) 72px, 80px"
+                          className="object-cover"
+                        />
                       ) : (
                         <div className="w-full h-full flex items-center justify-center text-slate-300">
                           <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -686,7 +692,13 @@ function ProfileListings({
                 <div className="flex items-center gap-4 min-w-0">
                   <div className="relative w-18 h-18 sm:w-20 sm:h-20 rounded-xl overflow-hidden bg-slate-100 shrink-0 border border-slate-200/60">
                     {hasImages ? (
-                      <Image src={listing.images[0]} alt={listing.title} fill className="object-cover" />
+                      <Image
+                        src={listing.images[0]}
+                        alt={listing.title}
+                        fill
+                        sizes="(max-width: 640px) 72px, 80px"
+                        className="object-cover"
+                      />
                     ) : (
                       <div className="w-full h-full flex items-center justify-center text-slate-300">
                         <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">

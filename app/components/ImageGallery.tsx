@@ -1,6 +1,6 @@
 "use client";
 
-import { useReducer, useEffect } from "react";
+import { useReducer, useEffect, useRef } from "react";
 import Image from "next/image";
 
 interface ImageGalleryProps {
@@ -55,6 +55,24 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
     activeIndex: 0,
     fullscreenIndex: null,
   });
+
+  const dialogRef = useRef<HTMLDialogElement>(null);
+
+  // Sync native HTML <dialog> with fullscreenIndex state
+  useEffect(() => {
+    const dialog = dialogRef.current;
+    if (!dialog) return;
+
+    if (fullscreenIndex !== null) {
+      if (!dialog.open) {
+        dialog.showModal();
+      }
+    } else {
+      if (dialog.open) {
+        dialog.close();
+      }
+    }
+  }, [fullscreenIndex]);
 
   // Handle keyboard navigation in fullscreen
   useEffect(() => {
@@ -199,86 +217,90 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
         )}
       </div>
 
-      {/* Fullscreen Lightbox */}
-      {fullscreenIndex !== null && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label="Image gallery lightbox"
-          className="fixed inset-0 z-50 bg-slate-950/95 backdrop-blur-md flex items-center justify-center animate-in fade-in duration-200"
-        >
-          {/* Backdrop button for outside click dismiss */}
-          <button
-            type="button"
-            onClick={closeFullscreen}
-            className="absolute inset-0 w-full h-full cursor-default"
-            aria-label="Close fullscreen view"
-            tabIndex={-1}
-          />
-          {/* Close button */}
-          <button
-            type="button"
-            onClick={closeFullscreen}
-            className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
-            aria-label="Close fullscreen"
-          >
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+      {/* Fullscreen Lightbox Native Dialog */}
+      <dialog
+        ref={dialogRef}
+        onClose={closeFullscreen}
+        onCancel={(e) => {
+          e.preventDefault();
+          closeFullscreen();
+        }}
+        onClick={(e) => {
+          if (e.target === dialogRef.current) {
+            closeFullscreen();
+          }
+        }}
+        aria-label="Image gallery lightbox"
+        className="fixed inset-0 z-50 m-0 p-0 w-screen h-screen max-w-none max-h-none border-0 bg-slate-950/95 backdrop-blur-md text-white backdrop:bg-slate-950/80 outline-none select-none [&:not([open])]:hidden open:flex items-center justify-center animate-in fade-in duration-200"
+      >
+        {fullscreenIndex !== null && (
+          <>
+            {/* Close button */}
+            <button
+              type="button"
+              onClick={closeFullscreen}
+              className="absolute top-4 right-4 z-10 bg-white/10 hover:bg-white/20 text-white w-10 h-10 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+              aria-label="Close fullscreen"
+            >
+              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
 
-          {/* Counter */}
-          <span className="absolute top-5 left-1/2 -translate-x-1/2 text-white/80 text-xs font-semibold backdrop-blur-md bg-white/10 px-4 py-1.5 rounded-full border border-white/10">
-            {fullscreenIndex + 1} / {images.length}
-          </span>
+            {/* Counter */}
+            <span className="absolute top-5 left-1/2 -translate-x-1/2 text-white/80 text-xs font-semibold backdrop-blur-md bg-white/10 px-4 py-1.5 rounded-full border border-white/10 pointer-events-none">
+              {fullscreenIndex + 1} / {images.length}
+            </span>
 
-          {/* Image */}
-          <div
-            className="relative w-[90vw] h-[82vh] flex items-center justify-center"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <Image
-              src={images[fullscreenIndex]}
-              alt={`ছবি ${fullscreenIndex + 1}`}
-              fill
-              className="object-contain select-none rounded-xl"
-              draggable={false}
-            />
-          </div>
+            {/* Image */}
+            <div
+              className="relative w-[90vw] h-[82vh] flex items-center justify-center"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <Image
+                src={images[fullscreenIndex]}
+                alt={`ছবি ${fullscreenIndex + 1}`}
+                fill
+                sizes="90vw"
+                className="object-contain select-none rounded-xl"
+                draggable={false}
+              />
+            </div>
 
-          {/* Navigation arrows */}
-          {images.length > 1 && (
-            <>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goFullscreenPrev();
-                }}
-                className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
-                aria-label="Previous fullscreen image"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
-                </svg>
-              </button>
-              <button
-                type="button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  goFullscreenNext();
-                }}
-                className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer"
-                aria-label="Next fullscreen image"
-              >
-                <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
-                </svg>
-              </button>
-            </>
-          )}
-        </div>
-      )}
+            {/* Navigation arrows */}
+            {images.length > 1 && (
+              <>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goFullscreenPrev();
+                  }}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+                  aria-label="Previous fullscreen image"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M15 19l-7-7 7-7" />
+                  </svg>
+                </button>
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    goFullscreenNext();
+                  }}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 bg-white/10 hover:bg-white/20 text-white w-11 h-11 rounded-full flex items-center justify-center transition-all backdrop-blur-md cursor-pointer focus:outline-none focus:ring-2 focus:ring-white/50"
+                  aria-label="Next fullscreen image"
+                >
+                  <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                  </svg>
+                </button>
+              </>
+            )}
+          </>
+        )}
+      </dialog>
     </>
   );
 }

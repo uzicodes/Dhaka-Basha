@@ -207,6 +207,7 @@ export default function ImageGallery({ images }: ImageGalleryProps) {
               src={images[fullscreenIndex]}
               alt={`ছবি ${fullscreenIndex + 1}`}
               fill
+              sizes="90vw"
               className="object-contain shadow-2xl select-none rounded-lg"
               draggable={false}
             />
