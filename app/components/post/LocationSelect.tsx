@@ -54,9 +54,12 @@ export default function LocationSelect({
           onMouseDown={(e) => e.preventDefault()}
         >
           {locations.map((loc) => (
-            <div key={loc.value}>
-              <li
-                className={`px-4 py-2.5 text-slate-900 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors flex justify-between items-center ${expandedLoc === loc.value ? 'bg-[#EBE3A7] font-semibold' : ''}`}
+            <li key={loc.value} className="border-b border-[#2C5745]/10 last:border-0">
+              <button
+                type="button"
+                className={`w-full px-4 py-2.5 text-slate-900 hover:bg-[#EBE3A7] hover:text-[#2E2910] text-sm transition-colors flex justify-between items-center text-left cursor-pointer ${
+                  expandedLoc === loc.value ? "bg-[#EBE3A7] font-semibold" : ""
+                }`}
                 onClick={(e) => {
                   if (loc.subLocations) {
                     e.stopPropagation();
@@ -68,81 +71,58 @@ export default function LocationSelect({
                     setExpandedLoc("");
                   }
                 }}
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    if (loc.subLocations) {
-                      e.stopPropagation();
-                      setExpandedLoc(expandedLoc === loc.value ? "" : loc.value);
-                    } else {
-                      setValue("location", loc.value, { shouldValidate: true });
-                      setValue("subLocation", "");
-                      setIsSelectOpen(false);
-                      setExpandedLoc("");
-                    }
-                  }
-                }}
-                tabIndex={0}
-                role="option"
+                aria-expanded={loc.subLocations ? expandedLoc === loc.value : undefined}
               >
                 <span>{loc.label}</span>
                 {loc.subLocations && (
-                  <svg className={`w-4 h-4 transition-transform ${expandedLoc === loc.value ? 'rotate-180 text-[#EB7D00]' : 'text-slate-400'}`} fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" /></svg>
+                  <svg
+                    className={`w-4 h-4 transition-transform ${
+                      expandedLoc === loc.value ? "rotate-180 text-[#EB7D00]" : "text-slate-400"
+                    }`}
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
+                  </svg>
                 )}
-              </li>
+              </button>
 
               {loc.subLocations && expandedLoc === loc.value && (
-                <ul className="bg-[#EBE3A7]/30 border-y border-[#2C5745]/10">
-                  <li
-                    className="px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors border-b border-[#2C5745]/10 last:border-0"
-                    onClick={() => {
-                      setValue("location", loc.value, { shouldValidate: true });
-                      setValue("subLocation", "");
-                      setIsSelectOpen(false);
-                      setExpandedLoc("");
-                    }}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
+                <ul className="bg-[#EBE3A7]/30 border-t border-[#2C5745]/10">
+                  <li>
+                    <button
+                      type="button"
+                      className="w-full text-left px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] text-sm transition-colors border-b border-[#2C5745]/10 cursor-pointer"
+                      onClick={() => {
                         setValue("location", loc.value, { shouldValidate: true });
                         setValue("subLocation", "");
                         setIsSelectOpen(false);
                         setExpandedLoc("");
-                      }
-                    }}
-                    tabIndex={0}
-                    role="option"
-                  >
-                    যেকোনো (Any)
+                      }}
+                    >
+                      যেকোনো (Any)
+                    </button>
                   </li>
                   {loc.subLocations.map((sub) => (
-                    <li
-                      key={sub.value}
-                      className="px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors border-b border-[#2C5745]/10 last:border-0"
-                      onClick={() => {
-                        setValue("location", loc.value, { shouldValidate: true });
-                        setValue("subLocation", sub.value, { shouldValidate: true });
-                        setIsSelectOpen(false);
-                        setExpandedLoc("");
-                      }}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter' || e.key === ' ') {
-                          e.preventDefault();
+                    <li key={sub.value}>
+                      <button
+                        type="button"
+                        className="w-full text-left px-8 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] text-sm transition-colors border-b border-[#2C5745]/10 last:border-0 cursor-pointer"
+                        onClick={() => {
                           setValue("location", loc.value, { shouldValidate: true });
                           setValue("subLocation", sub.value, { shouldValidate: true });
                           setIsSelectOpen(false);
                           setExpandedLoc("");
-                        }
-                      }}
-                      tabIndex={0}
-                      role="option"
-                    >
-                      {sub.label}
+                        }}
+                      >
+                        {sub.label}
+                      </button>
                     </li>
                   ))}
                 </ul>
               )}
-            </div>
+            </li>
           ))}
         </ul>
       )}

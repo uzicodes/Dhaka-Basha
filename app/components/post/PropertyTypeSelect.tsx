@@ -35,24 +35,17 @@ export default function PropertyTypeSelect({
           onMouseDown={(e) => e.preventDefault()}
         >
           {propertyTypes.map((type) => (
-            <li
-              key={type.value}
-              className="px-4 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors"
-              onClick={() => {
-                setValue("propertyType", type.value, { shouldValidate: true });
-                setIsPropertyTypeOpen(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  e.preventDefault();
+            <li key={type.value} className="border-b border-[#2C5745]/10 last:border-0">
+              <button
+                type="button"
+                className="w-full text-left px-4 py-2.5 text-slate-700 hover:bg-[#EBE3A7] hover:text-[#2E2910] cursor-pointer text-sm transition-colors"
+                onClick={() => {
                   setValue("propertyType", type.value, { shouldValidate: true });
                   setIsPropertyTypeOpen(false);
-                }
-              }}
-              tabIndex={0}
-              role="option"
-            >
-              {type.label}
+                }}
+              >
+                {type.label}
+              </button>
             </li>
           ))}
         </ul>
